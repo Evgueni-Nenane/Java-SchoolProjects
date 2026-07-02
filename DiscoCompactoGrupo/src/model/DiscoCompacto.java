@@ -1,102 +1,63 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class DiscoCompacto {
 
-    private int ID_DC;
-    private String musico;
-    private String generoMusica;
-    private String gravadora;
+    private int codigoDisco;
+    private String titulo;
     private double preco;
-    private String produtor;
-    private String editora;
     private int anoEdicao;
+    private Generos generoMusical;
+    private List<Banda> bandas;
+    private List<Gravadora> gravadoras;
+    private List<Produtor> produtores;
+    private List<Editora> editoras;
 
-    public DiscoCompacto(String musico, String generoMusica, String gravadora,
-            double preco, String editora, String produtor, int anoEdicao) {
-        this.musico = musico;
-        this.generoMusica = generoMusica;
-        this.gravadora = gravadora;
+    public DiscoCompacto(String titulo, Generos generoMusical, double preco,
+            int anoEdicao, List<Banda> bandas, List<Gravadora> gravadoras,
+            List<Produtor> produtores, List<Editora> editoras) {
+        this.titulo = titulo;
+        this.generoMusical = generoMusical;
         this.preco = preco;
-        this.produtor = produtor;
-        this.editora = editora;
         this.anoEdicao = anoEdicao;
+        this.bandas = bandas;
+        this.gravadoras = gravadoras;
+        this.produtores = produtores;
+        this.editoras = editoras;
     }
 
-    public DiscoCompacto(int ID_DC, String musico, String generoMusica, String gravadora,
-            double preco, String editora, String produtor, int anoEdicao) {
-        this(musico, generoMusica, gravadora, preco, editora, produtor, anoEdicao);
-        this.ID_DC = ID_DC;
+    public DiscoCompacto(int codigoDisco, String titulo, Generos generoMusical,
+            double preco, int anoEdicao, List<Banda> bandas,
+            List<Gravadora> gravadoras, List<Produtor> produtores,
+            List<Editora> editoras) {
+        this(titulo, generoMusical, preco, anoEdicao, bandas, gravadoras, produtores, editoras);
+        this.codigoDisco = codigoDisco;
     }
 
-    public int existenciaDisco() {
-        LocalDate hoje = LocalDate.now();
-        int anoActual = hoje.getYear();
-        return anoActual - anoEdicao;
-    }
-
-    public String getMusico() {
-        return musico;
-    }
-
-    public void setMusico(String musico) {
-        this.musico = musico;
-    }
-
-    public String getGeneroMusica() {
-        return generoMusica;
-    }
-
-    public void setGeneroMusica(String generoMusica) {
-        this.generoMusica = generoMusica;
-    }
-
-    public String getGravadora() {
-        return gravadora;
-    }
-
-    public void setGravadora(String gravadora) {
-        this.gravadora = gravadora;
-    }
-
-    public double getPreco() {
-        return preco;
-    }
-
-    public void setPreco(double preco) {
-        this.preco = preco;
-    }
-
-    public String getProdutor() {
-        return produtor;
-    }
-
-    public void setProdutor(String produtor) {
-        this.produtor = produtor;
-    }
-
-    public String getEditora() {
-        return editora;
-    }
-
-    public void setEditora(String editora) {
-        this.editora = editora;
-    }
-
-    public int getAnoEdicao() {
-        return anoEdicao;
-    }
-
-    public void setAnoEdicao(int anoEdicao) {
-        this.anoEdicao = anoEdicao;
-    }
-
-    public int getID_DC() {
-        return ID_DC;
-    }
-
-    public void setID_DC(int ID_DC) {
-        this.ID_DC = ID_DC;
-    }
+    public int getCodigoDisco() { return codigoDisco; }
+    public void setCodigoDisco(int codigoDisco) { this.codigoDisco = codigoDisco; }
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public double getPreco() { return preco; }
+    public void setPreco(double preco) { this.preco = preco; }
+    public int getAnoEdicao() { return anoEdicao; }
+    public void setAnoEdicao(int anoEdicao) { this.anoEdicao = anoEdicao; }
+    public Generos getGeneroMusical() { return generoMusical; }
+    public void setGeneroMusical(Generos generoMusical) { this.generoMusical = generoMusical; }
+    public List<Banda> getBandas() { return bandas; }
+    public void setBandas(List<Banda> bandas) { this.bandas = bandas; }
+    public List<Gravadora> getGravadoras() { return gravadoras; }
+    public void setGravadoras(List<Gravadora> gravadoras) { this.gravadoras = gravadoras; }
+    public List<Produtor> getProdutores() { return produtores; }
+    public void setProdutores(List<Produtor> produtores) { this.produtores = produtores; }
+    public List<Editora> getEditoras() { return editoras; }
+    public void setEditoras(List<Editora> editoras) { this.editoras = editoras; }
+    
+    public int discoExistencia(int ano) {
+    	LocalDate hoje = LocalDate.now();
+    	int anoActual = hoje.getYear();
+    	return anoActual - ano;
+    };
 }
