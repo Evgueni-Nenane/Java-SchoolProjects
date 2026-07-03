@@ -128,7 +128,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		txtIntervenientes.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
-		btnBandas = new JButton("Gravadora");
+		btnBandas = new JButton("Banda");
 		btnBandas.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnBandas.addActionListener(this);
 		sidebarPanel.add(btnBandas);
@@ -233,10 +233,15 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		innerUser.setBackground(verticalStrut.getBackground());
 		topbarPanel.add(innerUser, BorderLayout.CENTER);
 		
+
 		
 		PainelDisco painelDisco = new PainelDisco(cardPrincipal, painelCentral, discoController, editoraController, gravadoraController, logsController);
 		painelDisco.setBackground(new Color(246, 247, 249));
 		painelCentral.add(painelDisco, "Discos");
+		
+		Banda_Participants painelBandaPt = new Banda_Participants();
+		painelBandaPt.setBackground(new Color(246, 247, 249));
+		painelCentral.add(painelBandaPt, "Banda e Participantes");
 		
 		PainelUtilizadores painelUtilizadores = new PainelUtilizadores();
 		painelUtilizadores.setBackground(new Color(246, 247, 249));
@@ -294,7 +299,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 			cardPrincipal.show(painelCentral, "Discos");
 		}
 		if (e.getSource() == btnBandas) {
-			new CadastrarGravadoraDialog().setVisible(true);
+			cardPrincipal.show(painelCentral, "Banda e Participantes");
 		}
 		if (e.getSource() == btnArtistas) {
 			new CadastrarEditoraDialog(editoraController).setVisible(true);

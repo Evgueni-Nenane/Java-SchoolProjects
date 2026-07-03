@@ -75,6 +75,39 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 		partePesquisa.add(pesquisar);
 		partePesquisa.add(txtPesquisa);
 		partePesquisa.add(filtro);
+		
+		txtPesquisa.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+
+		    private void filtrar() {
+		        String texto = txtPesquisa.getText().toLowerCase().trim();
+		        tabelaModelo.setRowCount(0);
+
+		        List<Utilizador> utilizadores = utilizadorController.listarUtilizador();
+		        for (Utilizador u : utilizadores) {
+		            if (texto.isEmpty() ||
+		                u.getNome().toLowerCase().contains(texto) ||
+		                String.valueOf(u.getApelido()).toLowerCase().contains(texto) ||
+		                u.getEmail().toLowerCase().contains(texto) ||
+		                String.valueOf(u.getGenero()).toLowerCase().contains(texto) ||
+		                String.valueOf(u.getPerfil()).toLowerCase().contains(texto) ||
+		                String.valueOf(u.getContacto()).contains(texto) ||
+		                String.valueOf(u.getCodigo()).contains(texto)) {
+
+		                tabelaModelo.addRow(new Object[]{
+		                    u.getCodigo(),
+		                    u.getNome() + " " + u.getApelido(),
+		                    u.getEmail(),
+		                    u.getGenero(),
+		                    u.getPerfil(),
+		                    u.getContacto()
+		                });
+		            }
+		        }
+		    }
+		});
 
 		titulo.add(parteDescritiva, BorderLayout.WEST);
 		titulo.add(partePesquisa, BorderLayout.EAST);
@@ -82,8 +115,7 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 
 		JPanel tabelaPanel = new JPanel();
 
-		String[] colunas = { "Codigo", "Nome Completo", "E-mail Corporativo", "Género", "Permissões", "Telefone",
-				"Status" };
+		String[] colunas = { "Codigo", "Nome Completo", "E-mail Corporativo", "Género", "Permissões", "Telefone"};
 		tabelaModelo = new DefaultTableModel(colunas, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
