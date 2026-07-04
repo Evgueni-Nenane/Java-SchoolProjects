@@ -77,7 +77,7 @@ public class PainelListaUsers extends JPanel {
 		        for (Utilizador u : utilizadores) {
 		            if (texto.isEmpty() ||
 		                u.getNome().toLowerCase().contains(texto) ||
-		                String.valueOf(u.getApelido()).toLowerCase().contains(texto) ||
+		                u.getApelido().toLowerCase().contains(texto) ||
 		                u.getEmail().toLowerCase().contains(texto) ||
 		                String.valueOf(u.getGenero()).toLowerCase().contains(texto) ||
 		                String.valueOf(u.getPerfil()).toLowerCase().contains(texto) ||
@@ -103,7 +103,8 @@ public class PainelListaUsers extends JPanel {
 
 		JPanel tabelaPanel = new JPanel();
 
-		String[] colunas = { "Codigo", "Nome Completo", "E-mail Corporativo", "Género", "Permissões", "Telefone"};
+		String[] colunas = { "Codigo", "Nome Completo", "E-mail Corporativo", "Género", "Permissões", "Telefone",
+				"Status" };
 		tabelaModelo = new DefaultTableModel(colunas, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -137,6 +138,7 @@ public class PainelListaUsers extends JPanel {
 		tabelaModelo.setRowCount(0);
 		List<Utilizador> utilizadores = utilizadorController.listarUtilizador();
 		for (Utilizador utilizador : utilizadores) {
+			System.out.println(utilizador.toString());
 			tabelaModelo.addRow(new Object[] {
 					utilizador.getCodigo(),
 					utilizador.getNome() + " "+ utilizador.getApelido(),

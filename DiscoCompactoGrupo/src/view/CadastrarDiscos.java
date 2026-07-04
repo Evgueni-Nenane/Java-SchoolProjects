@@ -472,6 +472,10 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		        if(sucesso) {
 		            JOptionPane.showMessageDialog(null, "Disco cadastrado com sucesso!");
 					LocalDateTime horaAgora = LocalDateTime.now();
+					System.out.println(Sessao.getUtilizadorLogado().getNome());
+					System.out.println(Sessao.getUtilizadorLogado().getApelido());
+					System.out.println(Sessao.getUtilizadorLogado().getPerfil());
+					System.out.println(Sessao.getUtilizadorLogado().getEmail());
 					log = new Logs(
 							Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
 							Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),

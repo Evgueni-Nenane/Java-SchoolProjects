@@ -65,6 +65,38 @@ public class PainelLogs extends JPanel implements ActionListener {
 		partePesquisa.add(pesquisar);
 		partePesquisa.add(txtPesquisa);
 		partePesquisa.add(filtro);
+		txtPesquisa.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+
+		    private void filtrar() {
+		        String texto = txtPesquisa.getText().toLowerCase().trim();
+		        tabelaModelo.setRowCount(0);
+
+		        List<Logs> logs = logsController.listarLogs();
+		        for (Logs log : logs) {
+		            if (texto.isEmpty() ||
+		                log.getNome().toLowerCase().contains(texto) ||
+		                String.valueOf(log.getApelido()).toLowerCase().contains(texto) ||
+		                log.getEmail().toLowerCase().contains(texto) ||
+		                String.valueOf(log.getPerfil()).toLowerCase().contains(texto) ||
+		                String.valueOf(log.getAccao()).toLowerCase().contains(texto) ||
+		                String.valueOf(log.getDataHora()).contains(texto) ||
+		                String.valueOf(log.getCodigo()).contains(texto)) {
+
+		                tabelaModelo.addRow(new Object[]{
+		                    log.getCodigo(),
+		                    log.getNome() + " " + log.getApelido(),
+		                    log.getEmail(),
+		                    log.getPerfil(),
+		                    log.getAccao(),
+		                    log.getDataHora()
+		                });
+		            }
+		        }
+		    }
+		});
 
 		titulo.add(parteDescritiva, BorderLayout.WEST);
 		titulo.add(partePesquisa, BorderLayout.EAST);
@@ -106,6 +138,7 @@ public class PainelLogs extends JPanel implements ActionListener {
 		tabelaModelo.setRowCount(0);
 		List<Logs> logs = logsController.listarLogs();
 		for (Logs log : logs) {
+			System.out.println(log.toString());
 			tabelaModelo.addRow(new Object[] {
 					log.getCodigo(),
 					log.getNome() + " "+ log.getApelido(),

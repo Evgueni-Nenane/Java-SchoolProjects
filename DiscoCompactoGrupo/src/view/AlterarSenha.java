@@ -92,7 +92,12 @@ public class AlterarSenha extends JFrame {
         
         if (senhaAlterada) {
         		dispose();
-
+				LocalDateTime horaAgora = LocalDateTime.now();
+				log = new Logs(
+						Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+						Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+						Sessao.getUtilizadorLogado().getEmail(), "Alteração de Senha", horaAgora);
+				logController.inserirLog(log);
             JOptionPane.showMessageDialog(this, "Senha alterada com sucesso!");
             JLogin login= new JLogin();
             login.setVisible(true);

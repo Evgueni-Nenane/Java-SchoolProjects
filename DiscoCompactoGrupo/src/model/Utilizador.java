@@ -36,6 +36,12 @@ public class Utilizador {
 	    this.email = email;
 	    this.contacto = contacto;
 	}
+	public Utilizador(String nome, String apelido, NivelAcesso perfil, String email) {
+		this.nome = nome;
+		this.apelido = apelido;
+		this.perfil = perfil;
+		this.email = email;
+	}
 	public Utilizador(String user_name, NivelAcesso perfil) {
 		this.user_name = user_name;
 		this.perfil = perfil;
@@ -45,11 +51,11 @@ public class Utilizador {
 		this.primeiroAcesso = primeiroAcesso;
 	}
 
-public Utilizador(String nomeCompleto, String contacto, String senha) {
-    this.nomeCompleto = nomeCompleto;
-    this.contacto = contacto;
-    this.senha = senha;
-}
+	public Utilizador(String nomeCompleto, String contacto, String senha) {
+	    this.nomeCompleto = nomeCompleto;
+	    this.contacto = contacto;
+	    this.senha = senha;
+	}
 	
 	
 	public String getNome() {

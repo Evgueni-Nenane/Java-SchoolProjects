@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,8 +26,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import controller.FicheiroTxt;
+import controller.LogsController;
 import controller.UtilizadorController;
+import model.Logs;
 import model.NivelAcesso;
+import model.Sessao;
 import model.Sexo;
 import model.Utilizador;
 
@@ -36,12 +40,14 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 	private JButton btnGerarSenha, btnEscolherFoto, btnRemoverFoto, btnCadastrar;
 	private JTextField txtNome, txtApelido, txtEmail, txtContacto, txtSenha, txtUser_Name;
 	private UtilizadorController utilizadorController;
+	private LogsController logController;
+	private Logs log;
 	private JComboBox<Sexo> generoSexual;
 	JComboBox<NivelAcesso> permissao;
 	
-	public PainelCadastroUsers(UtilizadorController utilizadorController) {
+	public PainelCadastroUsers(UtilizadorController utilizadorController, LogsController logController) {
 		this.utilizadorController = utilizadorController;
-		
+		this.logController = logController;
 		
 		JPanel fotoFormPanel = new JPanel(new BorderLayout());
 		fotoFormPanel.setBackground(Color.gray);
@@ -313,6 +319,13 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 	        
 	        if(sucesso) {
 	        	try {
+	        		LocalDateTime horaAgora = LocalDateTime.now();
+	        		log = new Logs(
+	        				Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+	        				Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+	        				Sessao.getUtilizadorLogado().getEmail(), "Cadastrar Utilizador", horaAgora);
+	        		logController.inserirLog(log);
+	        		
 					FicheiroTxt.guardarTxt(utilizador);
 				} catch (IOException e1) {
 					e1.printStackTrace();

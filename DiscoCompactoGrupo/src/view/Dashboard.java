@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.LocalDateTime;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -26,6 +27,7 @@ import controller.DiscoController;
 import controller.EditoraController;
 import controller.GravadoraController;
 import controller.LogsController;
+import model.Logs;
 import model.NivelAcesso;
 import model.Sessao;
 
@@ -44,6 +46,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 	private EditoraController editoraController;
 	private GravadoraController gravadoraController;
 	private LogsController logsController;
+	private Logs log;
 	
 	/**
 	 * Create the frame.
@@ -291,20 +294,44 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 				return;
 			}
 			cardPrincipal.show(painelCentral, "Utilizador");
+			LocalDateTime horaAgora = LocalDateTime.now();
+			log = new Logs(
+					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel utilizadores users", horaAgora);
+			logsController.inserirLog(log);
 		}
 		if (e.getSource() == btnRegistar) {
 			cardPrincipal.show(painelCentral, "Discos");
+			LocalDateTime horaAgora = LocalDateTime.now();
+			log = new Logs(
+					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel de discos", horaAgora);
+			logsController.inserirLog(log);
 		}
 		if (e.getSource() == btnListar) {
 			cardPrincipal.show(painelCentral, "Discos");
 		}
 		if (e.getSource() == btnBandas) {
 			cardPrincipal.show(painelCentral, "Banda e Participantes");
+			LocalDateTime horaAgora = LocalDateTime.now();
+			log = new Logs(
+					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel de banda e artistas", horaAgora);
+			logsController.inserirLog(log);
 		}
 		if (e.getSource() == btnArtistas) {
 			new CadastrarEditoraDialog(editoraController).setVisible(true);
 		}
 		if (e.getSource() == btnSair) {
+			LocalDateTime horaAgora = LocalDateTime.now();
+			log = new Logs(
+					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getEmail(), "Saiu do sistema", horaAgora);
+			logsController.inserirLog(log);
 			dispose();
 		}
 		if (e.getSource() == btnLogs) {
@@ -313,6 +340,12 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 				return;
 			}
 			cardPrincipal.show(painelCentral, "Logs_Sistema");
+			LocalDateTime horaAgora = LocalDateTime.now();
+			log = new Logs(
+					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel Logs do Sistema", horaAgora);
+			logsController.inserirLog(log);
 		}
 
 	}
