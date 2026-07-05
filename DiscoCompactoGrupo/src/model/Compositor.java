@@ -6,16 +6,18 @@ public class Compositor {
     private String nomeCompositor;
     private String apelidoCompositor;
     private String contactoCompositor;
+    private String emailCompositor;
 
-    public Compositor(String nomeCompositor, String apelidoCompositor, String contactoCompositor) {
+    public Compositor(String nomeCompositor, String apelidoCompositor, String contactoCompositor, String emailCompositor) {
         this.nomeCompositor = nomeCompositor;
         this.apelidoCompositor = apelidoCompositor;
         this.contactoCompositor = contactoCompositor;
+        this.emailCompositor = emailCompositor;
     }
 
     public Compositor(int codigoCompositor, String nomeCompositor,
-            String apelidoCompositor, String contactoCompositor) {
-        this(nomeCompositor, apelidoCompositor, contactoCompositor);
+            String apelidoCompositor, String contactoCompositor, String emailCompositor) {
+        this(nomeCompositor, apelidoCompositor, contactoCompositor, emailCompositor);
         this.codigoCompositor = codigoCompositor;
     }
 
@@ -27,4 +29,12 @@ public class Compositor {
     public void setApelidoCompositor(String apelidoCompositor) { this.apelidoCompositor = apelidoCompositor; }
     public String getContactoCompositor() { return contactoCompositor; }
     public void setContactoCompositor(String contactoCompositor) { this.contactoCompositor = contactoCompositor; }
+
+	public String getEmailCompositor() {
+		return emailCompositor;
+	}
+
+	public void setEmailCompositor(String emailCompositor) {
+		this.emailCompositor = emailCompositor;
+	}
 }

@@ -1,26 +1,10 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.time.LocalDateTime;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import controller.DiscoController;
@@ -225,7 +209,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		infoUser.setLayout(new BoxLayout(infoUser, BoxLayout.Y_AXIS));
 
 		JLabel lblNomeUser = new JLabel();
-		lblNomeUser.setText(Sessao.getUtilizadorLogado().getUser_name());
+		lblNomeUser.setText(Sessao.getUtilizadorLogado().getNome());
 		JLabel lblEmailUser = new JLabel();
 		lblEmailUser.setText(Sessao.getUtilizadorLogado().getPerfil().name());
 		
@@ -323,7 +307,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 			logsController.inserirLog(log);
 		}
 		if (e.getSource() == btnArtistas) {
-			new CadastrarEditoraDialog(editoraController).setVisible(true);
+			new CadastrarCompositorDialog().setVisible(true);
 		}
 		if (e.getSource() == btnSair) {
 			LocalDateTime horaAgora = LocalDateTime.now();

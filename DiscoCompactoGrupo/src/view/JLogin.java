@@ -53,8 +53,8 @@ public class JLogin extends JFrame {
     }
 
     private boolean ValidarCampos() {
-        String nome = textFieldNome.getText().trim();
-        String password = new String(passwordField.getPassword()).trim();
+        String nome = textFieldNome.getText();
+        String password = new String(passwordField.getPassword());
         if (nome.isEmpty()) {
             JOptionPane.showMessageDialog(this, "O campo Username não pode estar vazio.", "REVEJA OS CAMPOS", JOptionPane.ERROR_MESSAGE);
             textFieldNome.requestFocus();
@@ -131,8 +131,8 @@ public class JLogin extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (!ValidarCampos()) return;
 
-                String usuario = textFieldNome.getText().trim();
-                String senha = new String(passwordField.getPassword()).trim();
+                String usuario = textFieldNome.getText();
+                String senha = new String(passwordField.getPassword());
 
                 if (LoginDAO.login(usuario, senha)) {
                 	dispose();
