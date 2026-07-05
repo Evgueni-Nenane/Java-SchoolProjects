@@ -3,20 +3,42 @@ package view;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.swing.*;
 import javax.swing.table.*;
 
-public class Banda_Participants extends JPanel implements ActionListener, MouseListener {
+import controller.CantorController;
+import controller.CompositorController;
+import controller.MusicoController;
+import model.Cantor;
+import model.Compositor;
+import model.Musico;
+
+public class Banda_Participants extends JDialog implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
-	private DefaultTableModel tabelaCompModel, tabelaMusicModel, tabelaCantorModel;
-	private JButton btnAdicionarComp, btnAdicionarMusico, btnAdicionarCantor;
+	private Set<Integer> compositoresSelecionados = new HashSet<>();
+	private Set<Integer> musicosSelecionados = new HashSet<>();
+	private Set<Integer> cantoresSelecionados = new HashSet<>();
 	
-	public Banda_Participants() {
-		this.setLayout(new BorderLayout());
-		this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+	private DefaultTableModel tabelaCompModel, tabelaMusicModel, tabelaCantorModel;
+	private JButton btnAdicionarComp, btnAdicionarMusico, btnCancelar, btnSalvar, btnAdicionarCantor, btnLimparMusico, btnLimparCompositor, btnLimparCantor;
+	private CompositorController compositorController;
+	private MusicoController musicoController;
+	private CantorController cantorController;
+	
+	public Banda_Participants(CompositorController compositorController, MusicoController musicoController, CantorController cantorController) {
+		this.compositorController = compositorController;
+		this.musicoController = musicoController;
+		this.cantorController = cantorController;
 		
+		this.setSize(1000, 680);
+		this.setLocationRelativeTo(null);
+		this.setLayout(new BorderLayout());
+		this.setModal(true);
 		// ====================
 		// 		TOPCONTAINER
 		// ====================
@@ -43,42 +65,12 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		centerPanel.setBackground(Color.CYAN);
 		centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		
-		JPanel bandaPanel = new JPanel(new GridBagLayout());	
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.insets = new Insets(5, 5, 5, 5);
-		
-		JLabel lblBanda = new JLabel("Banda:");
-		gbc.gridx = 0; 
-		gbc.gridy = 0; 
-		gbc.weightx = 0.0;
-		gbc.anchor = GridBagConstraints.WEST; 
-		bandaPanel.add(lblBanda, gbc);
-
-		JComboBox<String> bandas = new JComboBox<>();
-		bandas.setPreferredSize(new Dimension(250, 28));
-		gbc.gridx = 0; 
-		gbc.gridy = 1; 
-		gbc.weightx = 0.0;
-		gbc.anchor = GridBagConstraints.WEST;
-		bandaPanel.add(bandas, gbc);
-		
-		JButton cadastrarBanda = new JButton("Cadastrar Banda");
-		cadastrarBanda.setPreferredSize(new Dimension(150, 28));
-		
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gbc.weightx = 1.0;
-		gbc.anchor = GridBagConstraints.EAST;
-		
-		bandaPanel.add(cadastrarBanda, gbc);
-		centerPanel.add(bandaPanel, BorderLayout.NORTH);
-		
+				
 		// ------------------------
 		//		 Center Content
 		// ------------------------
 		
 		JPanel container = new JPanel(new GridLayout(1, 3, 20, 0));
-		
 		
 		// ===============
 		// 		BOX 1
@@ -125,8 +117,20 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		
 		JPanel tabelaCompPanel = new JPanel();
 		
-		String[] colunasComp = {"", "Nome do Compositor", "Ações"};
-		tabelaCompModel = new DefaultTableModel(colunasComp, 0);		
+		String[] colunasComp = {"", "Nome do Compositor", "", "id"};
+		tabelaCompModel = new DefaultTableModel(colunasComp, 0) {
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex == 0) {
+					return Boolean.class;
+				}
+				return super.getColumnClass(columnIndex);
+			}
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return columnIndex == 0;
+			}
+		};		
 		
 		JTable tabelaComp = new JTable(tabelaCompModel);
 		tabelaComp.getTableHeader().setReorderingAllowed(false);
@@ -134,19 +138,26 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		tabelaComp.setRowHeight(27);
 		tabelaCompPanel.add(tabelaComp);
 		TableColumn checkboxColumn = tabelaComp.getColumnModel().getColumn(0);
-		checkboxColumn.setPreferredWidth(10);
+		checkboxColumn.setPreferredWidth(3);
 		checkboxColumn.setHeaderRenderer(new HeaderIconRenderer());
+		
+		TableColumn idColumn = tabelaComp.getColumnModel().getColumn(3);
+		idColumn.setMaxWidth(0);
+		idColumn.setMinWidth(0);
+		idColumn.setWidth(0);
+		
 		
 		JScrollPane scrollComp = new JScrollPane(tabelaComp);
 		
 		box1.add(scrollComp, BorderLayout.CENTER);
 		
 		// Parte de Baixo
-		JPanel acoesBox1 = new JPanel(new BorderLayout());
+		JPanel acoesBox1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
-		JLabel box1Baixo = new JLabel("Descrição da tabela de compositores");
+		btnLimparCompositor = new JButton("Desmarcar tudo");
+		btnLimparCompositor.addActionListener(this);
 		
-		acoesBox1.add(box1Baixo);
+		acoesBox1.add(btnLimparCompositor);
 		
 		box1.add(acoesBox1, BorderLayout.SOUTH);
 		
@@ -195,8 +206,20 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		
 		JPanel tabelaMusicoPanel = new JPanel();
 				
-		String[] colunasMusic = {"", "Nome do Músico", "Ações"};
-		tabelaMusicModel = new DefaultTableModel(colunasMusic, 0);		
+		String[] colunasMusic = {"", "Nome do Músico", "", "Id"};
+		tabelaMusicModel = new DefaultTableModel(colunasMusic, 0) {
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex == 0) {
+					return Boolean.class;
+				}
+				return super.getColumnClass(columnIndex);
+			}
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return columnIndex == 0;
+			}
+		};		
 				
 		JTable tabelaMusico = new JTable(tabelaMusicModel);
 		tabelaMusico.getTableHeader().setReorderingAllowed(false);
@@ -204,21 +227,28 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		tabelaMusico.setRowHeight(27);
 		tabelaMusicoPanel.add(tabelaMusico);
 		checkboxColumn = tabelaMusico.getColumnModel().getColumn(0);
-		checkboxColumn.setPreferredWidth(10);
-		checkboxColumn = tabelaMusico.getColumnModel().getColumn(0);
-		checkboxColumn.setPreferredWidth(10);
+		checkboxColumn.setPreferredWidth(3);
 		checkboxColumn.setHeaderRenderer(new HeaderIconRenderer());
+		
+		TableColumn idColumn2 = tabelaMusico.getColumnModel().getColumn(3);
+		idColumn2.setMaxWidth(0);
+		idColumn2.setMinWidth(0);
+		idColumn2.setWidth(0);
 		
 		JScrollPane scrollMusico = new JScrollPane(tabelaMusico);
 			
 		box2.add(scrollMusico, BorderLayout.CENTER);
 		
 		// Parte de Baixo
-		JPanel acoesBox2 = new JPanel(new BorderLayout());
+		JPanel acoesBox2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 				
 		JLabel box2Baixo = new JLabel("Descrição da tabela de músicos");
-				
+		btnLimparMusico = new JButton("Desmarcar tudo");
+		btnLimparMusico.addActionListener(this);		
+		
+		acoesBox2.add(btnLimparMusico);
 		acoesBox2.add(box2Baixo);
+		
 				
 		box2.add(acoesBox2, BorderLayout.SOUTH);
 				
@@ -267,8 +297,20 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		
 		JPanel tabelaCantorPanel = new JPanel();
 				
-		String[] colunasCantor = {"", "Nome do Cantor", "Ações"};
-		tabelaCantorModel = new DefaultTableModel(colunasCantor, 0);		
+		String[] colunasCantor = {"", "Nome do Cantor", "", "Id"};
+		tabelaCantorModel = new DefaultTableModel(colunasCantor, 0) {
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex == 0) {
+					return Boolean.class;
+				}
+				return super.getColumnClass(columnIndex);
+			}
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return columnIndex == 0;
+			}
+		};		
 				
 		JTable tabelaCantor = new JTable(tabelaCantorModel);
 		tabelaCantor.getTableHeader().setReorderingAllowed(false);
@@ -276,21 +318,25 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		tabelaCantor.setRowHeight(27);
 		tabelaCantorPanel.add(tabelaCantor);
 		checkboxColumn = tabelaCantor.getColumnModel().getColumn(0);
-		checkboxColumn.setPreferredWidth(10);
-		checkboxColumn = tabelaCantor.getColumnModel().getColumn(0);
-		checkboxColumn.setPreferredWidth(10);
+		checkboxColumn.setPreferredWidth(3);
 		checkboxColumn.setHeaderRenderer(new HeaderIconRenderer());
+		
+		TableColumn idColumn3 = tabelaCantor.getColumnModel().getColumn(3);
+		idColumn3.setMaxWidth(0);
+		idColumn3.setMinWidth(0);
+		idColumn3.setWidth(0);
 
 		JScrollPane scrollCantor = new JScrollPane(tabelaCantor);
 		
 		box3.add(scrollCantor, BorderLayout.CENTER);
 		
 		// Parte de Baixo
-		JPanel acoesBox3 = new JPanel(new BorderLayout());
-				
-		JLabel box3Baixo = new JLabel("Descrição da tabela de cantores");
-				
-		acoesBox3.add(box3Baixo);
+		JPanel acoesBox3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		
+		btnLimparCantor = new JButton("Desmarcar tudo");
+		btnLimparCantor.addActionListener(this);
+		
+		acoesBox3.add(btnLimparCantor);
 				
 		box3.add(acoesBox3, BorderLayout.SOUTH);
 				
@@ -301,9 +347,32 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		// ========================
 		// 		BOTTOM CONTAINER
 		// ========================		
-		JPanel bottomPanel = new JPanel();
+		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		bottomPanel.setBackground(Color.YELLOW);
 		bottomPanel.setPreferredSize(new Dimension(0, 50));
+		
+		btnSalvar = new JButton("Confirmar Seleção");
+		btnSalvar.addActionListener(this);
+		
+		btnCancelar = new JButton("Cancelar");
+		btnCancelar.addActionListener(this);
+		
+		bottomPanel.add(btnCancelar);
+		bottomPanel.add(btnSalvar);
+		
+		carregarCompositores();
+		carregarMusicos();
+		carregarCantores();
+		
+		Timer timer = new Timer(5000, e -> {
+			carregarCompositores();
+			carregarMusicos();
+			carregarCantores();
+		});
+		
+		timer.setInitialDelay(5000);
+		timer.start();
+		
 		
 		this.add(topContainer, BorderLayout.NORTH);
 		this.add(centerPanel, BorderLayout.CENTER);
@@ -326,6 +395,21 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		}
 		if (e.getSource() == btnAdicionarCantor) {
 			new CadastrarCantorDialog().setVisible(true);
+		}
+		if (e.getSource() == btnLimparMusico) {
+			desmarcarMusico();
+		}
+		if (e.getSource() == btnLimparCompositor) {
+			desmarcarCompositor();
+		}
+		if (e.getSource() == btnLimparCantor) {
+			desmarcarCantor();
+		}
+		if (e.getSource() == btnSalvar) {
+			
+		}
+		if (e.getSource() == btnCancelar) {
+			this.dispose();
 		}
 	}
 
@@ -350,5 +434,128 @@ public class Banda_Participants extends JPanel implements ActionListener, MouseL
 		}
 		
 	}
-
+	
+	public void carregarCompositores() {
+		for (int i = 0; i < tabelaCompModel.getRowCount(); i++) {
+			boolean marcado = (Boolean) tabelaCompModel.getValueAt(i, 0);
+			int id = (Integer) tabelaCompModel.getValueAt(i, 3);
+			
+			if (marcado) {
+				compositoresSelecionados.add(id);
+			} else {
+				compositoresSelecionados.remove(id);
+			}
+		}
+		
+		tabelaCompModel.setRowCount(0);
+		List<Compositor> compositores = compositorController.listarCompositor();
+		for (Compositor compositor : compositores) {
+			boolean estavaMarcado = compositoresSelecionados.contains(compositor.getCodigoCompositor());
+			tabelaCompModel.addRow(new Object[] {
+					estavaMarcado,
+					compositor.getNomeCompositor() + " " + compositor.getApelidoCompositor(),
+					"Compositor",
+					compositor.getCodigoCompositor()
+			});
+		}
+	}
+	public void carregarMusicos() {
+		for (int i = 0; i < tabelaMusicModel.getRowCount(); i++) {
+			boolean marcado = (Boolean) tabelaMusicModel.getValueAt(i, 0);
+			int id = (Integer) tabelaMusicModel.getValueAt(i, 3);
+			
+			if (marcado) {
+				musicosSelecionados.add(id);
+			} else {
+				musicosSelecionados.remove(id);
+			}
+		}
+		
+		tabelaMusicModel.setRowCount(0);
+		List<Musico> musicos = musicoController.listarMusicos();
+		
+		for (Musico musico : musicos) {
+			boolean estavaMarcado = musicosSelecionados.contains(musico.getCodigoMusico());
+			tabelaMusicModel.addRow(new Object[] {
+					estavaMarcado,
+					musico.getNomeMusico() + " " + musico.getApelidoMusico(),
+					musico.getInstrumento(),
+					musico.getCodigoMusico()
+			});
+		}
+	}
+	public void carregarCantores() {
+		for (int i = 0; i < tabelaCantorModel.getRowCount(); i++) {
+			boolean marcado = (Boolean) tabelaCantorModel.getValueAt(i, 0);
+			int id = (Integer) tabelaCantorModel.getValueAt(i, 3);
+			
+			if (marcado) {
+				cantoresSelecionados.add(id);
+			} else {
+				cantoresSelecionados.remove(id);
+			}
+		}
+		
+		tabelaCantorModel.setRowCount(0);
+		List<Cantor> cantores = cantorController.listarCantor();
+		
+		for (Cantor cantor: cantores) {
+			boolean estavaMarcado = cantoresSelecionados.contains(cantor.getCodigoCantor());
+			tabelaCantorModel.addRow(new Object[] {
+					estavaMarcado,
+					cantor.getNomeCantor() + " " + cantor.getApelidoCantor(),
+					"Vocal",
+					cantor.getCodigoCantor()
+			});
+		}
+	}
+	
+	public void desmarcarCompositor() {
+		compositoresSelecionados.clear();
+		
+		tabelaCompModel.setRowCount(0);
+		List<Compositor> compositores = compositorController.listarCompositor();
+		for (Compositor compositor : compositores) {
+			boolean estaDesmarcado = compositoresSelecionados.contains(compositor.getCodigoCompositor());
+			tabelaCompModel.addRow(new Object[] {
+					estaDesmarcado,
+					compositor.getNomeCompositor() + " " + compositor.getApelidoCompositor(),
+					"Compositor",
+					compositor.getCodigoCompositor()
+			});
+		}
+	
+	}
+	public void desmarcarMusico() {
+		musicosSelecionados.clear();
+		
+		tabelaMusicModel.setRowCount(0);
+		List<Musico> musicos = musicoController.listarMusicos();
+		for (Musico musico : musicos) {
+			boolean estaDesmarcado = musicosSelecionados.contains(musico.getCodigoMusico());
+			tabelaMusicModel.addRow(new Object[] {
+					estaDesmarcado,
+					musico.getNomeMusico() + " " + musico.getApelidoMusico(),
+					musico.getInstrumento(),
+					musico.getCodigoMusico()
+			});
+		}
+	
+	}
+	public void desmarcarCantor() {
+		cantoresSelecionados.clear();
+		
+		tabelaCantorModel.setRowCount(0);
+		List<Cantor> cantores = cantorController.listarCantor();
+		for (Cantor cantor : cantores) {
+			boolean estaDesmarcado = cantoresSelecionados.contains(cantor.getCodigoCantor());
+			tabelaCantorModel.addRow(new Object[] {
+					estaDesmarcado,
+					cantor.getNomeCantor() + " " + cantor.getApelidoCantor(),
+					"Vocal",
+					cantor.getCodigoCantor()
+			});
+		}
+	
+	}
 }

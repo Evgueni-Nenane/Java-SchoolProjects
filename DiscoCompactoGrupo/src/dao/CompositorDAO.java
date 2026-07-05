@@ -9,7 +9,7 @@ import model.Compositor;
 public class CompositorDAO {
 
     public boolean inserir(Compositor compositor) {
-        String sql = "INSERT INTO Compositor (Codigo_Compositor, Nome_Compositor, Apelido_Compositor, Contacto_Compositor, Email_Compositorr) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Compositor (Codigo_Compositor, Nome_Compositor, Apelido_Compositor, Contacto_Compositor, Email_Compositor) VALUES (?, ?, ?, ?, ?)";
         try {
             Connection conn = DBConnector.DBConnect();
             PreparedStatement ps = conn.prepareStatement(sql);

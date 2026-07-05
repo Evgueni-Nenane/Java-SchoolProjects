@@ -21,7 +21,6 @@ public class LoginDAO {
 	        ResultSet rs = ps.executeQuery();
 	        if(rs.next()) {
 	        	NivelAcesso perfil = NivelAcesso.valueOf(rs.getString("Perfil"));
-	            Utilizador user = new Utilizador(rs.getString("username"), perfil);
 	            Utilizador userSessao = new Utilizador(rs.getString("nome"), rs.getString("apelido"), perfil, rs.getString("email"));
 	            Sessao.iniciarSessao(userSessao);
 	            return true;

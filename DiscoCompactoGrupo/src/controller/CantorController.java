@@ -7,13 +7,13 @@ import model.Cantor;
 
 
 public class CantorController {
-	private static CantorDAO cantorDAO;
+	private CantorDAO cantorDAO;
 	
 	public CantorController() {
-		CantorController.cantorDAO = new CantorDAO();
+		this.cantorDAO = new CantorDAO();
 	}
 	
-    public static boolean cadastrarCantor(Cantor Cantor) {
+    public boolean cadastrarCantor(Cantor Cantor) {
         return cantorDAO.inserir(Cantor);
     }
     

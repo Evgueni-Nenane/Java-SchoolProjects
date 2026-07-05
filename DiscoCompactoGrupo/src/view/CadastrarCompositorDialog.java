@@ -25,6 +25,7 @@ public class CadastrarCompositorDialog extends JDialog implements ActionListener
     
     public CadastrarCompositorDialog() {
     	this.compositorController = new CompositorController();
+    	this.logController = new LogsController();
     	
         setTitle("Cadastrar Compositor");
         setSize(560, 360);

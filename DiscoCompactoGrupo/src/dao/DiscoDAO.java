@@ -56,8 +56,13 @@ public class DiscoDAO {
 	        Generos.valueOf(genero),
 	        rs.getDouble("Preco"),
 	        rs.getInt("Ano_Edicao"),
-	        null, null, null, null
-    );
+	        new ArrayList<>(),
+	        new ArrayList<>(),
+	        new ArrayList<>(),
+	        new ArrayList<>(),
+	        new ArrayList<>(),
+	        new ArrayList<>()
+		    );
 		    discos.add(disco);
 }
         } catch (SQLException e) {
@@ -66,6 +71,25 @@ public class DiscoDAO {
         return discos;
     }
 
+ // Atualizar disco
+    public boolean atualizar(DiscoCompacto disco) {
+        String sql = "UPDATE Disco_Compacto SET Titulo = ?, Genero = ?, Preco = ?, Ano_Edicao = ? WHERE Codigo_Disco = ?";
+        try {
+            Connection conn = DBConnector.DBConnect();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, disco.getTitulo());
+            ps.setString(2, disco.getGeneroMusical().toString());
+            ps.setDouble(3, disco.getPreco());
+            ps.setInt(4, disco.getAnoEdicao());
+            ps.setInt(5, disco.getCodigoDisco());
+            
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     // Remover disco
     public boolean remover(int codigoDisco) {
         String sql = "DELETE FROM Disco_Compacto WHERE Codigo_Disco = ?";

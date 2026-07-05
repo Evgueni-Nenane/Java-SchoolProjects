@@ -19,11 +19,13 @@ public class CadastrarCantorDialog extends JDialog implements ActionListener {
     private static final long serialVersionUID = 1L;
     private JTextField txtNome, txtApelido, txtContacto, txtEmail;
     private JButton btnSalvar;
+    private CantorController cantorController;
     private LogsController logController;
     private Logs log;
     
     public CadastrarCantorDialog() {
-    	new CantorController();
+    	this.cantorController = new CantorController();
+    	this.logController = new LogsController();
     	
         setTitle("Cadastrar Cantor");
         setSize(560, 360);
@@ -132,7 +134,7 @@ public class CadastrarCantorDialog extends JDialog implements ActionListener {
             }
             
             Cantor cantor = new Cantor(txtNome.getText(), txtApelido.getText(), txtContacto.getText(), txtEmail.getText());
-            boolean sucesso = CantorController.cadastrarCantor(cantor);
+            boolean sucesso = cantorController.cadastrarCantor(cantor);
             if(sucesso) {
     			LocalDateTime horaAgora = LocalDateTime.now();
     			log = new Logs(

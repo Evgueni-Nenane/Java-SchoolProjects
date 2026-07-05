@@ -2,8 +2,8 @@ package controller;
 
 import java.util.List;
 
-import dao.MusicoDAO;
 import model.Musico;
+import dao.MusicoDAO;
 
 public class MusicoController {
 	private MusicoDAO MusicoDAO;

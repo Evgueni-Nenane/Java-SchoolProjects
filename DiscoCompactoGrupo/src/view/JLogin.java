@@ -7,7 +7,6 @@ import java.awt.Graphics;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -21,18 +20,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
-import controller.LogsController;
 import dao.LoginDAO;
-import model.Logs;
-import model.Sessao;
 
 public class JLogin extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JTextField textFieldNome;
     private JPasswordField passwordField;
-    private LogsController logController;
-    private Logs log;
     
     
     public static void main(String[] args) {

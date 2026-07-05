@@ -29,10 +29,13 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
+import controller.CantorController;
+import controller.CompositorController;
 import controller.DiscoController;
 import controller.EditoraController;
 import controller.GravadoraController;
 import controller.LogsController;
+import controller.MusicoController;
 import model.DiscoCompacto;
 import model.Editora;
 import model.Generos;
@@ -45,20 +48,28 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 	private static final long serialVersionUID = 1L;
 	private DiscoController discoController;
 	
-	private JButton btnSalvar, btnLimpar;
+	private JButton btnSalvar, btnLimpar, btnBanda;
 	private JTextField txtNomeDisco, txtPrecoDisco;
 	private JSpinner spinnerDataDisco;
 	private JComboBox<Generos> generos;
+	private CompositorController compositorController;
+	private MusicoController musicoController;
+	private CantorController cantorController;
 	private EditoraController editoraController;
 	private GravadoraController gravadoraController;
 	private Logs log;
 	private LogsController logController;
 	
-	public CadastrarDiscos(DiscoController discoController, EditoraController editoraController, GravadoraController gravadoraController, LogsController logController) {
+	public CadastrarDiscos(DiscoController discoController, EditoraController editoraController,
+			GravadoraController gravadoraController, LogsController logController) {
 		this.discoController = discoController;
 		this.editoraController = editoraController;
 		this.gravadoraController = gravadoraController;
 		this.logController = logController;
+		compositorController = new CompositorController();
+		musicoController = new MusicoController();
+		cantorController = new CantorController();
+		
 		
 		JPanel painelPrincipal = new JPanel(new BorderLayout());
 		painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -228,13 +239,14 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		gbcBanda.gridx = 0;
 		gbcBanda.gridy = 0;
 		infoMainBandaPart.add(new JLabel("Banda"), (GridBagConstraints) gbcBanda.clone());
-		JComboBox<Generos> banda = new JComboBox<>(Generos.values());
-		banda.setPreferredSize(new Dimension(450, 25));
-		banda.setMinimumSize(new Dimension(450, 25));
-		banda.setMaximumSize(new Dimension(450, 25));
+		btnBanda = new JButton("Selecionar Participantes");
+		btnBanda.addActionListener(this);
+		btnBanda.setPreferredSize(new Dimension(450, 25));
+		btnBanda.setMinimumSize(new Dimension(450, 25));
+		btnBanda.setMaximumSize(new Dimension(450, 25));
 		gbcBanda.gridx = 0;
 		gbcBanda.gridy = 1;
-		infoMainBandaPart.add(banda, (GridBagConstraints) gbcBanda.clone());
+		infoMainBandaPart.add(btnBanda, (GridBagConstraints) gbcBanda.clone());
 
 		// Cantor
 		gbcBanda.gridx = 1;
@@ -463,7 +475,7 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		        Double preco = Double.parseDouble(txtPrecoDisco.getText());
 
 		        DiscoCompacto disco = new DiscoCompacto(
-		            titulo, genero, preco, ano, null, null, null, null
+		            ano, titulo, genero, preco, ano, null, null, null, null, null, null
 		        );		            
 
 		        
@@ -486,9 +498,12 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		            JOptionPane.showMessageDialog(null, "Erro ao cadastrar disco!");
 		    }
 		}
-		    if(e.getSource() == btnLimpar){
-		    	limparCampos();
-		    }
+		if(e.getSource() == btnLimpar){
+		   	limparCampos();
+		}
+		if (e.getSource() == btnBanda) {
+			new Banda_Participants(compositorController, musicoController, cantorController).setVisible(true);
+		}
 	}
 	
 	private void limparCampos() {

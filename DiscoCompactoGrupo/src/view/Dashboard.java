@@ -7,10 +7,13 @@ import java.time.LocalDateTime;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import controller.CantorController;
+import controller.CompositorController;
 import controller.DiscoController;
 import controller.EditoraController;
 import controller.GravadoraController;
 import controller.LogsController;
+import controller.MusicoController;
 import model.Logs;
 import model.NivelAcesso;
 import model.Sessao;
@@ -29,6 +32,9 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 	private DiscoController discoController;
 	private EditoraController editoraController;
 	private GravadoraController gravadoraController;
+	private CompositorController compositorController;
+	private MusicoController musicoController;
+	private CantorController cantorController;
 	private LogsController logsController;
 	private Logs log;
 	
@@ -41,6 +47,9 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		editoraController = new EditoraController();
 		gravadoraController = new GravadoraController();
 		logsController = new LogsController();
+		compositorController = new CompositorController();
+		musicoController = new MusicoController();
+		cantorController = new CantorController();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 700);
@@ -226,9 +235,9 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		painelDisco.setBackground(new Color(246, 247, 249));
 		painelCentral.add(painelDisco, "Discos");
 		
-		Banda_Participants painelBandaPt = new Banda_Participants();
-		painelBandaPt.setBackground(new Color(246, 247, 249));
-		painelCentral.add(painelBandaPt, "Banda e Participantes");
+//		Banda_Participants painelBandaPt = new Banda_Participants(compositorController, musicoController, cantorController);
+//		painelBandaPt.setBackground(new Color(246, 247, 249));
+//		painelCentral.add(painelBandaPt, "Banda e Participantes");
 		
 		PainelUtilizadores painelUtilizadores = new PainelUtilizadores();
 		painelUtilizadores.setBackground(new Color(246, 247, 249));
@@ -297,15 +306,15 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		if (e.getSource() == btnListar) {
 			cardPrincipal.show(painelCentral, "Discos");
 		}
-		if (e.getSource() == btnBandas) {
-			cardPrincipal.show(painelCentral, "Banda e Participantes");
-			LocalDateTime horaAgora = LocalDateTime.now();
-			log = new Logs(
-					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
-					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel de banda e artistas", horaAgora);
-			logsController.inserirLog(log);
-		}
+//		if (e.getSource() == btnBandas) {
+//			cardPrincipal.show(painelCentral, "Banda e Participantes");
+//			LocalDateTime horaAgora = LocalDateTime.now();
+//			log = new Logs(
+//					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+//					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+//					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel de banda e artistas", horaAgora);
+//			logsController.inserirLog(log);
+//		}
 		if (e.getSource() == btnArtistas) {
 			new CadastrarCompositorDialog().setVisible(true);
 		}

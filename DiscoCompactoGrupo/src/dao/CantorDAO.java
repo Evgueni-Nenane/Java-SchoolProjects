@@ -9,7 +9,7 @@ import model.Cantor;
 public class CantorDAO {
 
     public boolean inserir(Cantor Cantor) {
-        String sql = "INSERT INTO Cantor (Codigo_Cantor, Nome_Cantor, Apelido_Cantor, Contacto_Cantor, Email_Cantorr) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Cantor (Codigo_Cantor, Nome_Cantor, Apelido_Cantor, Contacto_Cantor, Email_Cantor) VALUES (?, ?, ?, ?, ?)";
         try {
             Connection conn = DBConnector.DBConnect();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -48,4 +48,6 @@ public class CantorDAO {
         }
         return cantores;
     }
+    
+    
 }

@@ -7,27 +7,27 @@ import java.time.LocalDateTime;
 
 import javax.swing.*;
 
-import controller.MusicoController;
+import controller.CompositorController;
 import controller.LogsController;
-import model.Musico;
+import model.Compositor;
 import model.Logs;
 import model.Sessao;
 
 
-public class CadastrarMusicoDialog extends JDialog implements ActionListener {
+public class CadastrarBandaDialog extends JDialog implements ActionListener {
 
     private static final long serialVersionUID = 1L;
-    private JTextField txtNome, txtApelido, txtInstrumento, txtEmail;
+    private JTextField txtNome, txtApelido, txtContacto, txtEmail;
     private JButton btnSalvar;
-    private MusicoController musicoController;
+    private CompositorController compositorController;
     private LogsController logController;
     private Logs log;
     
-    public CadastrarMusicoDialog() {
-    	this.musicoController = new MusicoController();
+    public CadastrarBandaDialog() {
+    	this.compositorController = new CompositorController();
     	this.logController = new LogsController();
     	
-        setTitle("Cadastrar Musico");
+        setTitle("Cadastrar Compositor");
         setSize(560, 360);
         setLocationRelativeTo(null);
         setModal(true);
@@ -36,7 +36,7 @@ public class CadastrarMusicoDialog extends JDialog implements ActionListener {
         // Título da cena
         JPanel titulo = new JPanel(new FlowLayout(FlowLayout.CENTER));
         
-        JLabel tituloDialog = new JLabel("Cadastro de Musico");
+        JLabel tituloDialog = new JLabel("Cadastro de Compositor");
         
         titulo.add(tituloDialog);
         
@@ -60,7 +60,7 @@ public class CadastrarMusicoDialog extends JDialog implements ActionListener {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         
-        nomePanel.add(new JLabel("Nome do Musico: "), gbc);
+        nomePanel.add(new JLabel("Nome do compositor: "), gbc);
         txtNome = new JTextField();
         txtNome.setPreferredSize(new Dimension(250, 30));
         txtNome.setMinimumSize(new Dimension(250, 30));
@@ -71,7 +71,7 @@ public class CadastrarMusicoDialog extends JDialog implements ActionListener {
         
         gbc.gridx = 1;
         gbc.gridy = 0;
-        nomePanel.add(new JLabel("Apelido do Musico: "), gbc);
+        nomePanel.add(new JLabel("Apelido do compositor: "), gbc);
         txtApelido = new JTextField();
         txtApelido.setPreferredSize(new Dimension(250, 30));
         txtApelido.setMinimumSize(new Dimension(250, 30));
@@ -84,20 +84,20 @@ public class CadastrarMusicoDialog extends JDialog implements ActionListener {
         
         gbco.gridx = 0;
         gbco.gridy = 1;        
-        form.add(new JLabel("Instrumento Tocado: "), gbco);
+        form.add(new JLabel("Contacto do compositor: "), gbco);
         
-        txtInstrumento = new JTextField();
-        txtInstrumento.setPreferredSize(new Dimension(250, 30));
-        txtInstrumento.setMinimumSize(new Dimension(250, 30));
-        txtInstrumento.setMaximumSize(new Dimension(250, 30));
+        txtContacto = new JTextField();
+        txtContacto.setPreferredSize(new Dimension(250, 30));
+        txtContacto.setMinimumSize(new Dimension(250, 30));
+        txtContacto.setMaximumSize(new Dimension(250, 30));
         gbco.gridx = 0;
         gbco.gridy = 2;
-        form.add(txtInstrumento, gbco);
+        form.add(txtContacto, gbco);
         
 
         gbco.gridx = 0;
         gbco.gridy = 3;
-        form.add(new JLabel("Email do Musico"), gbco);
+        form.add(new JLabel("Email do compositor"), gbco);
         txtEmail = new JTextField();
         txtEmail.setPreferredSize(new Dimension(250, 30));
         txtEmail.setMinimumSize(new Dimension(250, 30));
@@ -124,8 +124,8 @@ public class CadastrarMusicoDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Nome obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if(txtInstrumento.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Instrumento obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
+            if(txtContacto.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Contacto obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             if(txtEmail.getText().trim().isEmpty()) {
@@ -133,19 +133,19 @@ public class CadastrarMusicoDialog extends JDialog implements ActionListener {
                 return;
             }
             
-            Musico Musico = new Musico(txtNome.getText(), txtApelido.getText(), txtInstrumento.getText(), txtEmail.getText());
-            boolean sucesso = musicoController.cadastrarMusico(Musico);
+            Compositor compositor = new Compositor(txtNome.getText(), txtApelido.getText(), txtContacto.getText(), txtEmail.getText());
+            boolean sucesso = compositorController.cadastrarCompositor(compositor);
             if(sucesso) {
     			LocalDateTime horaAgora = LocalDateTime.now();
     			log = new Logs(
     					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
     					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
-    					Sessao.getUtilizadorLogado().getEmail(), "Cadastrou Musico no sistema", horaAgora);
+    					Sessao.getUtilizadorLogado().getEmail(), "Cadastrou compositor no sistema", horaAgora);
     			logController.inserirLog(log);
-                JOptionPane.showMessageDialog(this, "Musico cadastrado com sucesso!");
+                JOptionPane.showMessageDialog(this, "Banda cadastrado com sucesso!");
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Erro ao cadastrar Musico!");
+                JOptionPane.showMessageDialog(this, "Erro ao cadastrar banda!");
             }
         }
 

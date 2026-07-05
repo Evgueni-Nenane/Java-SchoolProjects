@@ -10,52 +10,126 @@ public class DiscoCompacto {
     private double preco;
     private int anoEdicao;
     private Generos generoMusical;
-    private List<Banda> bandas;
-    private List<Gravadora> gravadoras;
+    private List<Cantor> cantores;
+    private List<Musico> musicos;
+    private List<Compositor> compositores;
     private List<Produtor> produtores;
+    private List<Gravadora> gravadoras;
     private List<Editora> editoras;
 
     public DiscoCompacto(String titulo, Generos generoMusical, double preco,
-            int anoEdicao, List<Banda> bandas, List<Gravadora> gravadoras,
+            int anoEdicao, List<Cantor> cantores, List<Musico> musicos, List<Compositor> compositores, List<Gravadora> gravadoras,
             List<Produtor> produtores, List<Editora> editoras) {
         this.titulo = titulo;
         this.generoMusical = generoMusical;
         this.preco = preco;
         this.anoEdicao = anoEdicao;
-        this.bandas = bandas;
+        this.cantores = cantores;
+        this.compositores = compositores;
+        this.musicos = musicos;
         this.gravadoras = gravadoras;
         this.produtores = produtores;
         this.editoras = editoras;
     }
 
-    public DiscoCompacto(int codigoDisco, String titulo, Generos generoMusical,
-            double preco, int anoEdicao, List<Banda> bandas,
-            List<Gravadora> gravadoras, List<Produtor> produtores,
-            List<Editora> editoras) {
-        this(titulo, generoMusical, preco, anoEdicao, bandas, gravadoras, produtores, editoras);
+    public DiscoCompacto(int codigoDisco,String titulo, Generos generoMusical, double preco,
+            int anoEdicao, List<Cantor> cantores, List<Musico> musicos, List<Compositor> compositores, List<Gravadora> gravadoras,
+            List<Produtor> produtores, List<Editora> editoras) {
+        this(titulo, generoMusical, preco, anoEdicao, cantores, musicos, compositores, gravadoras, produtores, editoras);
         this.codigoDisco = codigoDisco;
     }
 
-    public int getCodigoDisco() { return codigoDisco; }
-    public void setCodigoDisco(int codigoDisco) { this.codigoDisco = codigoDisco; }
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
-    public double getPreco() { return preco; }
-    public void setPreco(double preco) { this.preco = preco; }
-    public int getAnoEdicao() { return anoEdicao; }
-    public void setAnoEdicao(int anoEdicao) { this.anoEdicao = anoEdicao; }
-    public Generos getGeneroMusical() { return generoMusical; }
-    public void setGeneroMusical(Generos generoMusical) { this.generoMusical = generoMusical; }
-    public List<Banda> getBandas() { return bandas; }
-    public void setBandas(List<Banda> bandas) { this.bandas = bandas; }
-    public List<Gravadora> getGravadoras() { return gravadoras; }
-    public void setGravadoras(List<Gravadora> gravadoras) { this.gravadoras = gravadoras; }
-    public List<Produtor> getProdutores() { return produtores; }
-    public void setProdutores(List<Produtor> produtores) { this.produtores = produtores; }
-    public List<Editora> getEditoras() { return editoras; }
-    public void setEditoras(List<Editora> editoras) { this.editoras = editoras; }
     
-    public int discoExistencia(int ano) {
+    
+    public int getCodigoDisco() {
+		return codigoDisco;
+	}
+
+	public void setCodigoDisco(int codigoDisco) {
+		this.codigoDisco = codigoDisco;
+	}
+
+	public String getTitulo() {
+		return titulo;
+	}
+
+	public void setTitulo(String titulo) {
+		this.titulo = titulo;
+	}
+
+	public double getPreco() {
+		return preco;
+	}
+
+	public void setPreco(double preco) {
+		this.preco = preco;
+	}
+
+	public int getAnoEdicao() {
+		return anoEdicao;
+	}
+
+	public void setAnoEdicao(int anoEdicao) {
+		this.anoEdicao = anoEdicao;
+	}
+
+	public Generos getGeneroMusical() {
+		return generoMusical;
+	}
+
+	public void setGeneroMusical(Generos generoMusical) {
+		this.generoMusical = generoMusical;
+	}
+
+	public List<Cantor> getCantores() {
+		return cantores;
+	}
+
+	public void setCantores(List<Cantor> cantores) {
+		this.cantores = cantores;
+	}
+
+	public List<Musico> getMusicos() {
+		return musicos;
+	}
+
+	public void setMusicos(List<Musico> musicos) {
+		this.musicos = musicos;
+	}
+
+	public List<Compositor> getCompositores() {
+		return compositores;
+	}
+
+	public void setCompositores(List<Compositor> compositores) {
+		this.compositores = compositores;
+	}
+
+	public List<Produtor> getProdutores() {
+		return produtores;
+	}
+
+	public void setProdutores(List<Produtor> produtores) {
+		this.produtores = produtores;
+	}
+
+	public List<Gravadora> getGravadoras() {
+		return gravadoras;
+	}
+
+	public void setGravadoras(List<Gravadora> gravadoras) {
+		this.gravadoras = gravadoras;
+	}
+
+	public List<Editora> getEditoras() {
+		return editoras;
+	}
+
+	public void setEditoras(List<Editora> editoras) {
+		this.editoras = editoras;
+	}
+
+	public int discoExistencia(int ano) {
     	LocalDate hoje = LocalDate.now();
     	int anoActual = hoje.getYear();
     	return anoActual - ano;
