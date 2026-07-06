@@ -24,4 +24,12 @@ public class UtilizadorController {
     public boolean suspenderUtilizador(int codigo) {
     	return utilizadorDAO.remover(codigo);
     }
+    
+    public boolean atualizarFoto(String username, byte[] foto) {
+        return utilizadorDAO.atualizarFoto(username, foto);
+    }
+
+    public byte[] buscarFoto(String username) {
+        return utilizadorDAO.buscarFoto(username);
+    }
 }

@@ -2,13 +2,11 @@ package view;
 
 import javax.swing.*;
 import controller.LogsController;
-import dao.DBConnector;
 import dao.LoginDAO;
 import model.Logs;
 import model.Sessao;
 
 import java.awt.*;
-import java.sql.*;
 import java.time.LocalDateTime;
 
 public class AlterarSenha extends JFrame {
@@ -34,6 +32,7 @@ public class AlterarSenha extends JFrame {
     }
 
     private void initialize() {
+    	this.logController = new LogsController();
 
         JLabel titulo = new JLabel("ALTERAR SENHA");
         titulo.setForeground(Color.WHITE);
@@ -88,7 +87,7 @@ public class AlterarSenha extends JFrame {
         
         String utilizadorON = Sessao.getUtilizadorLogado().getUser_name();
         
-        boolean senhaAlterada = LoginDAO.atualizarSenha(utilizadorON, senhaNova);
+        boolean senhaAlterada = LoginDAO.atualizarSenha(utilizadorON, senhaAntiga, senhaNova);
         
         if (senhaAlterada) {
         		dispose();
@@ -101,6 +100,9 @@ public class AlterarSenha extends JFrame {
             JOptionPane.showMessageDialog(this, "Senha alterada com sucesso!");
             JLogin login= new JLogin();
             login.setVisible(true);
+        }
+        else {
+        	JOptionPane.showMessageDialog(this, "Senha inválida.");
         }
     }
 }

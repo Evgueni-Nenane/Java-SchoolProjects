@@ -13,7 +13,7 @@ public class GravadoraController {
         this.gravadoraDAO = new GravadoraDAO();
     }
 
-    public boolean cadastrarGravadora(Gravadora gravadora) {
+    public int cadastrarGravadora(Gravadora gravadora) {
         return gravadoraDAO.inserir(gravadora);
     }
     

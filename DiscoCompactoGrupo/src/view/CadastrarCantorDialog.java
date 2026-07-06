@@ -134,8 +134,8 @@ public class CadastrarCantorDialog extends JDialog implements ActionListener {
             }
             
             Cantor cantor = new Cantor(txtNome.getText(), txtApelido.getText(), txtContacto.getText(), txtEmail.getText());
-            boolean sucesso = cantorController.cadastrarCantor(cantor);
-            if(sucesso) {
+            int sucesso = cantorController.cadastrarCantor(cantor);
+            if(sucesso != -1) {
     			LocalDateTime horaAgora = LocalDateTime.now();
     			log = new Logs(
     					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),

@@ -13,7 +13,7 @@ public class CantorController {
 		this.cantorDAO = new CantorDAO();
 	}
 	
-    public boolean cadastrarCantor(Cantor Cantor) {
+    public int cadastrarCantor(Cantor Cantor) {
         return cantorDAO.inserir(Cantor);
     }
     

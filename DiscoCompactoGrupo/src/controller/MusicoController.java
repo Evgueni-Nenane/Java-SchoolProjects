@@ -12,7 +12,7 @@ public class MusicoController {
 		this.MusicoDAO = new MusicoDAO();
 	}
 	
-    public boolean cadastrarMusico(Musico Musico) {
+    public int cadastrarMusico(Musico Musico) {
         return MusicoDAO.inserir(Musico);
     }
     

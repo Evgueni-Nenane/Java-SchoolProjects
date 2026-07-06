@@ -37,6 +37,7 @@ import controller.EditoraController;
 import controller.GravadoraController;
 import controller.LogsController;
 import controller.MusicoController;
+import controller.ProdutorController;
 import model.DiscoCompacto;
 import model.Editora;
 import model.Generos;
@@ -48,9 +49,9 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 	private static final long serialVersionUID = 1L;
 	private DiscoController discoController;
 	
-	private JButton btnSalvar, btnLimpar, btnBanda;
+	private JButton btnSalvar, btnLimpar, btnBanda, btnProducao;
 	private JTextField txtNomeDisco, txtPrecoDisco;
-	private JLabel partSelecionados, countCompositores,countMusicos, countCantores;
+	private JLabel partSelecionados, partSelecionadosProd, countCompositores,countMusicos, countCantores, countProdutores, countGravadoras, countEditoras;
 	private JSpinner spinnerDataDisco;
 	private JComboBox<Generos> generos;
 	private CompositorController compositorController;
@@ -58,6 +59,8 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 	private CantorController cantorController;
 	private EditoraController editoraController;
 	private GravadoraController gravadoraController;
+	private Creditos_Producao creditosProducao;
+	private ProdutorController produtorController;
 	private Participantes participantes;
 	private Logs log;
 	private LogsController logController;
@@ -71,8 +74,11 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		compositorController = new CompositorController();
 		musicoController = new MusicoController();
 		cantorController = new CantorController();
+		produtorController = new ProdutorController();
+		gravadoraController = new GravadoraController();
+		editoraController = new EditoraController();
 		participantes = new Participantes(compositorController, musicoController, cantorController);
-		
+		creditosProducao = new Creditos_Producao(produtorController, gravadoraController, editoraController);
 		
 		JPanel painelPrincipal = new JPanel(new BorderLayout());
 		painelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -94,18 +100,15 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(5, 5, 5, 5);
 
-		gbc.weightx = 1.0;
+		gbc.weightx = 2;
 		gbc.weighty = 0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.anchor = GridBagConstraints.WEST;
 
 		// =====================
 		// Informações do Disco
 		// =====================
 		JPanel infoDiscos = new JPanel(new BorderLayout());
-		infoDiscos.setPreferredSize(new Dimension(500, 160));
-		infoDiscos.setMinimumSize(new Dimension(500, 160));
-		infoDiscos.setMaximumSize(new Dimension(500, 160));
 		infoDiscos.setBackground(new Color(246, 247, 249));
 		JLabel lblTituloDisco = new JLabel("Informações do Disco");
 		lblTituloDisco.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
@@ -116,35 +119,53 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		GridBagConstraints gbcDisco = new GridBagConstraints();
 		gbcDisco.insets = new Insets(5, 5, 2, 5);
 		gbcDisco.anchor = GridBagConstraints.WEST;
-
+		gbcDisco.weightx = 1.0;
+		gbcDisco.fill = GridBagConstraints.HORIZONTAL;
+		
 		// Nome
 		gbcDisco.gridx = 0;
 		gbcDisco.gridy = 0;
+		
 		infoMainDisco.add(new JLabel("Nome do Disco"), (GridBagConstraints) gbcDisco.clone());
 		txtNomeDisco = new JTextField();
-		txtNomeDisco.setPreferredSize(new Dimension(220, 25));
-		txtNomeDisco.setMinimumSize(new Dimension(220, 25));
-		txtNomeDisco.setMaximumSize(new Dimension(220, 25));
-
+		txtNomeDisco.setPreferredSize(new Dimension(500, 25));
+		
 		gbcDisco.gridx = 0;
 		gbcDisco.gridy = 1;
+		gbcDisco.gridwidth = 3;
+		gbcDisco.weightx = 1.0;
+		gbcDisco.fill = GridBagConstraints.HORIZONTAL;
+		infoMainDisco.add(txtNomeDisco, gbcDisco);
 		infoMainDisco.add(txtNomeDisco, (GridBagConstraints) gbcDisco.clone());
 
 		// Preço
-		gbcDisco.gridx = 1;
-		gbcDisco.gridy = 0;
+		gbcDisco.gridwidth = 1;
+		gbcDisco.gridx = 0;
+		gbcDisco.gridy = 2;
 		infoMainDisco.add(new JLabel("Preço"), (GridBagConstraints) gbcDisco.clone());
 		txtPrecoDisco = new JTextField();
 		txtPrecoDisco.setPreferredSize(new Dimension(100, 25));
 		txtPrecoDisco.setMinimumSize(new Dimension(100, 25));
 		txtPrecoDisco.setMaximumSize(new Dimension(100, 25));
-		gbcDisco.gridx = 1;
-		gbcDisco.gridy = 1;
+		gbcDisco.gridx = 0;
+		gbcDisco.gridy = 3;
 		infoMainDisco.add(txtPrecoDisco, (GridBagConstraints) gbcDisco.clone());
 
+		// Genero
+		gbcDisco.gridx = 1;
+		gbcDisco.gridy = 2;
+		infoMainDisco.add(new JLabel("Gênero Musical"), (GridBagConstraints) gbcDisco.clone());
+		generos = new JComboBox<>(Generos.values());
+		generos.setPreferredSize(new Dimension(220, 25));
+		generos.setMinimumSize(new Dimension(220, 25));
+		generos.setMaximumSize(new Dimension(220, 25));
+		gbcDisco.gridx = 1;
+		gbcDisco.gridy = 3;
+		infoMainDisco.add(generos, (GridBagConstraints) gbcDisco.clone());
+		
 		// Data de Edição
 		gbcDisco.gridx = 2;
-		gbcDisco.gridy = 0;
+		gbcDisco.gridy = 2;
 		infoMainDisco.add(new JLabel("Data de Edição"), (GridBagConstraints) gbcDisco.clone());
 		spinnerDataDisco = new JSpinner(new SpinnerDateModel());
 		spinnerDataDisco.setEditor(new JSpinner.DateEditor(spinnerDataDisco, "dd/MM/yyyy"));
@@ -152,73 +173,16 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		spinnerDataDisco.setMinimumSize(new Dimension(125, 25));
 		spinnerDataDisco.setMaximumSize(new Dimension(125, 25));
 		gbcDisco.gridx = 2;
-		gbcDisco.gridy = 1;
-		infoMainDisco.add(spinnerDataDisco, (GridBagConstraints) gbcDisco.clone());
-
-		// Género
-		gbcDisco.gridx = 0;
-		gbcDisco.gridy = 2;
-		infoMainDisco.add(new JLabel("Gênero Musical"), (GridBagConstraints) gbcDisco.clone());
-		generos = new JComboBox<>(Generos.values());
-		generos.setPreferredSize(new Dimension(220, 25));
-		generos.setMinimumSize(new Dimension(220, 25));
-		generos.setMaximumSize(new Dimension(220, 25));
-		gbcDisco.gridx = 0;
 		gbcDisco.gridy = 3;
-		infoMainDisco.add(generos, (GridBagConstraints) gbcDisco.clone());
+		infoMainDisco.add(spinnerDataDisco, (GridBagConstraints) gbcDisco.clone());
 
 		infoDiscos.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
 		infoDiscos.add(infoMainDisco, BorderLayout.CENTER);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+		gbc.gridwidth = 2;
 		cadastroPanel.add(infoDiscos, (GridBagConstraints) gbc.clone());
 
-		// =====================
-		// Informações da Edição
-		// =====================
-		JPanel infoEdicao = new JPanel(new BorderLayout());
-		infoEdicao.setBackground(new Color(246, 247, 249));
-		infoEdicao.setPreferredSize(new Dimension(400, 160));
-		infoEdicao.setMinimumSize(new Dimension(400, 160));
-		infoEdicao.setMaximumSize(new Dimension(400, 160));
-		infoEdicao.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
-
-		JLabel lblTituloEdicao = new JLabel("Informações da Edição");
-		lblTituloEdicao.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
-		infoEdicao.add(lblTituloEdicao, BorderLayout.NORTH);
-
-		JPanel infoMainEdicao = new JPanel(new GridBagLayout());
-		infoMainEdicao.setBackground(new Color(246, 247, 249));
-		GridBagConstraints gbcEdicao = new GridBagConstraints();
-		gbcEdicao.insets = new Insets(5, 5, 2, 5);
-		gbcEdicao.anchor = GridBagConstraints.WEST;
-
-		gbcEdicao.gridx = 0;
-		gbcEdicao.gridy = 0;
-		infoMainEdicao.add(new JLabel("Editora"), (GridBagConstraints) gbcEdicao.clone());
-		JComboBox<Editora> editora = new JComboBox<>();
-		List<Editora> editoras = editoraController.listarEditoras();
-		for(Editora e : editoras) {
-		    editora.addItem(e);
-		}
-		editora.setPreferredSize(new Dimension(170, 25));
-		gbcEdicao.gridx = 0;
-		gbcEdicao.gridy = 1;
-		infoMainEdicao.add(editora, (GridBagConstraints) gbcEdicao.clone());
-
-		gbcEdicao.gridx = 1;
-		gbcEdicao.gridy = 0;
-		infoMainEdicao.add(new JLabel("Edição"), (GridBagConstraints) gbcEdicao.clone());
-		JComboBox<Generos> edicao = new JComboBox<>(Generos.values());
-		edicao.setPreferredSize(new Dimension(150, 25));
-		gbcEdicao.gridx = 1;
-		gbcEdicao.gridy = 1;
-		infoMainEdicao.add(edicao, (GridBagConstraints) gbcEdicao.clone());
-
-		infoEdicao.add(infoMainEdicao, BorderLayout.CENTER);
-		gbc.gridx = 1;
-		gbc.gridy = 0;
-		cadastroPanel.add(infoEdicao, (GridBagConstraints) gbc.clone());
 
 		// ====================================
 		// Informações da Banda e Participantes
@@ -277,8 +241,39 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		infoMainBandaPart.add(informacaoMain, gbcBanda);
 
 		// Compositor
+		btnProducao = new JButton("Selecionar Produção");
+		btnProducao.addActionListener(this);
+		btnProducao.setPreferredSize(new Dimension(450, 25));
+		btnProducao.setMinimumSize(new Dimension(450, 25));
+		btnBanda.setMaximumSize(new Dimension(450, 25));
+		gbcBanda.gridx = 1;
+		gbcBanda.gridy = 1;
+		infoMainBandaPart.add(btnProducao, (GridBagConstraints) gbcBanda.clone());
 		
-
+		JPanel informacaoMainProd = new JPanel(new BorderLayout());
+		informacaoMainProd.setBackground(Color.WHITE);
+		informacaoMainProd.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		informacaoMainProd.setPreferredSize(new Dimension(450, 70));
+		informacaoMainProd.setMinimumSize(new Dimension(450, 70));
+		informacaoMainProd.setMaximumSize(new Dimension(450, 70));
+		partSelecionadosProd = new JLabel(creditosProducao.totalSelecionados() +" Membros Selecionados");
+		
+		JPanel innerInfoProd = new JPanel(new GridLayout(1, 3, 5, 5));
+		
+		countProdutores = new JLabel("Produtores: " + creditosProducao.produtorContador());
+		countGravadoras = new JLabel("Gravadoras: " + creditosProducao.gravadoraContador());
+		countEditoras = new JLabel("Editoras: "  + creditosProducao.editoraContador());
+		
+		innerInfoProd.add(countProdutores);
+		innerInfoProd.add(countGravadoras);
+		innerInfoProd.add(countEditoras);
+		
+		informacaoMainProd.add(partSelecionadosProd, BorderLayout.NORTH);
+		informacaoMainProd.add(innerInfoProd, BorderLayout.CENTER);
+		
+		gbcBanda.gridx = 1;
+		gbcBanda.gridy = 2;
+		infoMainBandaPart.add(informacaoMainProd, gbcBanda);
 		// Músicos
 		
 
@@ -288,28 +283,6 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		gbc.gridy = 1;
 		cadastroPanel.add(infoBandaPart, (GridBagConstraints) gbc.clone());
 		gbc.gridwidth = 1;
-
-		// ====================================
-		// Informações da Gravadora
-		// ====================================
-		JPanel infoGravadora = new JPanel(new BorderLayout());
-		infoGravadora.setBackground(new Color(246, 247, 249));
-		infoGravadora.setPreferredSize(new Dimension(500, 180));
-		infoGravadora.setMinimumSize(new Dimension(500, 180));
-		infoGravadora.setMaximumSize(new Dimension(500, 180));
-		infoGravadora.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
-
-		JLabel lblTituloGravadora = new JLabel("Informações da Gravadora");
-		lblTituloGravadora.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
-		infoGravadora.add(lblTituloGravadora, BorderLayout.NORTH);
-
-		JPanel infoMainGravadora = new JPanel(new GridBagLayout());
-		infoMainGravadora.setBackground(new Color(246, 247, 249));
-		GridBagConstraints gbcGravadora = new GridBagConstraints();
-		gbcGravadora.insets = new Insets(5, 5, 2, 5);
-		gbcGravadora.anchor = GridBagConstraints.WEST;
-
-		// Gravadora
 		
 		// ====================================
 		// Informações do Produtor
@@ -402,13 +375,15 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		        Double preco = Double.parseDouble(txtPrecoDisco.getText());
 
 		        DiscoCompacto disco = new DiscoCompacto(
-		            ano, titulo, genero, preco, ano, null, null, null, null, null, null
+		            ano, titulo, genero, preco, ano, participantes.getCantoresSelecionados(), participantes.getMusicoSelecionados(),
+		            participantes.getCompositoresSelecionados(), creditosProducao.getGravadoraSelecionados(),creditosProducao.getProdutoresSelecionados(), creditosProducao.getEditorasSelecionados()
 		        );		            
 
+		        Date dataSelecionada1 = (Date) spinnerDataDisco.getValue();
 		        
-		        boolean sucesso = discoController.cadastrarDisco(disco);
+		        int sucesso = discoController.cadastrarDisco(disco, dataSelecionada1);
 		        
-		        if(sucesso) {
+		        if(sucesso != -1) {
 		            JOptionPane.showMessageDialog(null, "Disco cadastrado com sucesso!");
 					LocalDateTime horaAgora = LocalDateTime.now();
 					System.out.println(Sessao.getUtilizadorLogado().getNome());
@@ -435,6 +410,13 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 			countMusicos.setText("Músicos: " + participantes.musicoContador());
 			countCantores.setText("Cantores: " + participantes.cantorContador());
 		}
+		if (e.getSource() == btnProducao) {
+			creditosProducao.setVisible(true);
+			partSelecionadosProd.setText(creditosProducao.totalSelecionados() +" Membros Selecionados");
+			countProdutores.setText("Produtores: " + creditosProducao.produtorContador());
+			countGravadoras.setText("Gravadoras: " + creditosProducao.gravadoraContador());
+			countEditoras.setText("Editoras: " + creditosProducao.editoraContador());
+		}
 	}
 	
 	private void limparCampos() {
@@ -442,5 +424,17 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 	    txtPrecoDisco.setText("");
 	    spinnerDataDisco.setValue(new Date());
 	    generos.setSelectedIndex(0);
+	    participantes.desmarcarCantor();
+	    participantes.desmarcarCompositor();
+	    participantes.desmarcarMusico();
+	    partSelecionados.setText(participantes.totalSelecionados() +" Participantes Selecionados");
+	    countCompositores.setText("Compositores: " + participantes.compositorContador());
+		countMusicos.setText("Músicos: " + participantes.musicoContador());
+		countCantores.setText("Cantores: " + participantes.cantorContador());
+		
+		partSelecionadosProd.setText(creditosProducao.totalSelecionados() +" Membros Selecionados");
+		countProdutores.setText("Produtores: " + creditosProducao.produtorContador());
+		countGravadoras.setText("Gravadoras: " + creditosProducao.gravadoraContador());
+		countEditoras.setText("Editoras: " + creditosProducao.editoraContador());
 	}
 }

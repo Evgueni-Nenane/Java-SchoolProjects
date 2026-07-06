@@ -13,7 +13,7 @@ public class CompositorController {
 		this.compositorDAO = new CompositorDAO();
 	}
 	
-    public boolean cadastrarCompositor(Compositor compositor) {
+    public int cadastrarCompositor(Compositor compositor) {
         return compositorDAO.inserir(compositor);
     }
     

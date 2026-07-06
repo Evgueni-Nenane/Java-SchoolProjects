@@ -35,6 +35,37 @@ public class UtilizadorDAO {
         }
     }
     
+    public boolean atualizarFoto(String username, byte[] foto) {
+        String sql = "UPDATE Utilizador SET foto = ? WHERE UserName = ?";
+        try {
+            Connection conn = DBConnector.DBConnect();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setBytes(1, foto);
+            ps.setString(2, username);
+            ps.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public byte[] buscarFoto(String username) {
+        String sql = "SELECT foto FROM Utilizador WHERE UserName = ?";
+        try {
+            Connection conn = DBConnector.DBConnect();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getBytes("foto");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     public List<Utilizador> listarTodos() {
         List<Utilizador> utilizadores = new ArrayList<>();
         String sql = "SELECT * FROM Utilizador";

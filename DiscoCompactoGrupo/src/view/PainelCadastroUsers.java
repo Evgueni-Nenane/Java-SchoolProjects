@@ -1,5 +1,11 @@
 package view;
-
+import javax.swing.JFileChooser;
+import javax.swing.ImageIcon;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
+import java.awt.Image;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -44,11 +50,13 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 	private Logs log;
 	private JComboBox<Sexo> generoSexual;
 	JComboBox<NivelAcesso> permissao;
-	
+	private JLabel fotoLabel;
+	private byte[] fotoBytes;
+
 	public PainelCadastroUsers(UtilizadorController utilizadorController, LogsController logController) {
 		this.utilizadorController = utilizadorController;
 		this.logController = logController;
-		
+
 		JPanel fotoFormPanel = new JPanel(new BorderLayout());
 		fotoFormPanel.setBackground(Color.gray);
 
@@ -112,7 +120,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		gbc.gridx = 1;
 		gbc.gridy = 2;
 		formularioPanel.add(lblPerfis, (GridBagConstraints) gbc.clone());
-		
+
 		permissao = new JComboBox<>(NivelAcesso.values());
 		permissao.setPreferredSize(new Dimension(300, 30));
 		gbc.gridx = 1;
@@ -133,7 +141,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		gbc.gridwidth = 2;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		formularioPanel.add(txtUser_Name, (GridBagConstraints) gbc.clone());
-		
+
 		// E-mail
 		JLabel lblEmail = new JLabel("E-mail Corporativo");
 		gbc.anchor = GridBagConstraints.WEST;
@@ -164,7 +172,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		txtContacto.setPreferredSize(new Dimension(0, 30));
 		formularioPanel.add(txtContacto, (GridBagConstraints) gbc.clone());
 
-		// Gerador da Porra da Senha
+		// Gerador da Senha
 		JLabel lblSenha = new JLabel("Password Inicial");
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.gridx = 0;
@@ -218,14 +226,14 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 
 		// Foto em Si
 
-		JLabel foto = new JLabel();
-		foto.setPreferredSize(new Dimension(150, 150));
-		foto.setMaximumSize(new Dimension(150, 150));
-		foto.setMinimumSize(new Dimension(150, 150));
-		foto.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-		foto.setAlignmentX(Component.CENTER_ALIGNMENT);
+		fotoLabel = new JLabel();
+		fotoLabel.setPreferredSize(new Dimension(150, 150));
+		fotoLabel.setMaximumSize(new Dimension(150, 150));
+		fotoLabel.setMinimumSize(new Dimension(150, 150));
+		fotoLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		fotoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		fotoPanel.add(Box.createVerticalStrut(10));
-		fotoPanel.add(foto);
+		fotoPanel.add(fotoLabel);
 
 		// Botao de Escolher foto
 
@@ -286,78 +294,123 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	    if(e.getSource() == btnCadastrar) {
-	    	
-            // Validação
-            if(txtNome.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Por favor insira o nome do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if(txtApelido.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Por favor insira o apelido do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if(txtUser_Name.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Por favor insira o username do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if(txtEmail.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Por favor insira o email do utilzador!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if(txtSenha.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Por favor gere a senha!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            boolean firstAccess = true;
-	        Utilizador utilizador = new Utilizador(txtNome.getText(), txtApelido.getText(), txtUser_Name.getText(), (Sexo) generoSexual.getSelectedItem(), (NivelAcesso) permissao.getSelectedItem(),
-	        	    txtEmail.getText(), txtContacto.getText(), txtSenha.getText(), firstAccess);		            
 
+		//escolher foto
+		if (e.getSource() == btnEscolherFoto) {
+			JFileChooser fileChooser = new JFileChooser();
+			fileChooser.setFileFilter(new FileNameExtensionFilter("Imagens", "jpg", "jpeg", "png"));
+			int resultado = fileChooser.showOpenDialog(this);
+			if (resultado == JFileChooser.APPROVE_OPTION) {
+				try {
+					File ficheiro = fileChooser.getSelectedFile();
+					FileInputStream fis = new FileInputStream(ficheiro);
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					byte[] buffer = new byte[1024];
+					int lidos;
+					while ((lidos = fis.read(buffer)) != -1) {
+						baos.write(buffer, 0, lidos);
+					}
+					fis.close();
+					fotoBytes = baos.toByteArray();
 
-	        // 3. Chamar o controller
-	        boolean sucesso = utilizadorController.cadastrarUtilizador(utilizador);
-	        
-	        if(sucesso) {
-	        	try {
-	        		LocalDateTime horaAgora = LocalDateTime.now();
-	        		log = new Logs(
-	        				Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-	        				Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
-	        				Sessao.getUtilizadorLogado().getEmail(), "Cadastrar Utilizador", horaAgora);
-	        		logController.inserirLog(log);
-	        		
+					ImageIcon icon = new ImageIcon(ficheiro.getAbsolutePath());
+					Image imagemEscalada = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+					fotoLabel.setIcon(new ImageIcon(imagemEscalada));
+				} catch (IOException ex) {
+					JOptionPane.showMessageDialog(this, "Erro ao carregar a imagem: " + ex.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			return;
+		}
+
+		if (e.getSource() == btnRemoverFoto) {
+			fotoBytes = null;
+			fotoLabel.setIcon(null);
+			return;
+		}
+
+		if (e.getSource() == btnCadastrar) {
+
+			// Validação
+			if (txtNome.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Por favor insira o nome do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			if (txtApelido.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Por favor insira o apelido do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			if (txtUser_Name.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Por favor insira o username do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			if (txtEmail.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Por favor insira o email do utilzador!", "Erro", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			if (txtSenha.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Por favor gere a senha!", "Erro", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			boolean firstAccess = true;
+			Utilizador utilizador = new Utilizador(txtNome.getText(), txtApelido.getText(), txtUser_Name.getText(),
+					(Sexo) generoSexual.getSelectedItem(), (NivelAcesso) permissao.getSelectedItem(),
+					txtEmail.getText(), txtContacto.getText(), txtSenha.getText(), firstAccess);
+
+			// Chamar o controller
+			boolean sucesso = utilizadorController.cadastrarUtilizador(utilizador);
+
+			if (sucesso) {
+				try {
+					LocalDateTime horaAgora = LocalDateTime.now();
+					log = new Logs(
+							Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+							Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+							Sessao.getUtilizadorLogado().getEmail(), "Cadastrar Utilizador", horaAgora);
+					logController.inserirLog(log);
 					FicheiroTxt.guardarTxt(utilizador);
+
+					if (fotoBytes != null) {
+						utilizadorController.atualizarFoto(utilizador.getUser_name(), fotoBytes);
+					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-	            JOptionPane.showMessageDialog(null, "Utilizador cadastrado com sucesso!");
-	            limparCampos();
-	        } else {
-	            JOptionPane.showMessageDialog(null, "Erro ao cadastrar utilizador!");
-	        }
-	    }
-	    if (e.getSource() == btnGerarSenha) {
-	    	if(txtNome.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Por favor insira o nome do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if(txtApelido.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Por favor insira o apelido do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-	    	String senha = txtUser_Name.getText().charAt(0) + "" + txtApelido.getText().charAt(2) + txtApelido.getText() + "258";
-	    	txtSenha.setText(senha);
-	    }
+				JOptionPane.showMessageDialog(null, "Utilizador cadastrado com sucesso!");
+				limparCampos();
+			} else {
+				JOptionPane.showMessageDialog(null, "Erro ao cadastrar utilizador!");
+			}
+			return;
+		}
+
+		if (e.getSource() == btnGerarSenha) {
+			if (txtNome.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Por favor insira o nome do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			if (txtApelido.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Por favor insira o apelido do utilizador!", "Erro", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+			String apelido = txtApelido.getText();
+			char terceiraLetra = apelido.length() >= 3 ? apelido.charAt(2) : apelido.charAt(apelido.length() - 1);
+			String senha = txtUser_Name.getText().charAt(0) + "" + terceiraLetra + apelido + "258";
+			txtSenha.setText(senha);
+		}
 	}
-	
+
 	private void limparCampos() {
-	    txtNome.setText("");
-	    txtApelido.setText("");
-	    txtUser_Name.setText("");
-	    txtEmail.setText("");
-	    txtContacto.setText("");
-	    txtSenha.setText("");
-	    permissao.setSelectedIndex(0);
-	    generoSexual.setSelectedIndex(0);
+		txtNome.setText("");
+		txtApelido.setText("");
+		txtUser_Name.setText("");
+		txtEmail.setText("");
+		txtContacto.setText("");
+		txtSenha.setText("");
+		permissao.setSelectedIndex(0);
+		generoSexual.setSelectedIndex(0);
+		fotoBytes = null;
+		fotoLabel.setIcon(null);
 	}
 }

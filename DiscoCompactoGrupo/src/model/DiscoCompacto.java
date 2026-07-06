@@ -3,8 +3,9 @@ package model;
 import java.time.LocalDate;
 import java.util.List;
 
-public class DiscoCompacto {
 
+public class DiscoCompacto {
+		
     private int codigoDisco;
     private String titulo;
     private double preco;
@@ -41,7 +42,11 @@ public class DiscoCompacto {
 
     
     
-    public int getCodigoDisco() {
+    public DiscoCompacto() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public int getCodigoDisco() {
 		return codigoDisco;
 	}
 
@@ -134,4 +139,5 @@ public class DiscoCompacto {
     	int anoActual = hoje.getYear();
     	return anoActual - ano;
     };
+    
 }

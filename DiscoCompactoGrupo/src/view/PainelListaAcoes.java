@@ -134,9 +134,11 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 		suspenderPanel.add(scroll, BorderLayout.CENTER);
         btnRemover = new JButton("Remover Selecionado");
         btnRemover.addActionListener(this);
+        
         btnResetSenha = new JButton("Resetar Senha");
         btnResetSenha.addActionListener(this);
 
+        
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         painelBotoes.add(btnRemover);
         painelBotoes.add(btnResetSenha);
@@ -224,7 +226,6 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 	                			} catch (IOException e1) {
 	                				e1.printStackTrace();
 	                			}
-	                			JOptionPane.showMessageDialog(null, "Utilizador cadastrado com sucesso!");
 	        	        } else {
 	        	            JOptionPane.showMessageDialog(null, "Erro ao cadastrar utilizador!");
 	        	        }
@@ -235,5 +236,6 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 	                }
 	            }
 		}	
+
 	}
  }

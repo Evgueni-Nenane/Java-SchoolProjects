@@ -112,6 +112,33 @@ public class Participantes extends JDialog implements ActionListener, MouseListe
 		boxTitleContainer.add(boxLabelComp);
 		boxTitleContainer.add(accoesComp);
 		
+		pesquisarComp.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+
+		    private void filtrar() {
+		        String texto = pesquisarComp.getText().toLowerCase().trim();
+		        tabelaCompModel.setRowCount(0);
+
+		        List<Compositor> compositores = compositorController.listarCompositor();
+		        for (Compositor c : compositores) {
+		            if (texto.isEmpty() ||
+		                c.getNomeCompositor().toLowerCase().contains(texto) ||
+		                c.getEmailCompositor().toLowerCase().contains(texto) || 
+		            	c.getApelidoCompositor().toLowerCase().contains(texto)) {
+
+		                tabelaCompModel.addRow(new Object[]{
+		                		compositoresSelecionados.contains(c.getCodigoCompositor()),
+		                	    c.getNomeCompositor() + " " + c.getApelidoCompositor(),
+		                	    "Compositor",
+		                	    c.getCodigoCompositor()
+		                });
+		            }
+		        }
+		    }
+		});
+		
 		box1.add(boxTitleContainer, BorderLayout.NORTH);
 		
 		// Parte do centro da box
@@ -202,6 +229,32 @@ public class Participantes extends JDialog implements ActionListener, MouseListe
 		boxTitleContainerMusic.add(boxLabelMusic);
 		boxTitleContainerMusic.add(accoesMusico);
 				
+		pesquisarMusico.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+
+		    private void filtrar() {
+		        String texto = pesquisarMusico.getText().toLowerCase().trim();
+		        tabelaMusicModel.setRowCount(0);
+
+		        List<Musico> musicos = musicoController.listarMusicos();
+		        for (Musico m : musicos) {
+		            if (texto.isEmpty() ||
+		                m.getNomeMusico().toLowerCase().contains(texto) ||
+		                m.getEmailMusico().toLowerCase().contains(texto) || 
+		            	m.getApelidoMusico().toLowerCase().contains(texto)) {
+
+		                tabelaMusicModel.addRow(new Object[]{
+		                		musicosSelecionados.contains(m.getCodigoMusico()),
+		                	    m.getNomeMusico() + " " + m.getApelidoMusico(),
+		                	    m.getInstrumento(),
+		                	    m.getCodigoMusico()
+		                });
+		            }
+		        }
+		    }
+		});
 		box2.add(boxTitleContainerMusic, BorderLayout.NORTH);
 		// Parte do centro da box
 		
@@ -292,6 +345,33 @@ public class Participantes extends JDialog implements ActionListener, MouseListe
 			
 		boxTitleContainerCantor.add(boxLabelCantor);
 		boxTitleContainerCantor.add(accoesCantor);
+		
+		pesquisarCantor.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		    public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+
+		    private void filtrar() {
+		        String texto = pesquisarCantor.getText().toLowerCase().trim();
+		        tabelaCantorModel.setRowCount(0);
+
+		        List<Cantor> cantores = cantorController.listarCantor();
+		        for (Cantor ca : cantores) {
+		            if (texto.isEmpty() ||
+		                ca.getNomeCantor().toLowerCase().contains(texto) ||
+		                ca.getEmailCantor().toLowerCase().contains(texto) || 
+		            	ca.getApelidoCantor().toLowerCase().contains(texto)) {
+
+		                tabelaCantorModel.addRow(new Object[]{
+		                		cantoresSelecionados.contains(ca.getCodigoCantor()),
+		                	    ca.getNomeCantor() + " " + ca.getApelidoCantor(),
+		                	    "Vocal",
+		                	    ca.getCodigoCantor()
+		                });
+		            }
+		        }
+		    }
+		});
 		box3.add(boxTitleContainerCantor, BorderLayout.NORTH);
 				
 		// Parte do centro da box
@@ -407,9 +487,12 @@ public class Participantes extends JDialog implements ActionListener, MouseListe
 			desmarcarCantor();
 		}
 		if (e.getSource() == btnSalvar) {
-			
+			this.dispose();
 		}
 		if (e.getSource() == btnCancelar) {
+			desmarcarCompositor();
+			desmarcarMusico();
+			desmarcarCantor();
 			this.dispose();
 		}
 	}

@@ -2,6 +2,7 @@ package model;
 
 public class Utilizador {
 	private int codigo;
+	private byte[] foto;
 	private String nome;
 	private String nomeCompleto;
 	private String apelido;
@@ -36,9 +37,11 @@ public class Utilizador {
 	    this.email = email;
 	    this.contacto = contacto;
 	}
-	public Utilizador(String nome, String apelido, NivelAcesso perfil, String email) {
+	public Utilizador(byte[] foto, String nome, String apelido, String username, NivelAcesso perfil, String email) {
+		this.foto = foto;
 		this.nome = nome;
 		this.apelido = apelido;
+		this.user_name = username;
 		this.perfil = perfil;
 		this.email = email;
 	}
@@ -108,6 +111,12 @@ public class Utilizador {
 	}
 	public void setPrimeiroAcesso(boolean primeiroAcesso) {
 		this.primeiroAcesso = primeiroAcesso;
+	}
+	public byte[] getFoto() {
+		return foto;
+	}
+	public void setFoto(byte[] foto) {
+		this.foto = foto;
 	}
 	
 	public String toString() {

@@ -23,7 +23,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel painelPrincipal;
 
-	private JButton btnRegistar, btnListar, btnBandas, btnArtistas;
+	private JButton btnRegistar, btnBandas, btnArtistas;
 	private JButton btnEstatistica, btnExportar, btnUtilizador, btnLogs, btnSair;
 
 	private CardLayout cardPrincipal;
@@ -110,38 +110,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		btnRegistar.addActionListener(this);
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
-		btnListar = new JButton("Listar");
-		btnListar.setAlignmentX(Component.CENTER_ALIGNMENT);
-		sidebarPanel.add(btnListar);
-		btnListar.setPreferredSize(new Dimension(130, 30));
-		btnListar.setMinimumSize(new Dimension(130, 30));
-		btnListar.setMaximumSize(new Dimension(130, 30));
-		sidebarPanel.add(Box.createVerticalStrut(10));
-
-		// Menu Intervenientes
-		JLabel txtIntervenientes = new JLabel("Intervenientes");
-		sidebarPanel.add(txtIntervenientes);
-		txtIntervenientes.setAlignmentX(Component.CENTER_ALIGNMENT);
-		sidebarPanel.add(Box.createVerticalStrut(10));
-
-		btnBandas = new JButton("Banda");
-		btnBandas.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnBandas.addActionListener(this);
-		sidebarPanel.add(btnBandas);
-		btnBandas.setPreferredSize(new Dimension(130, 30));
-		btnBandas.setMinimumSize(new Dimension(130, 30));
-		btnBandas.setMaximumSize(new Dimension(130, 30));
-		sidebarPanel.add(Box.createVerticalStrut(10));
-
-		btnArtistas = new JButton("Editora");
-		btnArtistas.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnArtistas.addActionListener(this);
-		sidebarPanel.add(btnArtistas);
-		btnArtistas.setPreferredSize(new Dimension(130, 30));
-		btnArtistas.setMinimumSize(new Dimension(130, 30));
-		btnArtistas.setMaximumSize(new Dimension(130, 30));
-		sidebarPanel.add(Box.createVerticalStrut(10));
-
 		// Menu Relatórios
 		JLabel txtRelatorios = new JLabel("Relatórios");
 		sidebarPanel.add(txtRelatorios);
@@ -218,10 +186,13 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		infoUser.setLayout(new BoxLayout(infoUser, BoxLayout.Y_AXIS));
 
 		JLabel lblNomeUser = new JLabel();
-		lblNomeUser.setText(Sessao.getUtilizadorLogado().getNome());
+		lblNomeUser.setText(Sessao.getUtilizadorLogado().getNome() + Sessao.getUtilizadorLogado().getApelido());
 		JLabel lblEmailUser = new JLabel();
 		lblEmailUser.setText(Sessao.getUtilizadorLogado().getPerfil().name());
 		
+		ImageIcon icon = new ImageIcon(Sessao.getUtilizadorLogado().getFoto());
+		Image imagemEscalada = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+		fotoUser.setIcon(new ImageIcon(imagemEscalada));
 		infoUser.add(lblNomeUser);
 		infoUser.add(lblEmailUser);
 
@@ -302,21 +273,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
 					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel de discos", horaAgora);
 			logsController.inserirLog(log);
-		}
-		if (e.getSource() == btnListar) {
-			cardPrincipal.show(painelCentral, "Discos");
-		}
-//		if (e.getSource() == btnBandas) {
-//			cardPrincipal.show(painelCentral, "Banda e Participantes");
-//			LocalDateTime horaAgora = LocalDateTime.now();
-//			log = new Logs(
-//					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-//					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
-//					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel de banda e artistas", horaAgora);
-//			logsController.inserirLog(log);
-//		}
-		if (e.getSource() == btnArtistas) {
-			new CadastrarCompositorDialog().setVisible(true);
 		}
 		if (e.getSource() == btnSair) {
 			LocalDateTime horaAgora = LocalDateTime.now();

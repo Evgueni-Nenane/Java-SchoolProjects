@@ -22,7 +22,6 @@ public class LogsDAO {
 			ps.setString(5, log.getAccao());
 			ps.setObject(6, log.getDataHora());
 			ps.executeUpdate();
-			System.out.println("Logado com sucesso");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();

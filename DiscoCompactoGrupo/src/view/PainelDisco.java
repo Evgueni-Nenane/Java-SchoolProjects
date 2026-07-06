@@ -72,7 +72,7 @@ public class PainelDisco extends JPanel implements ActionListener, MouseListener
 
 		cardPanel.add(new CadastrarDiscos(discoController, editoraController, gravadoraController, logController), "Cadastrar");
 		cardPanel.add(new ListarPainelCD(discoController), "Listar");
-		cardPanel.add(new RemoverDiscos(discoController), "Remover");
+		cardPanel.add(new ListaAcoesDiscos(discoController), "Remover");
 
 		menuPrincipal.add(topbarPrincipal, BorderLayout.NORTH);
 		menuPrincipal.add(cardPanel, BorderLayout.CENTER);

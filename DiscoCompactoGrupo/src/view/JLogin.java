@@ -132,7 +132,7 @@ public class JLogin extends JFrame {
                 	dispose();
                     
                 	JOptionPane.showMessageDialog(JLogin.this, "Bem-vindo, " + usuario + "!");
-	                if (LoginDAO.isPrimeiroAcesso(usuario)) {
+	                if (LoginDAO.isPrimeiroAcesso(usuario, senha)) {
 	                    AlterarSenha alterarSenha = new AlterarSenha(usuario, senha);
 	                    alterarSenha.setVisible(true);
 	                } else {

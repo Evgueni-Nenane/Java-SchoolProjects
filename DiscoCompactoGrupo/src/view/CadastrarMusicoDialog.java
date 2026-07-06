@@ -134,8 +134,8 @@ public class CadastrarMusicoDialog extends JDialog implements ActionListener {
             }
             
             Musico Musico = new Musico(txtNome.getText(), txtApelido.getText(), txtInstrumento.getText(), txtEmail.getText());
-            boolean sucesso = musicoController.cadastrarMusico(Musico);
-            if(sucesso) {
+            int sucesso = musicoController.cadastrarMusico(Musico);
+            if(sucesso != -1) {
     			LocalDateTime horaAgora = LocalDateTime.now();
     			log = new Logs(
     					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),

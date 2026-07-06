@@ -11,9 +11,7 @@ import java.awt.event.MouseListener;
 import java.time.LocalDateTime;
 
 import javax.swing.JButton;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
 import controller.LogsController;
 import controller.UtilizadorController;
 import model.Logs;
@@ -24,7 +22,7 @@ public class PainelUtilizadores extends JPanel implements ActionListener, MouseL
 	private static final long serialVersionUID = 1L;
 	private CardLayout cardLayout;
 	private JPanel cardPanel;
-	private JButton btnCadastrarUsers, btnSuspenderUser, btnListarUsers;
+	private JButton btnCadastrarUsers, btnSuspenderUser;
 	private UtilizadorController utilizadorController;
 	private LogsController logController;
 	private Logs log;
@@ -45,14 +43,12 @@ public class PainelUtilizadores extends JPanel implements ActionListener, MouseL
 		btnCadastrarUsers = new JButton("Cadastrar Utilizadores");
 		btnCadastrarUsers.addActionListener(this);
 
-		btnListarUsers = new JButton("Listar Utilizadores");
-		btnListarUsers.addActionListener(this);
 
-		btnSuspenderUser = new JButton("Suspender Utilizador");
+
+		btnSuspenderUser = new JButton("Informações de Utilizador");
 		btnSuspenderUser.addActionListener(this);
 
 		mainTopBar.add(btnCadastrarUsers);
-		mainTopBar.add(btnListarUsers);
 		mainTopBar.add(btnSuspenderUser);
 		mainTopBar.setBackground(new Color(254, 254, 254));
 
@@ -60,7 +56,6 @@ public class PainelUtilizadores extends JPanel implements ActionListener, MouseL
 		mainPanel.add(cardPanel, BorderLayout.CENTER);
 
 		cardPanel.add(new PainelCadastroUsers(utilizadorController, logController), "Cadastro");
-		cardPanel.add(new PainelListaUsers(utilizadorController), "Lista");
 		cardPanel.add(new PainelListaAcoes(utilizadorController), "Suspender User");
 
 		this.setLayout(new BorderLayout());
@@ -107,15 +102,6 @@ public class PainelUtilizadores extends JPanel implements ActionListener, MouseL
 					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
 					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
 					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel cadastrar users", horaAgora);
-			logController.inserirLog(log);
-		}
-		if (e.getSource() == btnListarUsers) {
-			cardLayout.show(cardPanel, "Lista");
-			LocalDateTime horaAgora2 = LocalDateTime.now();
-			log = new Logs(
-					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
-					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel listar users", horaAgora2);
 			logController.inserirLog(log);
 		}
 		if (e.getSource() == btnSuspenderUser) {

@@ -1,84 +1,117 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
+
+import controller.GravadoraController;
+import controller.LogsController;
+import model.Gravadora;
+import model.Logs;
+import model.Sessao;
+
 
 public class CadastrarGravadoraDialog extends JDialog implements ActionListener {
 
     private static final long serialVersionUID = 1L;
     private JTextField txtNome, txtEmail, txtEndereco, txtContacto;
-    private JButton btnSalvar, btnCancelar;
-
+    private JButton btnSalvar;
+    private GravadoraController gravadoraController;
+    private LogsController logController;
+    private Logs log;
+    
     public CadastrarGravadoraDialog() {
+    	this.gravadoraController = new GravadoraController();
+    	this.logController = new LogsController();
+    	
         setTitle("Cadastrar Gravadora");
-        setSize(500, 330);
+        setSize(560, 360);
         setLocationRelativeTo(null);
         setModal(true);
         setLayout(new BorderLayout());
 
+        // Título da cena
+        JPanel titulo = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        
+        JLabel tituloDialog = new JLabel("Cadastro de Gravadora");
+        
+        titulo.add(tituloDialog);
+        
+        add(titulo, BorderLayout.NORTH);
+        
         // Formulário
         JPanel form = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 10, 5, 10);
-        gbc.anchor = GridBagConstraints.WEST;
+        form.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
-        gbc.gridx = 0; gbc.gridy = 0;
-        form.add(new JLabel("Nome da Gravadora:"), gbc);
+        GridBagConstraints gbco = new GridBagConstraints();
+        gbco.insets = new Insets(5,5,5,5);
+        gbco.gridx = 0;
+        gbco.gridy = 0;
+        gbco.anchor = GridBagConstraints.WEST;
+        gbco.fill = GridBagConstraints.BOTH;
+        
+        JPanel nomePanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5,5,5,5);        
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        
+        nomePanel.add(new JLabel("Nome da Gravadora: "), gbc);
         txtNome = new JTextField();
         txtNome.setPreferredSize(new Dimension(250, 30));
         txtNome.setMinimumSize(new Dimension(250, 30));
         txtNome.setMaximumSize(new Dimension(250, 30));
-        gbc.gridx = 0; gbc.gridy = 1;
-        form.add(txtNome, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        nomePanel.add(txtNome, gbc);        
+        form.add(nomePanel, gbco);
+        
 
-        gbc.gridx = 0; gbc.gridy = 2;
-        form.add(new JLabel("Email:"), gbc);
-        txtEmail = new JTextField();
-        txtEmail.setPreferredSize(new Dimension(250, 30));
-        txtEmail.setMinimumSize(new Dimension(250, 30));
-        txtEmail.setMaximumSize(new Dimension(250, 30));
-        gbc.gridx = 0; gbc.gridy = 3;
-        form.add(txtEmail, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 4;
-        form.add(new JLabel("Endereço:"), gbc);
-        txtEndereco = new JTextField();
-        txtEndereco.setPreferredSize(new Dimension(250, 30));
-        txtEndereco.setMinimumSize(new Dimension(250, 30));
-        txtEndereco.setMaximumSize(new Dimension(250, 30));
-        gbc.gridx = 0; gbc.gridy = 5;
-        form.add(txtEndereco, gbc);
-
-        gbc.gridx = 0; gbc.gridy = 6;
-        form.add(new JLabel("Contacto:"), gbc);
+        gbco.gridx = 0;
+        gbco.gridy = 2;
+        form.add(new JLabel("Contacto da Gravadora"), gbco);
         txtContacto = new JTextField();
         txtContacto.setPreferredSize(new Dimension(250, 30));
         txtContacto.setMinimumSize(new Dimension(250, 30));
         txtContacto.setMaximumSize(new Dimension(250, 30));
-        gbc.gridx = 0; gbc.gridy = 7;
-        form.add(txtContacto, gbc);
+        gbco.gridx = 0;
+        gbco.gridy = 3;
+        form.add(txtContacto, gbco);
+        
+        gbco.gridx = 0;
+        gbco.gridy = 4;
+        form.add(new JLabel("Email da Gravadora"), gbco);
+        txtEmail = new JTextField();
+        txtEmail.setPreferredSize(new Dimension(250, 30));
+        txtEmail.setMinimumSize(new Dimension(250, 30));
+        txtEmail.setMaximumSize(new Dimension(250, 30));
+        gbco.gridx = 0;
+        gbco.gridy = 5;
+        form.add(txtEmail, gbco);
+        
+
+        gbco.gridx = 0;
+        gbco.gridy = 6;
+        form.add(new JLabel("Endereço da Gravadora"), gbco);
+        txtEndereco = new JTextField();
+        txtEndereco.setPreferredSize(new Dimension(250, 30));
+        txtEndereco.setMinimumSize(new Dimension(250, 30));
+        txtEndereco.setMaximumSize(new Dimension(250, 30));
+        gbco.gridx = 0;
+        gbco.gridy = 7;
+        form.add(txtEndereco, gbco);
 
         add(form, BorderLayout.CENTER);
 
-        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnSalvar = new JButton("Salvar");
+        // Botões
+        JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        btnSalvar = new JButton("Cadastrar");
         btnSalvar.addActionListener(this);
-        btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener(this);
-        painelBotoes.add(btnCancelar);
+        btnSalvar.setPreferredSize(new Dimension(130, 30));
         painelBotoes.add(btnSalvar);
         add(painelBotoes, BorderLayout.SOUTH);
     }
@@ -89,12 +122,27 @@ public class CadastrarGravadoraDialog extends JDialog implements ActionListener 
             if(txtNome.getText().trim().isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Nome obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
                 return;
+                }
+            if(txtEmail.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Email obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
+                return;
             }
-            JOptionPane.showMessageDialog(this, "Gravadora cadastrada com sucesso!");
-            dispose();
+            
+            Gravadora gravadora = new Gravadora(txtNome.getText(), txtContacto.getText(), txtEmail.getText(), txtEndereco.getText());
+            int sucesso = gravadoraController.cadastrarGravadora(gravadora);
+            if(sucesso != -1) {
+    			LocalDateTime horaAgora = LocalDateTime.now();
+    			log = new Logs(
+    					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+    					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+    					Sessao.getUtilizadorLogado().getEmail(), "Cadastrou Gravadora no sistema", horaAgora);
+    			logController.inserirLog(log);
+                JOptionPane.showMessageDialog(this, "Gravadora cadastrada com sucesso!");
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Erro ao cadastrar Gravadora!");
+            }
         }
-        if(e.getSource() == btnCancelar) {
-            dispose();
-        }
-    }
+
+    }    
 }

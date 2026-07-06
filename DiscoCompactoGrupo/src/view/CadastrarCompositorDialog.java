@@ -134,8 +134,8 @@ public class CadastrarCompositorDialog extends JDialog implements ActionListener
             }
             
             Compositor compositor = new Compositor(txtNome.getText(), txtApelido.getText(), txtContacto.getText(), txtEmail.getText());
-            boolean sucesso = compositorController.cadastrarCompositor(compositor);
-            if(sucesso) {
+            int sucesso = compositorController.cadastrarCompositor(compositor);
+            if(sucesso != -1) {
     			LocalDateTime horaAgora = LocalDateTime.now();
     			log = new Logs(
     					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
