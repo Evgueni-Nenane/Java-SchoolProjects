@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,7 +40,6 @@ import controller.MusicoController;
 import model.DiscoCompacto;
 import model.Editora;
 import model.Generos;
-import model.Gravadora;
 import model.Logs;
 import model.Sessao;
 
@@ -50,6 +50,7 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 	
 	private JButton btnSalvar, btnLimpar, btnBanda;
 	private JTextField txtNomeDisco, txtPrecoDisco;
+	private JLabel partSelecionados, countCompositores,countMusicos, countCantores;
 	private JSpinner spinnerDataDisco;
 	private JComboBox<Generos> generos;
 	private CompositorController compositorController;
@@ -57,6 +58,7 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 	private CantorController cantorController;
 	private EditoraController editoraController;
 	private GravadoraController gravadoraController;
+	private Participantes participantes;
 	private Logs log;
 	private LogsController logController;
 	
@@ -69,6 +71,7 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		compositorController = new CompositorController();
 		musicoController = new MusicoController();
 		cantorController = new CantorController();
+		participantes = new Participantes(compositorController, musicoController, cantorController);
 		
 		
 		JPanel painelPrincipal = new JPanel(new BorderLayout());
@@ -225,7 +228,7 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		infoBandaPart.setBackground(new Color(246, 247, 249));
 		infoBandaPart.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
 
-		JLabel lblTituloBandaPart = new JLabel("Informações da Banda e Participantes");
+		JLabel lblTituloBandaPart = new JLabel("Créditos do Disco");
 		lblTituloBandaPart.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
 		infoBandaPart.add(lblTituloBandaPart, BorderLayout.NORTH);
 
@@ -238,7 +241,7 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		// Banda
 		gbcBanda.gridx = 0;
 		gbcBanda.gridy = 0;
-		infoMainBandaPart.add(new JLabel("Banda"), (GridBagConstraints) gbcBanda.clone());
+		infoMainBandaPart.add(new JLabel("Participantes"), (GridBagConstraints) gbcBanda.clone());
 		btnBanda = new JButton("Selecionar Participantes");
 		btnBanda.addActionListener(this);
 		btnBanda.setPreferredSize(new Dimension(450, 25));
@@ -249,40 +252,35 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		infoMainBandaPart.add(btnBanda, (GridBagConstraints) gbcBanda.clone());
 
 		// Cantor
-		gbcBanda.gridx = 1;
-		gbcBanda.gridy = 0;
-		infoMainBandaPart.add(new JLabel("Cantor da Banda"), (GridBagConstraints) gbcBanda.clone());
-		JComboBox<Generos> cantor = new JComboBox<>(Generos.values());
-		cantor.setPreferredSize(new Dimension(450, 25));
-		cantor.setMinimumSize(new Dimension(450, 25));
-		cantor.setMaximumSize(new Dimension(450, 25));
-		gbcBanda.gridx = 1;
-		gbcBanda.gridy = 1;
-		infoMainBandaPart.add(cantor, (GridBagConstraints) gbcBanda.clone());
+		JPanel informacaoMain = new JPanel(new BorderLayout());
+		informacaoMain.setBackground(Color.WHITE);
+		informacaoMain.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		informacaoMain.setPreferredSize(new Dimension(450, 70));
+		informacaoMain.setMinimumSize(new Dimension(450, 70));
+		informacaoMain.setMaximumSize(new Dimension(450, 70));
+		partSelecionados = new JLabel(participantes.totalSelecionados() +" Participantes Selecionados");
+		
+		JPanel innerInfo = new JPanel(new GridLayout(1, 3, 5, 5));
+		
+		countCompositores = new JLabel("Compositores: " + participantes.compositorContador());
+		countMusicos = new JLabel("Músicos: " + participantes.musicoContador());
+		countCantores = new JLabel("Cantores: " + participantes.cantorContador());
+		
+		innerInfo.add(countCompositores);
+		innerInfo.add(countMusicos);
+		innerInfo.add(countCantores);
+		
+		informacaoMain.add(partSelecionados, BorderLayout.NORTH);
+		informacaoMain.add(innerInfo, BorderLayout.CENTER);
+		gbcBanda.gridx = 0;
+		gbcBanda.gridy = 2;
+		infoMainBandaPart.add(informacaoMain, gbcBanda);
 
 		// Compositor
-		gbcBanda.gridx = 0;
-		gbcBanda.gridy = 2;
-		infoMainBandaPart.add(new JLabel("Compositor da Banda"), (GridBagConstraints) gbcBanda.clone());
-		JComboBox<Generos> compositor = new JComboBox<>(Generos.values());
-		compositor.setPreferredSize(new Dimension(450, 25));
-		compositor.setMinimumSize(new Dimension(450, 25));
-		compositor.setMaximumSize(new Dimension(450, 25));
-		gbcBanda.gridx = 0;
-		gbcBanda.gridy = 3;
-		infoMainBandaPart.add(compositor, (GridBagConstraints) gbcBanda.clone());
+		
 
 		// Músicos
-		gbcBanda.gridx = 1;
-		gbcBanda.gridy = 2;
-		infoMainBandaPart.add(new JLabel("Músicos da Banda"), (GridBagConstraints) gbcBanda.clone());
-		JComboBox<Generos> musicos = new JComboBox<>(Generos.values());
-		musicos.setPreferredSize(new Dimension(450, 25));
-		musicos.setMinimumSize(new Dimension(450, 25));
-		musicos.setMaximumSize(new Dimension(450, 25));
-		gbcBanda.gridx = 1;
-		gbcBanda.gridy = 3;
-		infoMainBandaPart.add(musicos, (GridBagConstraints) gbcBanda.clone());
+		
 
 		infoBandaPart.add(infoMainBandaPart, BorderLayout.CENTER);
 		gbc.gridwidth = 2;
@@ -312,87 +310,16 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		gbcGravadora.anchor = GridBagConstraints.WEST;
 
 		// Gravadora
-		gbcGravadora.gridx = 0;
-		gbcGravadora.gridy = 0;
-		infoMainGravadora.add(new JLabel("Gravadora"), (GridBagConstraints) gbcGravadora.clone());
-		JTextField gravadora = new JTextField();
-		gravadora.setPreferredSize(new Dimension(220, 25));
-		gravadora.setMinimumSize(new Dimension(220, 25));
-		gravadora.setMaximumSize(new Dimension(220, 25));
-		gbcGravadora.gridx = 0;
-		gbcGravadora.gridy = 1;
-		infoMainGravadora.add(gravadora, (GridBagConstraints) gbcGravadora.clone());
-
-
-		// Escolher
-		gbcGravadora.gridx = 1;
-		gbcGravadora.gridy = 0;
-		infoMainGravadora.add(new JLabel("Escolher Gravadora"), (GridBagConstraints) gbcGravadora.clone());
-		JComboBox<Gravadora> gravadora1 = new JComboBox<>();
-		List<Gravadora> gravadoras = gravadoraController.listarGravadoras();
-		for(Gravadora e : gravadoras) {
-		    gravadora1.addItem(e);
-		}
-		gravadora1.setPreferredSize(new Dimension(220, 25));
-		gravadora1.setMinimumSize(new Dimension(220, 25));
-		gravadora1.setMaximumSize(new Dimension(220, 25));
-		gbcGravadora.gridx = 1;
-		gbcGravadora.gridy = 1;
-		infoMainGravadora.add(gravadora1, (GridBagConstraints) gbcGravadora.clone());
-
 		
-		// Endereço
-		gbcGravadora.gridx = 0;
-		gbcGravadora.gridy = 2;
-		infoMainGravadora.add(new JLabel("Endereço da Gravadora"), (GridBagConstraints) gbcGravadora.clone());
-		JTextField txtEnderecoGravadora = new JTextField();
-		txtEnderecoGravadora.setPreferredSize(new Dimension(480, 25));
-		txtEnderecoGravadora.setMinimumSize(new Dimension(480, 25));
-		txtEnderecoGravadora.setMaximumSize(new Dimension(480, 25));
-		gbcGravadora.gridwidth = 2;
-		gbcGravadora.gridx = 0;
-		gbcGravadora.gridy = 3;
-		infoMainGravadora.add(txtEnderecoGravadora, (GridBagConstraints) gbcGravadora.clone());
-		gbcGravadora.gridwidth = 1;
-
-		// Email
-		gbcGravadora.gridx = 0;
-		gbcGravadora.gridy = 4;
-		infoMainGravadora.add(new JLabel("E-mail da Gravadora"), (GridBagConstraints) gbcGravadora.clone());
-		JTextField txtEmailGravadora = new JTextField();
-		txtEmailGravadora.setPreferredSize(new Dimension(220, 25));
-		txtEmailGravadora.setMinimumSize(new Dimension(220, 25));
-		txtEmailGravadora.setMaximumSize(new Dimension(220, 25));
-		gbcGravadora.gridx = 0;
-		gbcGravadora.gridy = 5;
-		infoMainGravadora.add(txtEmailGravadora, (GridBagConstraints) gbcGravadora.clone());
-
-		// Contacto
-		gbcGravadora.gridx = 1;
-		gbcGravadora.gridy = 4;
-		infoMainGravadora.add(new JLabel("Contacto da Gravadora"), (GridBagConstraints) gbcGravadora.clone());
-		JTextField txtContactoGravadora = new JTextField();
-		txtContactoGravadora.setPreferredSize(new Dimension(150, 25));
-		txtContactoGravadora.setMinimumSize(new Dimension(150, 25));
-		txtContactoGravadora.setMaximumSize(new Dimension(150, 25));
-		gbcGravadora.gridx = 1;
-		gbcGravadora.gridy = 5;
-		infoMainGravadora.add(txtContactoGravadora, (GridBagConstraints) gbcGravadora.clone());
-
-		infoGravadora.add(infoMainGravadora, BorderLayout.CENTER);
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		cadastroPanel.add(infoGravadora, (GridBagConstraints) gbc.clone());
-
 		// ====================================
 		// Informações do Produtor
 		// ====================================
 		JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		JPanel painelBotoes = new JPanel(new BorderLayout());
 		painelBotoes.setBackground(new Color(246, 247, 249));
-		painelBotoes.setPreferredSize(new Dimension(400, 180));
-		painelBotoes.setMinimumSize(new Dimension(400, 180));
-		painelBotoes.setMaximumSize(new Dimension(400, 180));
+		painelBotoes.setPreferredSize(new Dimension(400, 100));
+		painelBotoes.setMinimumSize(new Dimension(400, 100));
+		painelBotoes.setMaximumSize(new Dimension(400, 100));
 		btnPanel.setBackground(new Color(246, 247, 249));
 
 		painelBotoes.setBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, new Color(220, 220, 220)));
@@ -502,7 +429,11 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		   	limparCampos();
 		}
 		if (e.getSource() == btnBanda) {
-			new Banda_Participants(compositorController, musicoController, cantorController).setVisible(true);
+			participantes.setVisible(true);
+			partSelecionados.setText(participantes.totalSelecionados() +" Participantes Selecionados");
+			countCompositores.setText("Compositores: " + participantes.compositorContador());
+			countMusicos.setText("Músicos: " + participantes.musicoContador());
+			countCantores.setText("Cantores: " + participantes.cantorContador());
 		}
 	}
 	
