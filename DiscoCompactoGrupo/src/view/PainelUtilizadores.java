@@ -56,7 +56,7 @@ public class PainelUtilizadores extends JPanel implements ActionListener, MouseL
 		mainPanel.add(cardPanel, BorderLayout.CENTER);
 
 		cardPanel.add(new PainelCadastroUsers(utilizadorController, logController), "Cadastro");
-		cardPanel.add(new PainelListaAcoes(utilizadorController), "Suspender User");
+		cardPanel.add(new PainelListaAcoes(utilizadorController, logController), "Suspender User");
 
 		this.setLayout(new BorderLayout());
 		this.add(mainPanel, BorderLayout.CENTER);
@@ -100,7 +100,7 @@ public class PainelUtilizadores extends JPanel implements ActionListener, MouseL
 			LocalDateTime horaAgora = LocalDateTime.now();
 			log = new Logs(
 					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel cadastrar users", horaAgora);
 			logController.inserirLog(log);
 		}
@@ -109,7 +109,7 @@ public class PainelUtilizadores extends JPanel implements ActionListener, MouseL
 			LocalDateTime horaAgora3 = LocalDateTime.now();
 			log = new Logs(
 					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel acções de users", horaAgora3);
 			logController.inserirLog(log);
 		}

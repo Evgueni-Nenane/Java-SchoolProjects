@@ -77,7 +77,7 @@ public class ProdutorDAO {
         return produtores;
     }
     public boolean inserRelacaoDiscoProdutor(int codigoDisco, int codigoProdutor) {
-    	String sql = "INSERT INTO ProDC (Codigo_Disco, Codigo_Produtor) VALUES (?,?)";
+    	String sql = "INSERT INTO ProDC (Codigo_DC, Codigo_Produtor) VALUES (?,?)";
     	try {
     		Connection conn = DBConnector.DBConnect();
     		PreparedStatement ps = conn.prepareStatement(sql);

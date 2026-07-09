@@ -1,55 +1,68 @@
 package controller;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 import model.Utilizador;
 
+import javax.swing.*;
+
 public class FicheiroTxt {
 
-   
+
 	public static void guardarTxt(Utilizador u) throws IOException {
 
-	    FileWriter fw = new FileWriter("Credenciais.txt", true);
-	    BufferedWriter bw = new BufferedWriter(fw);
+		String userHome = System.getProperty("user.home");
+		File documentosOneDrive = new File(userHome + File.separator + "OneDrive" + File.separator + "Documents"+ File.separator + "Credenciais");
+		File documentosNormal = new File(userHome + File.separator + "Documents"+ File.separator + "Credenciais");
 
-	    bw.write(u.toString());
-	    bw.newLine();
+		File dirFinal;
+		if (documentosOneDrive.getParentFile().exists()) {
+			dirFinal = documentosOneDrive;
+		} else {
+			dirFinal = documentosNormal;
+		}
+		
 
-	    bw.close();
-	    fw.close();
+		if (!dirFinal.exists()) {
+			if (!dirFinal.mkdir()) {
+				JOptionPane.showMessageDialog(null, "Directório não encontrado!",
+						"Sem directório", JOptionPane.WARNING_MESSAGE);
+				return;
+			}			
+		}
+			FileWriter file = new FileWriter(new File(dirFinal,u.getNome()+u.getApelido()+ "_Credenciais"+".txt"), true);
+			PrintWriter pw = new PrintWriter(file);
+			pw.printf(u.toString()+"\n\n");
+			
+			pw.close();
+			file.close();
 	}
 	public static void guardarResetTxt(Utilizador u) throws IOException {
 
-	    FileWriter fw = new FileWriter("Credenciais.txt", true);
-	    BufferedWriter bw = new BufferedWriter(fw);
+		String userHome = System.getProperty("user.home");
+		File documentosOneDrive = new File(userHome + File.separator + "OneDrive" + File.separator + "Documents"+ File.separator + "Credenciais_Resets");
+		File documentosNormal = new File(userHome + File.separator + "Documents"+ File.separator + "Credenciais_Resets");
 
-	    bw.write(u.toStringReset());
-	    bw.newLine();
+		File dirFinal;
+		if (documentosOneDrive.getParentFile().exists()) {
+			dirFinal = documentosOneDrive;
+		} else {
+			dirFinal = documentosNormal;
+		}
+		
 
-	    bw.close();
-	    fw.close();
+		if (!dirFinal.exists()) {
+			if (!dirFinal.mkdir()) {
+				JOptionPane.showMessageDialog(null, "Directório não encontrado!",
+						"Sem directório", JOptionPane.WARNING_MESSAGE);
+				return;
+			}			
+		}
+			FileWriter file = new FileWriter(new File(dirFinal,u.getNomeCompleto()+ "Reset_Cred"+".txt"), true);
+			PrintWriter pw = new PrintWriter(file);
+			pw.printf(u.toStringReset()+"\n\n");
+			
+			pw.close();
+			file.close();
 	}
-//	public void guardarBD(Utilizador u) throws Exception {
-//
-//	    Connection conn = DBConnector.DBConnect();
-//
-//	    String sql = "INSERT INTO utilizadores "
-//	            + "(nome,apelido,usuario,senha,contacto)"
-//	            + " VALUES (?,?,?,?,?)";
-//
-//	    PreparedStatement ps = conn.prepareStatement(sql);
-//
-//	    ps.setString(1, u.getNome());
-//	    ps.setString(2, u.getApelido());
-//	    ps.setString(3, u.getUser_name());
-//	    ps.setString(4, u.getSenha());
-//	    ps.setString(5, u.getContacto());
-//	    
-//	    ps.executeUpdate();
-//
-//	    ps.close();
-//	    conn.close();
-//	}
 }

@@ -24,21 +24,24 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import controller.FicheiroTxt;
+import controller.LogsController;
 import controller.UtilizadorController;
 import dao.LoginDAO;
 import model.Utilizador;
+import resources.EstilizarTabela;
 
 public class PainelListaAcoes extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private DefaultTableModel tabelaModelo;
 	private UtilizadorController utilizadorController;
-	private JButton btnRemover, btnResetSenha;
+	private JButton btnRemover, btnResetSenha, btnEditarUser;
 	private JTable tabela;
-	
+	private LogsController logController;
 
-	public PainelListaAcoes(UtilizadorController utilizadorController) {
+	public PainelListaAcoes(UtilizadorController utilizadorController, LogsController logController) {
 		this.utilizadorController = utilizadorController;
+		this.logController = logController;
 		
 		JPanel suspenderPanel = new JPanel();
 		suspenderPanel.setLayout(new BorderLayout());
@@ -115,7 +118,7 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 
 		JPanel tabelaPanel = new JPanel();
 
-		String[] colunas = { "Codigo", "Nome Completo", "E-mail Corporativo", "Género", "Permissões", "Telefone"};
+		String[] colunas = {"Codigo","Nome Completo", "E-mail Corporativo", "Género", "Permissões", "Telefone"};
 		tabelaModelo = new DefaultTableModel(colunas, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -124,13 +127,14 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 		};
 			
 		tabela = new JTable(tabelaModelo);
+		EstilizarTabela.aplicar(tabela);
 		tabela.getTableHeader().setReorderingAllowed(false);
 		tabela.getTableHeader().setResizingAllowed(false);
 		tabela.setRowHeight(30);
 		tabelaPanel.add(tabela);
 
 		JScrollPane scroll = new JScrollPane(tabela);
-
+		scroll.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		suspenderPanel.add(scroll, BorderLayout.CENTER);
         btnRemover = new JButton("Remover Selecionado");
         btnRemover.addActionListener(this);
@@ -138,10 +142,13 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
         btnResetSenha = new JButton("Resetar Senha");
         btnResetSenha.addActionListener(this);
 
+        btnEditarUser = new JButton("Editar Utilizador");
+        btnEditarUser.addActionListener(this);
         
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         painelBotoes.add(btnRemover);
         painelBotoes.add(btnResetSenha);
+        painelBotoes.add(btnEditarUser);
         suspenderPanel.add(painelBotoes, BorderLayout.SOUTH);
 
 		this.setLayout(new BorderLayout());
@@ -165,7 +172,7 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 					utilizador.getNome() + " "+ utilizador.getApelido(),
 					utilizador.getEmail(),
 					utilizador.getGenero(),
-					utilizador.getPerfil(),
+					utilizador.getPerfil().getNome(),
 					utilizador.getContacto()
 			});
 		}
@@ -235,7 +242,12 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 	                    JOptionPane.showMessageDialog(null, "Erro ao resetar senha do/a utilizador/a!");
 	                }
 	            }
-		}	
+		} if (e.getSource() == btnEditarUser) {
+				int linhaSelecionada = tabela.getSelectedRow();
+				int codigoUser = (int) tabelaModelo.getValueAt(linhaSelecionada, 0);
+				new EditarUserDialog(utilizadorController, logController, codigoUser).setVisible(true);
+		}
+		
 
 	}
  }

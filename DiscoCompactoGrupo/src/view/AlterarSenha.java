@@ -16,13 +16,11 @@ public class AlterarSenha extends JFrame {
     private JPasswordField passwordFieldAntiga;
     private JPasswordField passwordFieldNova;
     private String utilizadorLogado;
-    private String nivelAcesso;
     private LogsController logController;
     private Logs log;
     
     public AlterarSenha(String utilizador, String nivel) {
         this.utilizadorLogado = utilizador;
-        this.nivelAcesso = nivel;
         setTitle("Alterar Senha");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(855, 566);
@@ -35,7 +33,7 @@ public class AlterarSenha extends JFrame {
     	this.logController = new LogsController();
 
         JLabel titulo = new JLabel("ALTERAR SENHA");
-        titulo.setForeground(Color.WHITE);
+        titulo.setForeground(Color.BLACK);
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titulo.setBounds(280, 50, 300, 30);
         add(titulo);
@@ -46,12 +44,12 @@ public class AlterarSenha extends JFrame {
         add(lblUser);
 
         textFieldUser = new JTextField(utilizadorLogado);
-        textFieldUser.setEditable(false); // não deixa mudar o username
+        textFieldUser.setEditable(false);
         textFieldUser.setBounds(280, 135, 250, 28);
         add(textFieldUser);
 
         JLabel lblSenhaAntiga = new JLabel("Senha Antiga:");
-        lblSenhaAntiga.setForeground(Color.WHITE);
+        lblSenhaAntiga.setForeground(Color.BLACK);
         lblSenhaAntiga.setBounds(280, 175, 150, 25);
         add(lblSenhaAntiga);
 
@@ -60,7 +58,7 @@ public class AlterarSenha extends JFrame {
         add(passwordFieldAntiga);
 
         JLabel lblSenhaNova = new JLabel("Nova Senha:");
-        lblSenhaNova.setForeground(Color.WHITE);
+        lblSenhaNova.setForeground(Color.BLACK);
         lblSenhaNova.setBounds(280, 240, 150, 25);
         add(lblSenhaNova);
 
@@ -94,7 +92,7 @@ public class AlterarSenha extends JFrame {
 				LocalDateTime horaAgora = LocalDateTime.now();
 				log = new Logs(
 						Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-						Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+						Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 						Sessao.getUtilizadorLogado().getEmail(), "Alterou de Senha", horaAgora);
 				logController.inserirLog(log);
             JOptionPane.showMessageDialog(this, "Senha alterada com sucesso!");

@@ -21,15 +21,21 @@ public class UtilizadorController {
         return utilizadorDAO.listarTodos();
     }
     
+    public Utilizador listarPorId(int codigoUser) {
+    	return utilizadorDAO.buscarPorId(codigoUser);
+    }
     public boolean suspenderUtilizador(int codigo) {
     	return utilizadorDAO.remover(codigo);
     }
     
-    public boolean atualizarFoto(String username, byte[] foto) {
-        return utilizadorDAO.atualizarFoto(username, foto);
+    public boolean adicionarFotoUser(int codigo, Utilizador utilizador) {
+        return utilizadorDAO.adicionarFoto(codigo, utilizador);
     }
-
-    public byte[] buscarFoto(String username) {
-        return utilizadorDAO.buscarFoto(username);
+    
+    public boolean atualizarUser(int codigo, Utilizador utilizador) {
+        return utilizadorDAO.atualizarUser(codigo, utilizador);
+    }
+    public byte[] buscarFoto(int codigoUser) {
+        return utilizadorDAO.buscarFoto(codigoUser);
     }
 }

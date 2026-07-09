@@ -1,4 +1,4 @@
-package view;
+	package view;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -9,10 +9,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.*;
 
-import controller.CantorController;
-import controller.CompositorController;
-import controller.DiscoController;
-import controller.MusicoController;
 import model.Cantor;
 import model.Compositor;
 import model.DiscoCompacto;
@@ -25,22 +21,17 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 
 	private static final long serialVersionUID = 1L;
 	
-	private JButton btnCancelar, btnSalvar, btnInfoPart;
+	private JButton btnSalvar;
 	
-	private JLabel lblTituloDiscoReal, lblGeneroReal, lblPrecoReal, lblTempoExistenciaReal;
-	private JLabel lblEditoraReal, lblDataEdicaoDiscoReal;
-	private JLabel lblGravadoraReal, lblEnderecoReal, lblEmailReal;
-	private JLabel lblProdutorReal, lblEmailProdutorReal;
+	private JLabel lblTituloDiscoReal, lblGeneroReal, lblPrecoReal, lblTempoExistenciaReal, lblDataEdicaoReal;
 	
-	private JTable tabelaCompositores;
-	private JTable tabelaMusicos;
-	private JTable tabelaCantores;
-	private DefaultTableModel tabelaCompModel, tabelaMusicModel, tabelaCantorModel;
-	private JPanel containerInfoParticipantes;
+	private DefaultTableModel tabelaCompModel, tabelaProdModel, tabelaMusicModel, tabelaGravaModel, tabelaCantorModel, tabelaEditorModel;
+	private JPanel containerInfoParticipantes, containerInfoProducao;
 	
 	public DiscoCompletoDialog(DiscoCompacto disco) {
 		
 		this.setSize(1000, 600);
+		this.setResizable(false);
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
 		this.setModal(true);
@@ -159,156 +150,59 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		lblTempoExistenciaReal.setFont(new Font("Arial", Font.PLAIN, 11));
 		innerInfoDisco.add(lblTempoExistenciaReal, gbcd);
 		
+		// Ano de edicao
+		gbcd.gridx = 0;
+		gbcd.gridy = 4;
+		JLabel lblDataEdicao = new JLabel("Data de Edição:");
+		lblDataEdicao.setFont(new Font("Arial", Font.BOLD, 11));
+		innerInfoDisco.add(lblDataEdicao, gbcd);
+		
+		gbcd.gridx = 1;
+		gbcd.gridy = 4;
+		lblDataEdicaoReal = new JLabel("----");
+		lblDataEdicaoReal.setFont(new Font("Arial", Font.PLAIN, 11));
+		innerInfoDisco.add(lblDataEdicaoReal, gbcd);
+		
 		containerInfoDisco.add(innerInfoDisco, BorderLayout.CENTER);
 		container.add(containerInfoDisco, gbc);
 		
 		// =================
-		// 		Gravadora
+		// 		Produção
 		// =================
-		JPanel containerInfoGravadora = new JPanel(new BorderLayout());
-		containerInfoGravadora.setBorder(BorderFactory.createTitledBorder(
+		containerInfoProducao = new JPanel(new BorderLayout());
+		containerInfoProducao.setBorder(BorderFactory.createTitledBorder(
 			BorderFactory.createLineBorder(Color.GRAY, 1), 
-			"GRAVADORA",
+			"PRODUÇÃO DO DISCO",
 			TitledBorder.LEFT, 
 			TitledBorder.TOP,
 			new Font("Arial", Font.BOLD, 12)
 		));
-		containerInfoGravadora.setBackground(Color.WHITE);
+		containerInfoProducao.setBackground(Color.WHITE);
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.weightx = 0.5;
-		
-		JPanel innerInfoGravadora = new JPanel(new GridBagLayout());
-		innerInfoGravadora.setBackground(Color.WHITE);
-		GridBagConstraints gbcg = new GridBagConstraints();
-		gbcg.insets = new Insets(3, 5, 3, 5);
-		gbcg.anchor = GridBagConstraints.WEST;
-		gbcg.fill = GridBagConstraints.HORIZONTAL;
-		gbcg.weightx = 1.0;
-		
-		// Nome da Gravadora
-		gbcg.gridx = 0;
-		gbcg.gridy = 0;
-		JLabel lblGravadora = new JLabel("Nome da Gravadora:");
-		lblGravadora.setFont(new Font("Arial", Font.BOLD, 11));
-		innerInfoGravadora.add(lblGravadora, gbcg);
-		
-		gbcg.gridx = 1;
-		gbcg.gridy = 0;
-		lblGravadoraReal = new JLabel("----");
-		lblGravadoraReal.setFont(new Font("Arial", Font.PLAIN, 11));
-		innerInfoGravadora.add(lblGravadoraReal, gbcg);
-		
-		// Endereço
-		gbcg.gridx = 0;
-		gbcg.gridy = 1;
-		JLabel lblEndereco = new JLabel("Endereço:");
-		lblEndereco.setFont(new Font("Arial", Font.BOLD, 11));
-		innerInfoGravadora.add(lblEndereco, gbcg);
-		
-		gbcg.gridx = 1;
-		gbcg.gridy = 1;
-		lblEnderecoReal = new JLabel("----");
-		lblEnderecoReal.setFont(new Font("Arial", Font.PLAIN, 11));
-		innerInfoGravadora.add(lblEnderecoReal, gbcg);
-		
-		// Email
-		gbcg.gridx = 0;
-		gbcg.gridy = 2;
-		JLabel lblEmail = new JLabel("E-mail:");
-		lblEmail.setFont(new Font("Arial", Font.BOLD, 11));
-		innerInfoGravadora.add(lblEmail, gbcg);
-		
-		gbcg.gridx = 1;
-		gbcg.gridy = 2;
-		lblEmailReal = new JLabel("----");
-		lblEmailReal.setFont(new Font("Arial", Font.PLAIN, 11));
-		innerInfoGravadora.add(lblEmailReal, gbcg);
-		
-		containerInfoGravadora.add(innerInfoGravadora, BorderLayout.CENTER);
-		container.add(containerInfoGravadora, gbc);
-		
-		// ================
-		// 		PRODUTOR
-		// ================
-		JPanel containerInfoProdutor = new JPanel(new BorderLayout());
-		containerInfoProdutor.setBorder(BorderFactory.createTitledBorder(
-			BorderFactory.createLineBorder(Color.GRAY, 1), 
-			"INFORMAÇÕES CRÉDITOS",
-			TitledBorder.LEFT, 
-			TitledBorder.TOP,
-			new Font("Arial", Font.BOLD, 12)
-		));
-		containerInfoProdutor.setBackground(Color.WHITE);
-		gbc.gridx = 1;
-		gbc.gridy = 1;
-		gbc.gridwidth = 1;
-		gbc.weightx = 0.5;
-		
-		JPanel innerInfoProdutor = new JPanel(new GridBagLayout());
-		innerInfoProdutor.setBackground(Color.WHITE);
-		GridBagConstraints gbcp = new GridBagConstraints();
-		gbcp.insets = new Insets(3, 5, 3, 5);
-		gbcp.anchor = GridBagConstraints.WEST;
-		gbcp.fill = GridBagConstraints.HORIZONTAL;
-		gbcp.weightx = 1.0;
-		
-		btnInfoPart = new JButton("Ver Participantes");
-		btnInfoPart.addActionListener(this);
-		innerInfoProdutor.add(btnInfoPart);
-		
-		// Informacao da Edicao
-		JPanel containerInfoEdicao = new JPanel(new BorderLayout());
-		containerInfoEdicao.setBorder(BorderFactory.createTitledBorder(
-			BorderFactory.createLineBorder(Color.GRAY, 1), 
-			"INFORMAÇÕES DA EDIÇÃO",
-			TitledBorder.LEFT, 
-			TitledBorder.TOP,
-			new Font("Arial", Font.BOLD, 12)
-		));
-		containerInfoEdicao.setBackground(Color.WHITE);
-		gbc.gridx = 0;
-		gbc.gridy = 2;
 		gbc.gridwidth = 2;
 		gbc.weightx = 1.0;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.BOTH;
 		
-		JPanel innerInfoEdicao = new JPanel(new GridBagLayout());
-		innerInfoEdicao.setBackground(Color.WHITE);
-		GridBagConstraints gbce = new GridBagConstraints();
-		gbce.insets = new Insets(3, 5, 3, 5);
-		gbce.anchor = GridBagConstraints.WEST;
-		gbce.fill = GridBagConstraints.HORIZONTAL;
-		gbce.weightx = 1.0;
+		JPanel tablesProdPanel = new JPanel(new GridLayout(1, 3, 10, 0));
+		tablesProdPanel.setBackground(Color.WHITE);
 		
-		// Editora
-		gbce.gridx = 0;
-		gbce.gridy = 0;
-		JLabel lblEditora = new JLabel("Editora:");
-		lblEditora.setFont(new Font("Arial", Font.BOLD, 11));
-		innerInfoEdicao.add(lblEditora, gbce);
+		// Tabela de Produtores
+		JPanel prodPanel = criarPainelTabela("PRODUTORES", new String[]{"Nome", "Email"});
+		tablesProdPanel.add(prodPanel);
 		
-		gbce.gridx = 1;
-		gbce.gridy = 0;
-		lblEditoraReal = new JLabel("----");
-		lblEditoraReal.setFont(new Font("Arial", Font.PLAIN, 11));
-		innerInfoEdicao.add(lblEditoraReal, gbce);
+		// Tabela de Gravadoras
+		JPanel gravaPanel = criarPainelTabela("GRAVADORAS", new String[]{"Nome", "Email"});
+		tablesProdPanel.add(gravaPanel);
 		
-		// Data da Edição
-		gbce.gridx = 0;
-		gbce.gridy = 1;
-		JLabel lblDataEdicaoDisco = new JLabel("Data da Edição:");
-		lblDataEdicaoDisco.setFont(new Font("Arial", Font.BOLD, 11));
-		innerInfoEdicao.add(lblDataEdicaoDisco, gbce);
+		// Tabela de Editoras
+		JPanel editoraPanel = criarPainelTabela("EDITORAS", new String[]{"Nome", "Email"});
+		tablesProdPanel.add(editoraPanel);
 		
-		gbce.gridx = 1;
-		gbce.gridy = 1;
-		lblDataEdicaoDiscoReal = new JLabel("----");
-		lblDataEdicaoDiscoReal.setFont(new Font("Arial", Font.PLAIN, 11));
-		innerInfoEdicao.add(lblDataEdicaoDiscoReal, gbce);
+		containerInfoProducao.add(tablesProdPanel, BorderLayout.CENTER);
+		container.add(containerInfoProducao, gbc);
 		
-		containerInfoEdicao.add(innerInfoEdicao, BorderLayout.CENTER);
-		container.add(containerInfoEdicao, gbc);
 		
 		// Participantes 
 		
@@ -322,7 +216,7 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		));
 		containerInfoParticipantes.setBackground(Color.WHITE);
 		gbc.gridx = 0;
-		gbc.gridy = 3;
+		gbc.gridy = 2;
 		gbc.gridwidth = 2;
 		gbc.weightx = 1.0;
 		gbc.weighty = 1.0;
@@ -347,8 +241,7 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		container.add(containerInfoParticipantes, gbc);
 		
 		// Bottom Container
-
-		JPanel bottomContainer = new JPanel();
+  		JPanel bottomContainer = new JPanel();
 		bottomContainer.setBackground(Color.WHITE);
 		bottomContainer.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		bottomContainer.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -360,14 +253,13 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		this.add(topContainer, BorderLayout.NORTH);
 		this.add(container, BorderLayout.CENTER);
 		this.add(bottomContainer, BorderLayout.SOUTH);
-		setDadosDisco(disco.getTitulo(), disco.getGeneroMusical().toString(), disco.getPreco(), disco.discoExistencia(disco.getAnoEdicao()));
-		setDadosEdicao(disco.getEditoras(), disco.getAnoEdicao());
-		setDadosGravadora(disco.getGravadoras());
+		setDadosDisco(disco.getTitulo(), disco.getGeneroMusical().toString(), disco.getPreco(), disco.discoExistencia(disco.getAnoEdicao()), disco.getEdicao().getDataEdicao());
+		popularProdutores(disco.getProdutores());
 		popularCompositores(disco.getCompositores());
 		popularMusicos(disco.getMusicos());
 		popularCantores(disco.getCantores());
-//		popularGravadora(disco.getGravadoras());
-//		popularEditora(disco.getEditoras());
+		popularGravadoras(disco.getGravadoras());
+		popularEditoras(disco.getEditoras());
 	}
 	
 	
@@ -383,7 +275,6 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 	        }
 	    }		
 	}
-
 	private void popularMusicos(List<Musico> musicos) {
 		tabelaMusicModel.setRowCount(0);
 	    if (musicos != null) {
@@ -395,7 +286,6 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 	        }
 	    }
 	}
-
 	private void popularCompositores(List<Compositor> compositores) {
 	    tabelaCompModel.setRowCount(0);
 	    if (compositores != null) {
@@ -407,14 +297,46 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 	        }
 	    }
 	}
-
+	private void popularProdutores(List<Produtor> produtores) {
+	    tabelaProdModel.setRowCount(0);
+	    if (produtores != null) {
+	        for (Produtor p : produtores) {
+	            tabelaProdModel.addRow(new Object[]{
+	                p.getNomeProdutor() + " " + p.getApelidoProdutor(),
+	                p.getEmailProdutor()
+	            });
+	        }
+	    }
+	}
+	private void popularGravadoras(List<Gravadora> gravadoras) {
+    tabelaGravaModel.setRowCount(0);
+	    if (gravadoras != null) {
+	        for (Gravadora g : gravadoras) {
+	            tabelaGravaModel.addRow(new Object[]{
+	                g.getNomeGravadora(),
+	                g.getEmailGravadora()
+	            });
+	        }
+	    }
+	}
+	private void popularEditoras(List<Editora> editoras) {
+	    tabelaEditorModel.setRowCount(0);
+		    if (editoras != null) {
+		        for (Editora e : editoras) {
+		            tabelaEditorModel.addRow(new Object[]{
+		                e.getNomeEditora(),
+		                e.getEmailEditora()
+		            });
+		        }
+		    }
+		}
 	private JPanel criarPainelTabela(String titulo, String[] colunas) {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBackground(Color.WHITE);
 		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		
 		// Título com contador
-		JLabel lblTitulo = new JLabel(titulo + " (0)");
+		JLabel lblTitulo = new JLabel(titulo);
 		lblTitulo.setFont(new Font("Arial", Font.BOLD, 11));
 		panel.add(lblTitulo, BorderLayout.NORTH);
 		
@@ -427,18 +349,22 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		};
 		JTable tabela = new JTable(model);
 		tabela.setRowHeight(25);
-		tabela.getTableHeader().setFont(new Font("Arial", Font.BOLD, 10));
-		tabela.setFont(new Font("Arial", Font.PLAIN, 10));
+		tabela.getTableHeader().setFont(new Font("Arial", Font.BOLD, 11));
+		tabela.setFont(new Font("Arial", Font.PLAIN, 11));
 		JScrollPane scroll = new JScrollPane(tabela);
 		scroll.setPreferredSize(new Dimension(0, 150));
-		if (titulo.contains("COMPOSITORES")) {
-		    tabelaCompositores = tabela;
+		if (titulo.contains("PRODUTORES")) {
+			tabelaProdModel = model;
+		} else if (titulo.contains("GRAVADORAS")) {
+			tabelaGravaModel = model;
+		} else if (titulo.contains("EDITORAS")) {
+			tabelaEditorModel = model;
+		}
+		else if (titulo.contains("COMPOSITORES")) {
 		    tabelaCompModel = model;
 		} else if (titulo.contains("MÚSICOS")) {
-		    tabelaMusicos = tabela;
 		    tabelaMusicModel = model;
 		} else if (titulo.contains("CANTORES")) {
-		    tabelaCantores = tabela;
 		    tabelaCantorModel = model;
 		}
 		panel.add(scroll, BorderLayout.CENTER);
@@ -447,7 +373,7 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 	}
 	
 	
-	public void setDadosDisco(String titulo, String genero, double preco, int ano) {
+	public void setDadosDisco(String titulo, String genero, double preco, int ano, Date dataEdicao) {
 	    if (titulo != null) {
 	        lblTituloDiscoReal.setText(titulo);
 	    } else {
@@ -462,58 +388,11 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 	    
 	    lblPrecoReal.setText(String.format("MZN. %.2f", preco));
 	    
-	    lblTempoExistenciaReal.setText("" + ano);    
-
-	}
-
-	public void setDadosEdicao(List<Editora> editoras, int ano) {
-		String editora1 = "";
-		for (Editora editora : editoras) {
-		   editora1 = editora.getNomeEditora();
-	   }
-		if (editora1 != null) {
-	        lblEditoraReal.setText(editora1);
-	    } else {
-	        lblEditoraReal.setText("----");
-	    }
-	    		
-	    if (ano + "" != null) {
-	        lblDataEdicaoDiscoReal.setText(ano + "");
-	    } else {
-	        lblDataEdicaoDiscoReal.setText("----");
-	       }
-	}
-
-	public void setDadosGravadora(List<Gravadora> gravadoras) {
-		String nome = "";
-		String endereco = "";
-		String email = "";
-		for (Gravadora gravadora : gravadoras) {
-			nome = gravadora.getNomeGravadora();
-			endereco = gravadora.getEnderecoGravadora();
-			email = gravadora.getContactoGravadora();
-		}
-		if (nome != null) {
-	    	
-	        lblGravadoraReal.setText(nome);
-	    } else {
-	        lblGravadoraReal.setText("----");
-	    }
+	    lblTempoExistenciaReal.setText("" + ano);   
 	    
-	    if (endereco != null) {
-	        lblEnderecoReal.setText(endereco);
-	    } else {
-	        lblEnderecoReal.setText("----");
-	    }
-	    
-	    if (email != null) {
-	        lblEmailReal.setText(email);
-	    } else {
-	        lblEmailReal.setText("----");
-	    }
+	    lblDataEdicaoReal.setText(dataEdicao + "");
+
 	}
-
-
 	
 
 	@Override public void mouseClicked(MouseEvent e) {}

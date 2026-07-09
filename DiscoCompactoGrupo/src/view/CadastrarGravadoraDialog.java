@@ -134,7 +134,7 @@ public class CadastrarGravadoraDialog extends JDialog implements ActionListener 
     			LocalDateTime horaAgora = LocalDateTime.now();
     			log = new Logs(
     					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-    					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+    					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
     					Sessao.getUtilizadorLogado().getEmail(), "Cadastrou Gravadora no sistema", horaAgora);
     			logController.inserirLog(log);
                 JOptionPane.showMessageDialog(this, "Gravadora cadastrada com sucesso!");

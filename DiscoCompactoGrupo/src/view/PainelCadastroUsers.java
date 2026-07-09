@@ -19,6 +19,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.time.LocalDateTime;
 
 import javax.swing.BorderFactory;
@@ -33,6 +35,7 @@ import javax.swing.JTextField;
 
 import controller.FicheiroTxt;
 import controller.LogsController;
+import controller.NivelController;
 import controller.UtilizadorController;
 import model.Logs;
 import model.NivelAcesso;
@@ -48,6 +51,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 	private UtilizadorController utilizadorController;
 	private LogsController logController;
 	private Logs log;
+	private NivelController niveisController;
 	private JComboBox<Sexo> generoSexual;
 	JComboBox<NivelAcesso> permissao;
 	private JLabel fotoLabel;
@@ -56,6 +60,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 	public PainelCadastroUsers(UtilizadorController utilizadorController, LogsController logController) {
 		this.utilizadorController = utilizadorController;
 		this.logController = logController;
+		this.niveisController = new NivelController();
 
 		JPanel fotoFormPanel = new JPanel(new BorderLayout());
 		fotoFormPanel.setBackground(Color.gray);
@@ -121,7 +126,10 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		gbc.gridy = 2;
 		formularioPanel.add(lblPerfis, (GridBagConstraints) gbc.clone());
 
-		permissao = new JComboBox<>(NivelAcesso.values());
+		permissao = new JComboBox<>();
+		for (NivelAcesso perfil : niveisController.listarNiveis()) {
+			permissao.addItem(perfil);
+		}
 		permissao.setPreferredSize(new Dimension(300, 30));
 		gbc.gridx = 1;
 		gbc.gridy = 3;
@@ -256,42 +264,19 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 
 		fotoFormPanel.add(fotoPanel, BorderLayout.WEST);
 		fotoFormPanel.add(formularioPanel, BorderLayout.CENTER);
-
+		
+		
+		URL urlImagem = getClass().getResource("/resources/noneProfile.png");
+		ImageIcon icon = new ImageIcon(urlImagem);
+		Image imagemEscalada = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+		fotoLabel.setIcon(new ImageIcon(imagemEscalada));
+		
 		this.setLayout(new BorderLayout());
 		this.add(fotoFormPanel, BorderLayout.CENTER);
 
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -352,13 +337,33 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 				JOptionPane.showMessageDialog(null, "Por favor gere a senha!", "Erro", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
-
+			
+			if (fotoBytes == null) {
+				try {
+					URL fotoPadrao = getClass().getResource("/resources/noneProfile.png");
+					InputStream is = fotoPadrao.openStream();
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					byte[] buffer = new byte[1024];
+					int lidos;
+						while ((lidos = is.read(buffer)) != -1) {
+							baos.write(buffer, 0, lidos);
+						}
+						fotoBytes = baos.toByteArray();
+				} catch (IOException x) {
+					x.printStackTrace();
+				} catch (NullPointerException h) {
+					JOptionPane.showMessageDialog(null, "Excepçao null" + h.getMessage() + "",
+							"Mensagem de Erro", JOptionPane.ERROR_MESSAGE);
+					h.printStackTrace();
+				}
+				
+			}
+			
 			boolean firstAccess = true;
-			Utilizador utilizador = new Utilizador(txtNome.getText(), txtApelido.getText(), txtUser_Name.getText(),
+			Utilizador utilizador = new Utilizador(fotoBytes, txtNome.getText(), txtApelido.getText(), txtUser_Name.getText(),
 					(Sexo) generoSexual.getSelectedItem(), (NivelAcesso) permissao.getSelectedItem(),
 					txtEmail.getText(), txtContacto.getText(), txtSenha.getText(), firstAccess);
 
-			// Chamar o controller
 			boolean sucesso = utilizadorController.cadastrarUtilizador(utilizador);
 
 			if (sucesso) {
@@ -366,14 +371,11 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 					LocalDateTime horaAgora = LocalDateTime.now();
 					log = new Logs(
 							Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-							Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+							Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 							Sessao.getUtilizadorLogado().getEmail(), "Cadastrar Utilizador", horaAgora);
 					logController.inserirLog(log);
 					FicheiroTxt.guardarTxt(utilizador);
 
-					if (fotoBytes != null) {
-						utilizadorController.atualizarFoto(utilizador.getUser_name(), fotoBytes);
-					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -395,8 +397,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 				return;
 			}
 			String apelido = txtApelido.getText();
-			char terceiraLetra = apelido.length() >= 3 ? apelido.charAt(2) : apelido.charAt(apelido.length() - 1);
-			String senha = txtUser_Name.getText().charAt(0) + "" + terceiraLetra + apelido + "258";
+			String senha = txtUser_Name.getText().charAt(0) + ""  + apelido + "258";
 			txtSenha.setText(senha);
 		}
 	}
@@ -411,6 +412,40 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		permissao.setSelectedIndex(0);
 		generoSexual.setSelectedIndex(0);
 		fotoBytes = null;
-		fotoLabel.setIcon(null);
+		URL fotoPadrao = getClass().getResource("/resources/noneProfile.png");
+		ImageIcon icon = new ImageIcon(fotoPadrao);
+		Image imagemEscalada = icon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
+		fotoLabel.setIcon(new ImageIcon(imagemEscalada));
 	}
+	
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

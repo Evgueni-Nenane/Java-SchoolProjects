@@ -12,7 +12,11 @@ import model.Utilizador;
 public class LoginDAO {
 
 	public static boolean login(String username, String senha) {
-	    String sql = "SELECT * FROM Utilizador WHERE username = ? AND senha = ?";
+	    String sql = "SELECT Codigo_User, Nome, Apelido, UserName, Genero, Email, Contacto, Foto, Codigo_Nivel, NomeNivel"
+	    		+ " FROM Utilizador u"
+	    		+ " INNER JOIN NivelAcesso n"
+	    		+ " ON u.Codigo_Nivel = n.CodigoNivel"
+	    		+ " WHERE BINARY username = ? AND BINARY senha = ?";
 	    try {
 	        Connection conn = DBConnector.DBConnect();
 	        PreparedStatement ps = conn.prepareStatement(sql);
@@ -20,7 +24,7 @@ public class LoginDAO {
 	        ps.setString(2, senha);
 	        ResultSet rs = ps.executeQuery();
 	        if(rs.next()) {
-	        	NivelAcesso perfil = NivelAcesso.valueOf(rs.getString("Perfil"));
+	        	NivelAcesso perfil = new NivelAcesso(rs.getInt("Codigo_Nivel"), rs.getString("NomeNivel"));
 	            Utilizador userSessao = new Utilizador(rs.getBytes("foto"), rs.getString("nome"), rs.getString("apelido"), rs.getString("username"), perfil, rs.getString("email"));
 	            Sessao.iniciarSessao(userSessao);
 	            return true;
@@ -32,6 +36,7 @@ public class LoginDAO {
 	    }
 	}
 	
+
 	public static boolean isPrimeiroAcesso(String username, String senha) {
 		String sql = "SELECT primeiro_acesso FROM utilizador WHERE UserName = ? AND Senha = ?";
 		try {
@@ -52,7 +57,7 @@ public class LoginDAO {
 	
 	public static boolean atualizarSenha(String username, String senhaAntiga, String novaSenha) {
 
-	    String sql = "UPDATE utilizador SET senha = ?, primeiro_acesso = 0 WHERE username = ? AND senha = ?";
+	    String sql = "UPDATE utilizador SET senha = ?, primeiro_acesso = 0 WHERE BINARY username = ? AND BINARY senha = ?";
 
 	    try (Connection conn = DBConnector.DBConnect();
 	         PreparedStatement ps = conn.prepareStatement(sql)) {

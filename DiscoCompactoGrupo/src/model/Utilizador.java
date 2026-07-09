@@ -14,8 +14,9 @@ public class Utilizador {
 	private String senha;
 	private boolean primeiroAcesso;
 	
-	public Utilizador(String nome, String apelido, String user_name, Sexo genero, NivelAcesso perfil, String email,
+	public Utilizador(byte[] foto, String nome, String apelido, String user_name, Sexo genero, NivelAcesso perfil, String email,
 			String contacto, String senha, boolean primeiroAcesso) {
+		this.foto = foto;
 		this.nome = nome;
 		this.apelido = apelido;
 		this.user_name = user_name;
@@ -37,6 +38,15 @@ public class Utilizador {
 	    this.email = email;
 	    this.contacto = contacto;
 	}
+	public Utilizador(byte[] foto, String nome, String apelido, Sexo genero, NivelAcesso perfil, String email, String contacto) {
+		this.foto = foto;
+	    this.nome = nome;
+	    this.apelido = apelido;
+	    this.genero = genero;
+	    this.perfil = perfil;
+	    this.email = email;
+	    this.contacto = contacto;
+	}
 	public Utilizador(byte[] foto, String nome, String apelido, String username, NivelAcesso perfil, String email) {
 		this.foto = foto;
 		this.nome = nome;
@@ -45,9 +55,11 @@ public class Utilizador {
 		this.perfil = perfil;
 		this.email = email;
 	}
-	public Utilizador(String user_name, NivelAcesso perfil) {
-		this.user_name = user_name;
+	public Utilizador(byte[] foto, NivelAcesso perfil, String email, String contacto) {
+		this.foto = foto;
 		this.perfil = perfil;
+		this.email = email;
+		this.contacto = contacto;
 	}
 	public Utilizador(String user_name, boolean primeiroAcesso) {
 		this.user_name = user_name;
@@ -61,6 +73,12 @@ public class Utilizador {
 	}
 	
 	
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+	public void setPerfil(NivelAcesso perfil) {
+		this.perfil = perfil;
+	}
 	public String getNome() {
 		return nome;
 	}
@@ -72,6 +90,13 @@ public class Utilizador {
 	}
 	public void setApelido(String apelido) {
 		this.apelido = apelido;
+	}
+	
+	public String getNomeCompleto() {
+		return nomeCompleto;
+	}
+	public void setNomeCompleto(String nomeCompleto) {
+		this.nomeCompleto = nomeCompleto;
 	}
 	public String getUser_name() {
 		return user_name;
@@ -119,33 +144,21 @@ public class Utilizador {
 		this.foto = foto;
 	}
 	
+	@Override
 	public String toString() {
-		return "====================================\r\n"
-				+ "======= Credenciais de " + nome + " =======\r\n"
-				+ "======================================\r\n"
-				+ "==----------------------------------==\r\n"
-				+ "--- Nome:       " + nome + "	     ---\r\n"
-				+ "--- Apelido:    " + apelido + "	 ---\r\n"
-				+ "--- Username:   "+ user_name + "	 ---\r\n"
-				+ "--- Senha:      "+ senha +" 	     ---\r\n"
-				+ "--- Contacto:   "+ contacto +"     ---\r\n"
-				+ "==--------------------------------==\r\n"
-				+ "====================================\r\n"
-				+ "\r\n"
-				+ "";
-	}
+	    return "======= Credenciais de " + this.nome + " =======\n"
+	         + "--- Nome:\t" + this.nome + "\n"
+	         + "--- Apelido:\t" + this.apelido + "\n"
+	         + "--- Username:\t" + this.user_name + "\n"
+	         + "--- Senha:\t" + this.senha + "\n"
+	         + "--- Contacto:\t" + this.contacto + "\n";
+	    }
+
 
 	public String toStringReset() {
-		return "===========================================\r\n"
-				+ "======= Credenciais de "+nomeCompleto+"=======\r\n"
-				+ "===========================================\r\n"
-				+ "==---------------------------------------==\r\n"
-				+ "--- Nome:       "+ nomeCompleto+ "	     	---\r\n"
-				+ "--- Senha:      "+ senha +" 			---\r\n"
-				+ "--- Contacto:   "+ contacto +"    	  	---\r\n"
-				+ "==---------------------------------------==\r\n"
-				+ "===========================================";
-	}
-
-
+	    return "======= Credenciais de " + nomeCompleto + " =======\n"
+	         + "--- Nome:\t" + nomeCompleto + "\n"
+	         + "--- Senha:\t" + senha  + "\n"
+	         + "--- Contacto:\t" + contacto  + "\n";
+	    }
 }

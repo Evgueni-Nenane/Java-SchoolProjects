@@ -15,7 +15,6 @@ import java.awt.event.MouseListener;
 import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -34,13 +33,13 @@ import controller.CantorController;
 import controller.CompositorController;
 import controller.DiscoController;
 import controller.EditoraController;
+import controller.GeneroController;
 import controller.GravadoraController;
 import controller.LogsController;
 import controller.MusicoController;
 import controller.ProdutorController;
 import model.DiscoCompacto;
-import model.Editora;
-import model.Generos;
+import model.Genero;
 import model.Logs;
 import model.Sessao;
 
@@ -49,28 +48,28 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 	private static final long serialVersionUID = 1L;
 	private DiscoController discoController;
 	
-	private JButton btnSalvar, btnLimpar, btnBanda, btnProducao;
+	private JButton btnSalvar, btnLimpar, btnBanda, btnProducao, btnAdGenero;
 	private JTextField txtNomeDisco, txtPrecoDisco;
 	private JLabel partSelecionados, partSelecionadosProd, countCompositores,countMusicos, countCantores, countProdutores, countGravadoras, countEditoras;
 	private JSpinner spinnerDataDisco;
-	private JComboBox<Generos> generos;
+	private JComboBox<Genero> generos;
 	private CompositorController compositorController;
 	private MusicoController musicoController;
 	private CantorController cantorController;
-	private EditoraController editoraController;
-	private GravadoraController gravadoraController;
 	private Creditos_Producao creditosProducao;
 	private ProdutorController produtorController;
 	private Participantes participantes;
 	private Logs log;
 	private LogsController logController;
+	private ListaAcoesDiscos listaAcoesDiscos;
+	private GeneroController generoController;
 	
 	public CadastrarDiscos(DiscoController discoController, EditoraController editoraController,
-			GravadoraController gravadoraController, LogsController logController) {
+			GravadoraController gravadoraController, LogsController logController, ListaAcoesDiscos listaAcoesDiscos) {
 		this.discoController = discoController;
-		this.editoraController = editoraController;
-		this.gravadoraController = gravadoraController;
+		this.listaAcoesDiscos = listaAcoesDiscos;
 		this.logController = logController;
+		generoController = new GeneroController();
 		compositorController = new CompositorController();
 		musicoController = new MusicoController();
 		cantorController = new CantorController();
@@ -155,7 +154,11 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		gbcDisco.gridx = 1;
 		gbcDisco.gridy = 2;
 		infoMainDisco.add(new JLabel("Gênero Musical"), (GridBagConstraints) gbcDisco.clone());
-		generos = new JComboBox<>(Generos.values());
+		generos = new JComboBox<>();
+		
+		for (Genero genero : generoController.listarGeneros()) {
+			generos.addItem(genero);
+		}
 		generos.setPreferredSize(new Dimension(220, 25));
 		generos.setMinimumSize(new Dimension(220, 25));
 		generos.setMaximumSize(new Dimension(220, 25));
@@ -163,8 +166,17 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		gbcDisco.gridy = 3;
 		infoMainDisco.add(generos, (GridBagConstraints) gbcDisco.clone());
 		
-		// Data de Edição
 		gbcDisco.gridx = 2;
+		gbcDisco.gridy = 3;
+		btnAdGenero = new JButton("Adicionar Genero");
+		btnAdGenero.addActionListener(this);
+		btnAdGenero.setPreferredSize(new Dimension(100, 25));
+		btnAdGenero.setMinimumSize(new Dimension(100, 25));
+		btnAdGenero.setMaximumSize(new Dimension(100, 25));
+		infoMainDisco.add(btnAdGenero, gbcDisco);
+		
+		// Data de Edição
+		gbcDisco.gridx = 3;
 		gbcDisco.gridy = 2;
 		infoMainDisco.add(new JLabel("Data de Edição"), (GridBagConstraints) gbcDisco.clone());
 		spinnerDataDisco = new JSpinner(new SpinnerDateModel());
@@ -172,7 +184,7 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		spinnerDataDisco.setPreferredSize(new Dimension(125, 25));
 		spinnerDataDisco.setMinimumSize(new Dimension(125, 25));
 		spinnerDataDisco.setMaximumSize(new Dimension(125, 25));
-		gbcDisco.gridx = 2;
+		gbcDisco.gridx = 3;
 		gbcDisco.gridy = 3;
 		infoMainDisco.add(spinnerDataDisco, (GridBagConstraints) gbcDisco.clone());
 
@@ -371,7 +383,7 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		    	
 		        String titulo = txtNomeDisco.getText();
 		        int ano = cal.get(Calendar.YEAR);
-		        Generos genero = (Generos) generos.getSelectedItem();
+		        Genero genero = (Genero) generos.getSelectedItem();
 		        Double preco = Double.parseDouble(txtPrecoDisco.getText());
 
 		        DiscoCompacto disco = new DiscoCompacto(
@@ -386,16 +398,13 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		        if(sucesso != -1) {
 		            JOptionPane.showMessageDialog(null, "Disco cadastrado com sucesso!");
 					LocalDateTime horaAgora = LocalDateTime.now();
-					System.out.println(Sessao.getUtilizadorLogado().getNome());
-					System.out.println(Sessao.getUtilizadorLogado().getApelido());
-					System.out.println(Sessao.getUtilizadorLogado().getPerfil());
-					System.out.println(Sessao.getUtilizadorLogado().getEmail());
 					log = new Logs(
 							Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-							Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+							Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 							Sessao.getUtilizadorLogado().getEmail(), "Cadastrar Disco", horaAgora);
 					logController.inserirLog(log);
 		            limparCampos();
+		            listaAcoesDiscos.carregarDiscos();
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Erro ao cadastrar disco!");
 		    }
@@ -416,6 +425,13 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 			countProdutores.setText("Produtores: " + creditosProducao.produtorContador());
 			countGravadoras.setText("Gravadoras: " + creditosProducao.gravadoraContador());
 			countEditoras.setText("Editoras: " + creditosProducao.editoraContador());
+		}
+		if (e.getSource() == btnAdGenero) {
+			new CriarGeneroDialog(generoController).setVisible(true);;
+			
+			for (Genero genero : generoController.listarGeneros()) {
+				generos.addItem(genero);
+			}
 		}
 	}
 	

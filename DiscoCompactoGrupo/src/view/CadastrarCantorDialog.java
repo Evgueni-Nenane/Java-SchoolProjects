@@ -139,7 +139,7 @@ public class CadastrarCantorDialog extends JDialog implements ActionListener {
     			LocalDateTime horaAgora = LocalDateTime.now();
     			log = new Logs(
     					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-    					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+    					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
     					Sessao.getUtilizadorLogado().getEmail(), "Cadastrou Cantor no sistema", horaAgora);
     			logController.inserirLog(log);
                 JOptionPane.showMessageDialog(this, "Cantor cadastrado com sucesso!");

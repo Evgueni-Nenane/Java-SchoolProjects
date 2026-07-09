@@ -10,15 +10,16 @@ public class DiscoCompacto {
     private String titulo;
     private double preco;
     private int anoEdicao;
-    private Generos generoMusical;
+    private Genero generoMusical;
     private List<Cantor> cantores;
     private List<Musico> musicos;
     private List<Compositor> compositores;
     private List<Produtor> produtores;
     private List<Gravadora> gravadoras;
     private List<Editora> editoras;
+    private Edicao edicao;
 
-    public DiscoCompacto(String titulo, Generos generoMusical, double preco,
+    public DiscoCompacto(String titulo, Genero generoMusical, double preco,
             int anoEdicao, List<Cantor> cantores, List<Musico> musicos, List<Compositor> compositores, List<Gravadora> gravadoras,
             List<Produtor> produtores, List<Editora> editoras) {
         this.titulo = titulo;
@@ -33,7 +34,7 @@ public class DiscoCompacto {
         this.editoras = editoras;
     }
 
-    public DiscoCompacto(int codigoDisco,String titulo, Generos generoMusical, double preco,
+    public DiscoCompacto(int codigoDisco,String titulo, Genero generoMusical, double preco,
             int anoEdicao, List<Cantor> cantores, List<Musico> musicos, List<Compositor> compositores, List<Gravadora> gravadoras,
             List<Produtor> produtores, List<Editora> editoras) {
         this(titulo, generoMusical, preco, anoEdicao, cantores, musicos, compositores, gravadoras, produtores, editoras);
@@ -78,11 +79,11 @@ public class DiscoCompacto {
 		this.anoEdicao = anoEdicao;
 	}
 
-	public Generos getGeneroMusical() {
+	public Genero getGeneroMusical() {
 		return generoMusical;
 	}
 
-	public void setGeneroMusical(Generos generoMusical) {
+	public void setGeneroMusical(Genero generoMusical) {
 		this.generoMusical = generoMusical;
 	}
 
@@ -132,6 +133,14 @@ public class DiscoCompacto {
 
 	public void setEditoras(List<Editora> editoras) {
 		this.editoras = editoras;
+	}
+	
+	public Edicao getEdicao() {
+		return edicao;
+	}
+
+	public void setEdicao(Edicao edicao) {
+		this.edicao = edicao;
 	}
 
 	public int discoExistencia(int ano) {

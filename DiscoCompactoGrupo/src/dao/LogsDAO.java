@@ -14,7 +14,6 @@ public class LogsDAO {
 		try {
 			Connection conn = DBConnector.DBConnect();
 			PreparedStatement ps = conn.prepareStatement(sql);
-			System.out.println("Nome: " + log.getNome());
 			ps.setString(1, log.getNome());
 			ps.setString(2, log.getApelido());
 			ps.setString(3, log.getPerfil());
@@ -46,7 +45,6 @@ public class LogsDAO {
                     (LocalDateTime) rs.getObject("Hora")
                 );
                 logs.add(log);
-                System.out.println(log.toString());
             }
         } catch(SQLException e) {
             e.printStackTrace();

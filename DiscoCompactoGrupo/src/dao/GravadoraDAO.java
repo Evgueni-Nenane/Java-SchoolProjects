@@ -66,9 +66,9 @@ public class GravadoraDAO {
                 Gravadora gravadora = new Gravadora(
                     rs.getInt("Codigo_Gravadora"),
                     rs.getString("Nome_Gravadora"),
-                    rs.getString("Email_Gravadora"),
+                    rs.getString("Contacto_Gravadora"),
                     rs.getString("Endereco_Gravadora"),
-                    rs.getString("Contacto_Gravadora")
+                    rs.getString("Email_Gravadora")
                 );
                 gravadoras.add(gravadora);
             }
@@ -79,7 +79,7 @@ public class GravadoraDAO {
     }
     
     public boolean inserRelacaoDiscoGravadora(int codigoDisco, int codigoGravadora) {
-    	String sql = "INSERT INTO GravadoraDisco (Codigo_Disco, Codigo_Gravadora) VALUES (?,?)";
+    	String sql = "INSERT INTO GravadoraDisco (Codigo_DC, Codigo_Gravadora) VALUES (?,?)";
     	try {
     		Connection conn = DBConnector.DBConnect();
     		PreparedStatement ps = conn.prepareStatement(sql);

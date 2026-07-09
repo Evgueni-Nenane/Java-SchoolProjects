@@ -7,23 +7,21 @@ import java.time.LocalDateTime;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-import controller.CantorController;
-import controller.CompositorController;
 import controller.DiscoController;
 import controller.EditoraController;
 import controller.GravadoraController;
 import controller.LogsController;
-import controller.MusicoController;
 import model.Logs;
 import model.NivelAcesso;
 import model.Sessao;
+import resources.EstilizarBotao;
 
 public class Dashboard extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel painelPrincipal;
 
-	private JButton btnRegistar, btnBandas, btnArtistas;
+	private JButton btnRegistar;
 	private JButton btnEstatistica, btnExportar, btnUtilizador, btnLogs, btnSair;
 
 	private CardLayout cardPrincipal;
@@ -32,9 +30,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 	private DiscoController discoController;
 	private EditoraController editoraController;
 	private GravadoraController gravadoraController;
-	private CompositorController compositorController;
-	private MusicoController musicoController;
-	private CantorController cantorController;
 	private LogsController logsController;
 	private Logs log;
 	
@@ -47,9 +42,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		editoraController = new EditoraController();
 		gravadoraController = new GravadoraController();
 		logsController = new LogsController();
-		compositorController = new CompositorController();
-		musicoController = new MusicoController();
-		cantorController = new CantorController();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 700);
@@ -102,6 +94,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
 		btnRegistar = new JButton("Registar");
+		EstilizarBotao.aplicar(btnRegistar);
 		btnRegistar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(btnRegistar);
 		btnRegistar.setPreferredSize(new Dimension(130, 30));
@@ -117,6 +110,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
 		btnEstatistica = new JButton("Estatisticas");
+		EstilizarBotao.aplicar(btnEstatistica);
 		btnEstatistica.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(btnEstatistica);
 		btnEstatistica.setPreferredSize(new Dimension(130, 30));
@@ -125,8 +119,10 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
 		btnExportar = new JButton("Exportar");
+		EstilizarBotao.aplicar(btnExportar);
 		btnExportar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(btnExportar);
+		btnExportar.addActionListener(this);
 		btnExportar.setPreferredSize(new Dimension(130, 30));
 		btnExportar.setMinimumSize(new Dimension(130, 30));
 		btnExportar.setMaximumSize(new Dimension(130, 30));
@@ -139,6 +135,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
 		btnUtilizador = new JButton("Utilizador");
+		EstilizarBotao.aplicar(btnUtilizador);
 		btnUtilizador.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(btnUtilizador);
 		btnUtilizador.setPreferredSize(new Dimension(130, 30));
@@ -148,6 +145,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
 		btnLogs = new JButton("Acessar Logs");
+		EstilizarBotao.aplicar(btnLogs);
 		btnLogs.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(btnLogs);
 		btnLogs.setPreferredSize(new Dimension(130, 30));
@@ -158,6 +156,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 
 		// Botao Sair
 		btnSair = new JButton("Sair");
+		EstilizarBotao.aplicar(btnSair);
 		btnSair.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnSair.setPreferredSize(new Dimension(130, 30));
 		btnSair.setMinimumSize(new Dimension(130, 30));
@@ -170,6 +169,8 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		// ===================
 		topbarPanel.setLayout(new BorderLayout());
 		JLabel lblSistema = new JLabel("Sistema de Gestão de Discos");
+		lblSistema.setFont(new Font("Montserrat", Font.BOLD, 16));
+		lblSistema.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 		lblSistema.setBackground(verticalStrut.getBackground());
 
 		topbarPanel.add(lblSistema, BorderLayout.WEST);
@@ -186,16 +187,19 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		infoUser.setLayout(new BoxLayout(infoUser, BoxLayout.Y_AXIS));
 
 		JLabel lblNomeUser = new JLabel();
-		lblNomeUser.setText(Sessao.getUtilizadorLogado().getNome() + Sessao.getUtilizadorLogado().getApelido());
+		lblNomeUser.setText(Sessao.getUtilizadorLogado().getNome() + " "+ Sessao.getUtilizadorLogado().getApelido());
 		JLabel lblEmailUser = new JLabel();
-		lblEmailUser.setText(Sessao.getUtilizadorLogado().getPerfil().name());
+		lblEmailUser.setText(Sessao.getUtilizadorLogado().getPerfil().getNome());
 		
-		ImageIcon icon = new ImageIcon(Sessao.getUtilizadorLogado().getFoto());
-		Image imagemEscalada = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-		fotoUser.setIcon(new ImageIcon(imagemEscalada));
+		if (Sessao.getUtilizadorLogado().getFoto() != null) {
+			ImageIcon icon = new ImageIcon(Sessao.getUtilizadorLogado().getFoto());
+			Image imagemEscalada = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+			fotoUser.setIcon(new ImageIcon(imagemEscalada));
+		}
+		
 		infoUser.add(lblNomeUser);
 		infoUser.add(lblEmailUser);
-
+	
 		innerUser.add(infoUser);
 		innerUser.setBackground(verticalStrut.getBackground());
 		topbarPanel.add(innerUser, BorderLayout.CENTER);
@@ -205,10 +209,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		PainelDisco painelDisco = new PainelDisco(cardPrincipal, painelCentral, discoController, editoraController, gravadoraController, logsController);
 		painelDisco.setBackground(new Color(246, 247, 249));
 		painelCentral.add(painelDisco, "Discos");
-		
-//		Banda_Participants painelBandaPt = new Banda_Participants(compositorController, musicoController, cantorController);
-//		painelBandaPt.setBackground(new Color(246, 247, 249));
-//		painelCentral.add(painelBandaPt, "Banda e Participantes");
 		
 		PainelUtilizadores painelUtilizadores = new PainelUtilizadores();
 		painelUtilizadores.setBackground(new Color(246, 247, 249));
@@ -253,7 +253,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnUtilizador) {
-			if (Sessao.getUtilizadorLogado().getPerfil() != NivelAcesso.ADMINISTRADOR) {
+			if (Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() != NivelAcesso.ADMINISTRADOR) {
 				JOptionPane.showMessageDialog(null, "Sem permissão suficientes", "Erro de Permissão", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
@@ -261,16 +261,20 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 			LocalDateTime horaAgora = LocalDateTime.now();
 			log = new Logs(
 					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel utilizadores users", horaAgora);
 			logsController.inserirLog(log);
+		}
+		if (e.getSource() == btnExportar) {
+			DialogExportar dialog = new DialogExportar(this);
+			dialog.setVisible(true);
 		}
 		if (e.getSource() == btnRegistar) {
 			cardPrincipal.show(painelCentral, "Discos");
 			LocalDateTime horaAgora = LocalDateTime.now();
 			log = new Logs(
 					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel de discos", horaAgora);
 			logsController.inserirLog(log);
 		}
@@ -278,13 +282,13 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 			LocalDateTime horaAgora = LocalDateTime.now();
 			log = new Logs(
 					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 					Sessao.getUtilizadorLogado().getEmail(), "Saiu do sistema", horaAgora);
 			logsController.inserirLog(log);
 			dispose();
 		}
 		if (e.getSource() == btnLogs) {
-			if (Sessao.getUtilizadorLogado().getPerfil() != NivelAcesso.AUDITOR) {
+			if (Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() != NivelAcesso.AUDITOR) {
 				JOptionPane.showMessageDialog(null, "Sem permissão suficiente", "Erro de Permissão", JOptionPane.WARNING_MESSAGE);
 				return;
 			}
@@ -292,7 +296,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 			LocalDateTime horaAgora = LocalDateTime.now();
 			log = new Logs(
 					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().name(),
+					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel Logs do Sistema", horaAgora);
 			logsController.inserirLog(log);
 		}

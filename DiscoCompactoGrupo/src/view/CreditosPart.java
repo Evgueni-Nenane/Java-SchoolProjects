@@ -16,6 +16,7 @@ import controller.ProdutorController;
 import controller.GravadoraController;
 import model.Editora;
 import model.Produtor;
+import resources.EstilizarTabela;
 import model.Gravadora;
 
 public class CreditosPart extends JDialog implements ActionListener, MouseListener {
@@ -170,6 +171,8 @@ public class CreditosPart extends JDialog implements ActionListener, MouseListen
 		};		
 		
 		JTable tabelaProdutor = new JTable(tabelaProdutorModel);
+		
+		EstilizarTabela.aplicar(tabelaProdutor);
 		tabelaProdutor.getTableHeader().setReorderingAllowed(false);
 		tabelaProdutor.getTableHeader().setResizingAllowed(false);
 		tabelaProdutor.setRowHeight(27);
@@ -286,6 +289,7 @@ public class CreditosPart extends JDialog implements ActionListener, MouseListen
 		};		
 				
 		JTable tabelaGravadora = new JTable(tabelaGravadoraModel);
+		EstilizarTabela.aplicar(tabelaGravadora);
 		tabelaGravadora.getTableHeader().setReorderingAllowed(false);
 		tabelaGravadora.getTableHeader().setResizingAllowed(false);
 		tabelaGravadora.setRowHeight(27);
@@ -402,6 +406,7 @@ public class CreditosPart extends JDialog implements ActionListener, MouseListen
 		};		
 				
 		JTable tabelaEditora = new JTable(tabelaEditoraModel);
+		EstilizarTabela.aplicar(tabelaEditora);
 		tabelaEditora.getTableHeader().setReorderingAllowed(false);
 		tabelaEditora.getTableHeader().setResizingAllowed(false);
 		tabelaEditora.setRowHeight(27);

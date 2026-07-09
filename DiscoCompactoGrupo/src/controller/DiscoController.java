@@ -74,6 +74,8 @@ public class DiscoController {
     		Edicao edicao = new Edicao(codigoDisco, editora.getCodigoEditora(), dataEdicaoCompleta);
     		edicaoDAO.inserir(edicao);
     	}
+        Edicao edicao = edicaoDAO.buscarPorCodigoDisco(codigoDisco);
+        disco.setEdicao(edicao);
     	
     	return 1;   
     }
@@ -103,7 +105,7 @@ public class DiscoController {
     	disco.setProdutores(produtorDAO.listarPorCodigo(codigoDisco));
     	disco.setGravadoras(gravadoraDAO.listarPorCodigo(codigoDisco));
     	disco.setEditoras(editoraDAO.listarPorCodigo(codigoDisco));
-    	
+    	disco.setEdicao(edicaoDAO.buscarPorCodigoDisco(codigoDisco));
     	return disco;
     }
 }

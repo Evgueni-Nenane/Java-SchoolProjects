@@ -34,7 +34,7 @@ public class JLogin extends JFrame {
             public void run() {
                 try {
                     JLogin window = new JLogin();
-                    window.setVisible(true); // ← usa o próprio JLogin
+                    window.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

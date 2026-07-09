@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 import controller.LogsController;
 import model.Logs;
+import resources.EstilizarTabela;
 
 public class PainelLogs extends JPanel implements ActionListener {
 
@@ -113,6 +114,7 @@ public class PainelLogs extends JPanel implements ActionListener {
 		};
 			
 		tabela = new JTable(tabelaModelo);
+		EstilizarTabela.aplicar(tabela);
 		tabela.getTableHeader().setReorderingAllowed(false);
 		tabela.getTableHeader().setResizingAllowed(false);
 
@@ -138,7 +140,6 @@ public class PainelLogs extends JPanel implements ActionListener {
 		tabelaModelo.setRowCount(0);
 		List<Logs> logs = logsController.listarLogs();
 		for (Logs log : logs) {
-			System.out.println(log.toString());
 			tabelaModelo.addRow(new Object[] {
 					log.getCodigo(),
 					log.getNome() + " "+ log.getApelido(),

@@ -16,6 +16,7 @@ import controller.ProdutorController;
 import controller.GravadoraController;
 import model.Editora;
 import model.Produtor;
+import resources.EstilizarTabela;
 import model.Gravadora;
 
 public class Creditos_Producao extends JDialog implements ActionListener, MouseListener {
@@ -36,7 +37,7 @@ public class Creditos_Producao extends JDialog implements ActionListener, MouseL
 		this.gravadoraController = gravadoraController;
 		this.editoraController = editoraController;
 		
-		this.setSize(1000, 760);
+		this.setSize(1000, 680);
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
 		this.setModal(true);
@@ -45,10 +46,14 @@ public class Creditos_Producao extends JDialog implements ActionListener, MouseL
 		topContainer.setBackground(Color.white);
 		topContainer.setPreferredSize(new Dimension(0, 50));
 		topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
+		topContainer.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
 		
 		JLabel titulo = new JLabel("Informações da produção");
-		JLabel descricao = new JLabel("Selecione e defina os produtores, gravadoras e editoras.");
+		titulo.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+		titulo.setFont(new Font("Montserrat", Font.BOLD, 16));
 		
+		JLabel descricao = new JLabel("Selecione e defina os produtores, gravadoras e editoras.");
+		descricao.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
 		topContainer.add(titulo);
 		topContainer.add(descricao);
 		
@@ -66,21 +71,23 @@ public class Creditos_Producao extends JDialog implements ActionListener, MouseL
 		
 		JPanel boxLabelComp = new JPanel();
 		boxLabelComp.setLayout(new BoxLayout(boxLabelComp, BoxLayout.Y_AXIS));
-		
 		JLabel lblProdutor = new JLabel("Produtores");
+		lblProdutor.setFont(new Font("Seog UI", Font.BOLD, 13));
 		JLabel lblDescrComp = new JLabel("Selecione todos os produtores que participam do disco.");
 		boxLabelComp.add(lblProdutor);
 		boxLabelComp.add(lblDescrComp);
 		
+		
 		JPanel accoesComp = new JPanel(new GridBagLayout());
 		GridBagConstraints gbcAC = new GridBagConstraints();
-		gbcAC.insets = new Insets(5,5,5,5);
+		gbcAC.insets = new Insets(5,5,5,10);
 		
 		JTextField pesquisarComp = new JTextField();
 		pesquisarComp.setPreferredSize(new Dimension(150, 28));
 		gbcAC.gridx = 0;
 		gbcAC.gridy = 0;
 		accoesComp.add(pesquisarComp, gbcAC);
+		
 		
 		btnAdicionarComp = new JButton("Adicionar");
 		btnAdicionarComp.addActionListener(this);
@@ -142,6 +149,8 @@ public class Creditos_Producao extends JDialog implements ActionListener, MouseL
 		};		
 		
 		JTable tabelaProdutor = new JTable(tabelaProdutorModel);
+		
+		EstilizarTabela.aplicar(tabelaProdutor);
 		tabelaProdutor.getTableHeader().setReorderingAllowed(false);
 		tabelaProdutor.getTableHeader().setResizingAllowed(false);
 		tabelaProdutor.setRowHeight(27);
@@ -250,6 +259,7 @@ public class Creditos_Producao extends JDialog implements ActionListener, MouseL
 		};		
 				
 		JTable tabelaGravadora = new JTable(tabelaGravadoraModel);
+		EstilizarTabela.aplicar(tabelaGravadora);
 		tabelaGravadora.getTableHeader().setReorderingAllowed(false);
 		tabelaGravadora.getTableHeader().setResizingAllowed(false);
 		tabelaGravadora.setRowHeight(27);
@@ -357,6 +367,7 @@ public class Creditos_Producao extends JDialog implements ActionListener, MouseL
 		};		
 				
 		JTable tabelaEditora = new JTable(tabelaEditoraModel);
+		EstilizarTabela.aplicar(tabelaEditora);
 		tabelaEditora.getTableHeader().setReorderingAllowed(false);
 		tabelaEditora.getTableHeader().setResizingAllowed(false);
 		tabelaEditora.setRowHeight(27);
