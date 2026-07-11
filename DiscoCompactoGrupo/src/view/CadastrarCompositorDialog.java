@@ -140,7 +140,7 @@ public class CadastrarCompositorDialog extends JDialog implements ActionListener
     			log = new Logs(
     					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
     					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
-    					Sessao.getUtilizadorLogado().getEmail(), "Cadastrou compositor no sistema", horaAgora);
+    					Sessao.getUtilizadorLogado().getEmail(), "Cadastrou compositor", horaAgora);
     			logController.inserirLog(log);
                 JOptionPane.showMessageDialog(this, "Compositor cadastrado com sucesso!");
                 dispose();

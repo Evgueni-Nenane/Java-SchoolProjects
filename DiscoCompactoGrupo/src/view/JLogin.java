@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,7 +28,7 @@ public class JLogin extends JFrame {
     private static final long serialVersionUID = 1L;
     private JTextField textFieldNome;
     private JPasswordField passwordField;
-    
+    private JCheckBox mostrarSenha;
     
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -63,7 +64,7 @@ public class JLogin extends JFrame {
     }
 
     private void initialize() {
-        this.setResizable(false);
+    	this.setResizable(false);
         this.setBounds(100, 100, 903, 546);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
@@ -78,6 +79,8 @@ public class JLogin extends JFrame {
 
         // Painel direito com imagem
         JPanel painelImagem = new JPanel() {
+            private static final long serialVersionUID = 1L;
+            
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -107,19 +110,20 @@ public class JLogin extends JFrame {
 
         textFieldNome = new JTextField();
         textFieldNome.setBounds(35, 189, 281, 32);
-        textFieldNome.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
+        textFieldNome.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Color.BLACK));
         textFieldNome.setOpaque(false);
         textFieldNome.setColumns(10);
         textFieldNome.setCaretColor(Color.BLACK);
         painelEsquerdo.add(textFieldNome);
 
-        passwordField = new JPasswordField();
+        passwordField = new JPasswordField(30);
+        passwordField.setEchoChar('*');
         passwordField.setBounds(35, 272, 281, 32);
         passwordField.setBorder(new MatteBorder(0, 0, 2, 0, Color.BLACK));
         passwordField.setOpaque(false);
         passwordField.setCaretColor(Color.BLACK);
         painelEsquerdo.add(passwordField);
-
+        
         JButton btnEntrar = new JButton("ENTRAR");
         btnEntrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -151,5 +155,17 @@ public class JLogin extends JFrame {
         btnEntrar.setBackground(Color.BLACK);
         btnEntrar.setBounds(110, 379, 111, 32);
         painelEsquerdo.add(btnEntrar);
+        
+        mostrarSenha = new JCheckBox("Mostrar Senha");
+        mostrarSenha.addActionListener(e -> {
+	        		if (mostrarSenha.isSelected()) {
+	        			passwordField.setEchoChar((char) 0);
+	        		} else {
+	        			passwordField.setEchoChar('*');
+	        		}
+	        	});
+        mostrarSenha.setBounds(35, 311, 281, 22);
+        mostrarSenha.setBackground(SystemColor.activeCaption);
+        painelEsquerdo.add(mostrarSenha);
     }
 }

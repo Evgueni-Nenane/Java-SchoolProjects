@@ -19,4 +19,16 @@ public class EditoraController {
     public List<Editora> listarEditoras() {
         return editoraDAO.listarTodos();
     }
+    
+    public Editora buscarPorCodigo(int codigo) {
+    		return editoraDAO.buscarPorCodigo(codigo);
+    }
+    
+    public boolean atualizarEditora(Editora editora) {
+    		return editoraDAO.atualizar(editora);
+    }
+    
+    public boolean removerEditora(int codigo) {
+    		return editoraDAO.remover(codigo);
+    }
 }

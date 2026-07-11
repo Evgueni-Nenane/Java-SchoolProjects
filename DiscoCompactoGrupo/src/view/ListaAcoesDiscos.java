@@ -4,8 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -23,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import controller.DiscoController;
 import controller.LogsController;
 import model.DiscoCompacto;
+import model.Genero;
 import model.NivelAcesso;
 import model.Sessao;
 import resources.EstilizarTabela;
@@ -34,7 +37,7 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
     private JTable tabela;
     private DiscoController discoController;
     private JButton btnRemover, btnVerDetalhes, btnEditar;
-	private LogsController logController;
+    private LogsController logController;
     
     public ListaAcoesDiscos(DiscoController discoController, LogsController logController) {
         this.discoController = discoController;
@@ -50,7 +53,8 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
         JPanel parteDescritiva = new JPanel();
         parteDescritiva.setLayout(new BoxLayout(parteDescritiva, BoxLayout.Y_AXIS));
         parteDescritiva.setBackground(titulo.getBackground());
-        JLabel nome = new JLabel("Remover Discos");
+        JLabel nome = new JLabel("Discos Cadastrados no Sistema");
+        nome.setFont(new Font("Montserrat", 16, Font.BOLD));
         parteDescritiva.add(Box.createHorizontalStrut(20));
         parteDescritiva.add(Box.createVerticalGlue());
         parteDescritiva.add(nome);
@@ -58,49 +62,49 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
 
         
         JPanel partePesquisa = new JPanel();
-		partePesquisa.setBackground(titulo.getBackground());
+        partePesquisa.setBackground(titulo.getBackground());
 
-		JLabel pesquisar = new JLabel("Pesquisar");
-		JTextField txtPesquisa = new JTextField();
-		txtPesquisa.setPreferredSize(new Dimension(200, 30));
-		
-		partePesquisa.add(pesquisar);
-		partePesquisa.add(txtPesquisa);
-		
-		txtPesquisa.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
-		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
-		    public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+        JLabel pesquisar = new JLabel("Pesquisar");
+        JTextField txtPesquisa = new JTextField();
+        txtPesquisa.setPreferredSize(new Dimension(200, 30));
+        
+        partePesquisa.add(pesquisar);
+        partePesquisa.add(txtPesquisa);
+        
+        txtPesquisa.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
 
-		    private void filtrar() {
-		        String texto = txtPesquisa.getText().toLowerCase().trim();
-		        tabelaModelo.setRowCount(0);
+            private void filtrar() {
+                String texto = txtPesquisa.getText().toLowerCase().trim();
+                tabelaModelo.setRowCount(0);
 
-		        List<DiscoCompacto> discos = discoController.listarDiscos();
-		        for (DiscoCompacto d : discos) {
-		            if (texto.isEmpty() ||
-		                d.getTitulo().toLowerCase().contains(texto) ||
-		                String.valueOf(d.getGeneroMusical()).toLowerCase().contains(texto) ||
-		                String.valueOf(d.getPreco()).toLowerCase().contains(texto) ||
-		                String.valueOf(d.getGeneroMusical()).contains(texto) ||
-		            	String.valueOf(d.getAnoEdicao()).contains(texto))
+                List<DiscoCompacto> discos = discoController.listarDiscos();
+                for (DiscoCompacto d : discos) {
+                    String generosStr = formatarGeneros(d.getGeneroMusical());
+                    
+                    if (texto.isEmpty() ||
+                        d.getTitulo().toLowerCase().contains(texto) ||
+                        generosStr.toLowerCase().contains(texto) ||
+                        String.valueOf(d.getPreco()).contains(texto) ||
+                        String.valueOf(d.getAnoEdicao()).contains(texto)) {
 
-		                tabelaModelo.addRow(new Object[]{
-		                		d.getCodigoDisco(),
-		                		d.getTitulo(),
-		                		d.getGeneroMusical(),
-		                		d.getPreco(),
-		                		d.getAnoEdicao()
-		                });
-		            }
-		        }
-		    }
-		);
-
-		titulo.add(parteDescritiva, BorderLayout.WEST);
-		titulo.add(partePesquisa, BorderLayout.EAST);
+                        tabelaModelo.addRow(new Object[]{
+                            d.getCodigoDisco(),
+                            d.getTitulo(),
+                            generosStr,
+                            d.getPreco(),
+                            d.getAnoEdicao()
+                        });
+                    }
+                }
+            }
+        });
 
         titulo.add(parteDescritiva, BorderLayout.WEST);
+        titulo.add(partePesquisa, BorderLayout.EAST);
+
         removerPanel.add(titulo, BorderLayout.NORTH);
 
         // Tabela
@@ -142,14 +146,28 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
         carregarDiscos();
     }
 
+    private String formatarGeneros(List<Genero> generos) {
+        if (generos == null || generos.isEmpty()) {
+            return "Nenhum gênero";
+        }
+        
+        List<String> nomesGeneros = new ArrayList<>();
+
+        for (Genero genero : generos) {
+            nomesGeneros.add(genero.getNomeGenero());
+        }
+
+        return String.join(", ", nomesGeneros);
+    }
+
     public void carregarDiscos() {
         tabelaModelo.setRowCount(0);
         List<DiscoCompacto> discos = discoController.listarDiscos();
         for (DiscoCompacto disco : discos) {
             tabelaModelo.addRow(new Object[]{
-            	disco.getCodigoDisco(),
+                disco.getCodigoDisco(),
                 disco.getTitulo(),
-                disco.getGeneroMusical(),
+                formatarGeneros(disco.getGeneroMusical()), 
                 disco.getPreco(),
                 disco.getAnoEdicao()
             });
@@ -159,12 +177,12 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource() == btnRemover) {
-			if(Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() == NivelAcesso.OPERADOR) {
-				JOptionPane.showMessageDialog(null, "Sem permissão suficiente", "Erro de permissão", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-        	
-        	int linhaSelecionada = tabela.getSelectedRow();
+            if(Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() == NivelAcesso.OPERADOR) {
+                JOptionPane.showMessageDialog(null, "Sem permissão suficiente", "Erro de permissão", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            int linhaSelecionada = tabela.getSelectedRow();
 
             if(linhaSelecionada == -1) {
                 JOptionPane.showMessageDialog(null, "Selecione um disco!", "Aviso", JOptionPane.WARNING_MESSAGE);
@@ -178,7 +196,7 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
 
             if(confirmacao == JOptionPane.YES_OPTION) {
 
-            	int codigo = (int) tabelaModelo.getValueAt(linhaSelecionada, 0);
+                int codigo = (int) tabelaModelo.getValueAt(linhaSelecionada, 0);
                 boolean sucesso = discoController.removerDisco(codigo);
 
                 if(sucesso) {
@@ -189,38 +207,38 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
                 }
             }
         }
-		if(e.getSource() == btnVerDetalhes) {
-			int linhaSelecionada = tabela.getSelectedRow();
-			
-			if (linhaSelecionada == -1) {
-				JOptionPane.showMessageDialog(null, "Selecione um disco", "Aviso", JOptionPane.WARNING_MESSAGE);
-				return;
-			}
-			
-			int codigo = (int) tabelaModelo.getValueAt(linhaSelecionada, 0);
-			DiscoCompacto discoCompleto = discoController.buscarDiscoCompleto(codigo);
-			
-			
-			new DiscoCompletoDialog(discoCompleto).setVisible(true);
-		}
-		if (e.getSource() == btnEditar) {
-			if(Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() == NivelAcesso.OPERADOR) {
-				JOptionPane.showMessageDialog(null, "Sem permissão suficiente", "Erro de permissão", JOptionPane.ERROR_MESSAGE);
-				return;
-			}
-			int linhaSelecionada = tabela.getSelectedRow();
-			
-			if (linhaSelecionada == -1) {
-				JOptionPane.showMessageDialog(null, "Selecione um disco", "Aviso", JOptionPane.WARNING_MESSAGE);
-				return;
-			}
-			
-			int codigo = (int) tabelaModelo.getValueAt(linhaSelecionada, 0);
-			DiscoCompacto disco = discoController.buscarDiscoCompleto(codigo);
-			
-			new EditarDiscoDialog(discoController, disco, logController).setVisible(true);
-			carregarDiscos();
-		}
+        if(e.getSource() == btnVerDetalhes) {
+            int linhaSelecionada = tabela.getSelectedRow();
+            
+            if (linhaSelecionada == -1) {
+                JOptionPane.showMessageDialog(null, "Selecione um disco", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            int codigo = (int) tabelaModelo.getValueAt(linhaSelecionada, 0);
+            DiscoCompacto discoCompleto = discoController.buscarDiscoCompleto(codigo);
+            
+            
+            new DiscoCompletoDialog(discoCompleto).setVisible(true);
+        }
+        if (e.getSource() == btnEditar) {
+            if(Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() == NivelAcesso.OPERADOR) {
+                JOptionPane.showMessageDialog(null, "Sem permissão suficiente", "Erro de permissão", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int linhaSelecionada = tabela.getSelectedRow();
+            
+            if (linhaSelecionada == -1) {
+                JOptionPane.showMessageDialog(null, "Selecione um disco", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            int codigo = (int) tabelaModelo.getValueAt(linhaSelecionada, 0);
+            DiscoCompacto disco = discoController.buscarDiscoCompleto(codigo);
+            
+            new EditarDiscoDialog(discoController, disco, logController).setVisible(true);
+            carregarDiscos();
+        }
     }
 
 }

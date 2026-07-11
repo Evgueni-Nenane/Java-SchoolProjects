@@ -76,6 +76,91 @@ public class ProdutorDAO {
         }
         return produtores;
     }
+    
+    public Produtor buscarPorCodigo(int codigoProdutor) {
+		Produtor produtor = new Produtor();
+		String sql = "SELECT * FROM Produtor "
+				+ "WHERE Codigo_Prod = ?";
+    try {
+        Connection conn = DBConnector.DBConnect();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, codigoProdutor);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()) {
+        	produtor = new Produtor(
+        				rs.getInt("Codigo_Prod"),
+        				rs.getString("Nome_Prod"),
+        				rs.getString("Apelido_Produtor"),
+        				rs.getString("Contacto_Prod"),
+        				rs.getString("Email_Prod")
+        			);
+
+            return produtor;
+        }
+    } catch(SQLException e) {
+        e.printStackTrace();
+    }
+		return produtor;
+    }
+    
+    public boolean atualizar(Produtor produtor) {
+    	String sql = "UPDATE Produtor SET email_prod = ?, contacto_prod = ? "
+    			+ "WHERE Codigo_prod = ? ";
+    	try (Connection conn = DBConnector.DBConnect();
+    		PreparedStatement ps = conn.prepareStatement(sql)) {
+    		ps.setString(1, produtor.getEmailProdutor());
+    		ps.setString(2, produtor.getContactoProdutor());
+    		ps.setInt(3, produtor.getCodigoProdutor());
+    		ps.executeUpdate();
+    		return true;
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    		return false;
+    	}
+    }
+    
+    public boolean temRelacionamento(int codigo) {
+    	String sql = "SELECT COUNT(*) AS Quantidade"
+    			+ " FROM ProDC "
+    			+ " WHERE Codigo_Produtor = ?";
+    	try {
+    		Connection conn = DBConnector.DBConnect();
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setInt(1, codigo);
+    		ResultSet rs = ps.executeQuery();
+    		if (rs.next()) {
+    			int quantidade = rs.getInt("Quantidade");
+    			
+    			if (quantidade > 0) {
+    				return true;
+    			}
+    		}
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return false;
+    }
+    
+    public boolean remover(int codigo) {
+    	if (temRelacionamento(codigo)) {
+    		return false;
+    	}
+    	
+    	String sql = "DELETE FROM Produtor WHERE codigo_prod = ?";
+    	try {
+    		Connection conn = DBConnector.DBConnect();
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setInt(1, codigo);
+    		
+    		int linhasAfectadas = ps.executeUpdate();
+    		return linhasAfectadas > 0;
+    	} catch(SQLException e) {
+    		e.printStackTrace();
+    		return false;
+    	}
+    }
+    
+    
     public boolean inserRelacaoDiscoProdutor(int codigoDisco, int codigoProdutor) {
     	String sql = "INSERT INTO ProDC (Codigo_DC, Codigo_Produtor) VALUES (?,?)";
     	try {

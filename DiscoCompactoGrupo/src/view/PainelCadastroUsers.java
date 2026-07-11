@@ -127,6 +127,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		formularioPanel.add(lblPerfis, (GridBagConstraints) gbc.clone());
 
 		permissao = new JComboBox<>();
+		
 		for (NivelAcesso perfil : niveisController.listarNiveis()) {
 			permissao.addItem(perfil);
 		}
@@ -363,7 +364,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 			Utilizador utilizador = new Utilizador(fotoBytes, txtNome.getText(), txtApelido.getText(), txtUser_Name.getText(),
 					(Sexo) generoSexual.getSelectedItem(), (NivelAcesso) permissao.getSelectedItem(),
 					txtEmail.getText(), txtContacto.getText(), txtSenha.getText(), firstAccess);
-
+			System.out.println("ID do perfil: " + utilizador.getPerfil().getCodigoNivel() );
 			boolean sucesso = utilizadorController.cadastrarUtilizador(utilizador);
 
 			if (sucesso) {

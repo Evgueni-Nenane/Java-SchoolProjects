@@ -20,4 +20,16 @@ public class CompositorController {
     public List<Compositor> listarCompositor() {
         return compositorDAO.listarTodos();
     }
+    
+    public Compositor buscarPorCodigo(int codigo) {
+    		return compositorDAO.buscarPorCodigo(codigo);
+    }
+    
+    public boolean atualizarCompositor(Compositor compositor) {
+    		return compositorDAO.atualizar(compositor);
+    }
+    
+    public boolean removerCompositor(int codigo) {
+    		return compositorDAO.remover(codigo);
+    }
 }

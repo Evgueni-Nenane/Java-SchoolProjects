@@ -30,10 +30,11 @@ public class CriarGeneroDialog extends JDialog {
         this.generoController = generoController;
         this.logController = new LogsController();
 
-        setTitle("Adicionar Género");
+        setTitle("Adicionar Genero");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(400, 220);
         setLocationRelativeTo(null);
+        setModal(true);
         setLayout(null);
 
         initialize();

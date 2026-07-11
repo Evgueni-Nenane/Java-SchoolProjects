@@ -7,6 +7,8 @@ public class Produtor {
     private String apelidoProdutor;
     private String contactoProdutor;
     private String emailProdutor;
+    
+    public Produtor() {}
 
     public Produtor(String nomeProdutor, String apelidoProdutor,
             String contactoProdutor, String emailProdutor) {
@@ -21,14 +23,47 @@ public class Produtor {
         this.codigoProdutor = codigoProdutor;
     }
 
-    public int getCodigoProdutor() { return codigoProdutor; }
-    public void setCodigoProdutor(int codigoProdutor) { this.codigoProdutor = codigoProdutor; }
-    public String getNomeProdutor() { return nomeProdutor; }
-    public void setNomeProdutor(String nomeProdutor) { this.nomeProdutor = nomeProdutor; }
-    public String getApelidoProdutor() { return apelidoProdutor; }
-    public void setApelidoProdutor(String apelidoProdutor) { this.apelidoProdutor = apelidoProdutor; }
-    public String getContactoProdutor() { return contactoProdutor; }
-    public void setContactoProdutor(String contactoProdutor) { this.contactoProdutor = contactoProdutor; }
-    public String getEmailProdutor() { return emailProdutor; }
-    public void setEmailProdutor(String emailProdutor) { this.emailProdutor = emailProdutor; }
+	public int getCodigoProdutor() {
+		return codigoProdutor;
+	}
+
+	public void setCodigoProdutor(int codigoProdutor) {
+		this.codigoProdutor = codigoProdutor;
+	}
+
+	public String getNomeProdutor() {
+		return nomeProdutor;
+	}
+
+	public void setNomeProdutor(String nomeProdutor) {
+		this.nomeProdutor = nomeProdutor;
+	}
+
+	public String getApelidoProdutor() {
+		return apelidoProdutor;
+	}
+
+	public void setApelidoProdutor(String apelidoProdutor) {
+		this.apelidoProdutor = apelidoProdutor;
+	}
+
+	public String getContactoProdutor() {
+		return contactoProdutor;
+	}
+
+	public void setContactoProdutor(String contactoProdutor) {
+		this.contactoProdutor = contactoProdutor;
+	}
+
+	public String getEmailProdutor() {
+		return emailProdutor;
+	}
+
+	public void setEmailProdutor(String emailProdutor) {
+		this.emailProdutor = emailProdutor;
+	}
+
+    public String getNomeCompleto() {
+    		return nomeProdutor + " " + apelidoProdutor;
+    }
 }

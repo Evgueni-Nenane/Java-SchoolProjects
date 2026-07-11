@@ -5,6 +5,8 @@ public class Genero {
     private int codigoGenero;
     private String nomeGenero;
 
+    public Genero() {}
+    
     public Genero(int codigoGenero, String nomeGenero) {
         this.codigoGenero = codigoGenero;
         this.nomeGenero = nomeGenero;

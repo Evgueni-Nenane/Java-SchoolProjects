@@ -10,7 +10,7 @@ public class DiscoCompacto {
     private String titulo;
     private double preco;
     private int anoEdicao;
-    private Genero generoMusical;
+    private List<Genero> generoMusical;
     private List<Cantor> cantores;
     private List<Musico> musicos;
     private List<Compositor> compositores;
@@ -19,7 +19,7 @@ public class DiscoCompacto {
     private List<Editora> editoras;
     private Edicao edicao;
 
-    public DiscoCompacto(String titulo, Genero generoMusical, double preco,
+    public DiscoCompacto(String titulo, List<Genero> generoMusical, double preco,
             int anoEdicao, List<Cantor> cantores, List<Musico> musicos, List<Compositor> compositores, List<Gravadora> gravadoras,
             List<Produtor> produtores, List<Editora> editoras) {
         this.titulo = titulo;
@@ -34,7 +34,7 @@ public class DiscoCompacto {
         this.editoras = editoras;
     }
 
-    public DiscoCompacto(int codigoDisco,String titulo, Genero generoMusical, double preco,
+    public DiscoCompacto(int codigoDisco,String titulo, List<Genero> generoMusical, double preco,
             int anoEdicao, List<Cantor> cantores, List<Musico> musicos, List<Compositor> compositores, List<Gravadora> gravadoras,
             List<Produtor> produtores, List<Editora> editoras) {
         this(titulo, generoMusical, preco, anoEdicao, cantores, musicos, compositores, gravadoras, produtores, editoras);
@@ -44,7 +44,6 @@ public class DiscoCompacto {
     
     
     public DiscoCompacto() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public int getCodigoDisco() {
@@ -79,11 +78,11 @@ public class DiscoCompacto {
 		this.anoEdicao = anoEdicao;
 	}
 
-	public Genero getGeneroMusical() {
+	public List<Genero> getGeneroMusical() {
 		return generoMusical;
 	}
 
-	public void setGeneroMusical(Genero generoMusical) {
+	public void setGeneroMusical(List<Genero> generoMusical) {
 		this.generoMusical = generoMusical;
 	}
 

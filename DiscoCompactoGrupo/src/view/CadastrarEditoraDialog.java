@@ -17,7 +17,7 @@ import model.Sessao;
 public class CadastrarEditoraDialog extends JDialog implements ActionListener {
 
     private static final long serialVersionUID = 1L;
-    private JTextField txtNome, txtEmail, txtEndereco;
+    private JTextField txtNome, txtContacto, txtEmail, txtEndereco;
     private JButton btnSalvar;
     private EditoraController editoraController;
     private LogsController logController;
@@ -117,7 +117,7 @@ public class CadastrarEditoraDialog extends JDialog implements ActionListener {
                 return;
             }
             
-            Editora editora = new Editora(txtNome.getText(), txtEmail.getText(), txtEndereco.getText());
+            Editora editora = new Editora(txtNome.getText(), txtContacto.getText(), txtEmail.getText(), txtEndereco.getText());
             boolean sucesso = editoraController.cadastrarEditora(editora);
             if(sucesso) {
     			LocalDateTime horaAgora = LocalDateTime.now();

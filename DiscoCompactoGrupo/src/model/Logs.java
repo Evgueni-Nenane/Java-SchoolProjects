@@ -77,21 +77,4 @@ public class Logs {
 	public String getPerfil() {
 		return perfil;
 	}
-	
-	public String toString() {
-		return "====================================\r\n"
-				+ "======= Credenciais de " + nome + " =======\r\n"
-				+ "======================================\r\n"
-				+ "==----------------------------------==\r\n"
-				+ "--- Nome:       " + nome + "	     ---\r\n"
-				+ "--- Apelido:    " + apelido + "	 ---\r\n"
-				+ "--- Username:   " + perfil + "	 ---\r\n"
-				+ "--- Contacto:   "+ email +"     ---\r\n"
-				+ "==--------------------------------==\r\n"
-				+ "====================================\r\n"
-				+ "\r\n"
-				+ "";
 	}
-	
-	
-}

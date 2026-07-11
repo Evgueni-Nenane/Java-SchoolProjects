@@ -20,4 +20,16 @@ public class GravadoraController {
     public List<Gravadora> listarGravadoras() {
         return gravadoraDAO.listarTodos();
     }
+    
+    public Gravadora buscarPorCodigo(int codigo) {
+    		return gravadoraDAO.buscarPorCodigo(codigo);
+    }
+    
+    public boolean atualizarGravadora(Gravadora gravadora) {
+    	return gravadoraDAO.atualizar(gravadora);
+    }
+    
+    public boolean removerGravadora(int codigo) {
+    	return gravadoraDAO.remover(codigo);
+    }
 }

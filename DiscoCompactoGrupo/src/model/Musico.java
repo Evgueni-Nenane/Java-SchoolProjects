@@ -1,23 +1,29 @@
 package model;
 
+import java.util.List;
+
 public class Musico {
     private int codigoMusico;
     private String nomeMusico;
     private String apelidoMusico;
-    private String instrumento;
+    private List<Instrumento> instrumento;
+    private String contactoMusico;
     private String emailMusico;
 
+    public Musico() {}
+    
     public Musico(String nomeMusico, String apelidoMusico,
-            String instrumento, String emailMusico) {
+            List<Instrumento> instrumento, String contactoMusico, String emailMusico) {
         this.nomeMusico = nomeMusico;
         this.apelidoMusico = apelidoMusico;
         this.instrumento = instrumento;
+        this.contactoMusico = contactoMusico;
         this.emailMusico = emailMusico;
     }
 
     public Musico(int codigoMusico, String nomeMusico, String apelidoMusico,
-    		String instrumento, String emailMusico) {
-        this(nomeMusico, apelidoMusico, instrumento, emailMusico);
+    		List<Instrumento> instrumento, String contactoMusico, String emailMusico) {
+        this(nomeMusico, apelidoMusico, instrumento, contactoMusico, emailMusico);
         this.codigoMusico = codigoMusico;
     }
 
@@ -45,12 +51,20 @@ public class Musico {
 		this.apelidoMusico = apelidoMusico;
 	}
 
-	public String getInstrumento() {
+	public List<Instrumento> getInstrumento() {
 		return instrumento;
 	}
 
-	public void setInstrumento(String instrumento) {
+	public void setInstrumento(List<Instrumento> instrumento) {
 		this.instrumento = instrumento;
+	}
+	
+	public String getContactoMusico() {
+		return contactoMusico;
+	}
+
+	public void setContactoMusico(String contactoMusico) {
+		this.contactoMusico = contactoMusico;
 	}
 
 	public String getEmailMusico() {
@@ -60,6 +74,9 @@ public class Musico {
 	public void setEmailMusico(String emailMusico) {
 		this.emailMusico = emailMusico;
 	}
-
+	
+	public String getNomeCompleto() {
+		return nomeMusico + " " + apelidoMusico;
+	}
     
 }

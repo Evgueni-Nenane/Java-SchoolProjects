@@ -1,510 +1,376 @@
 package view;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.net.URL;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
 
 import controller.EditoraController;
-import controller.ProdutorController;
 import controller.GravadoraController;
+import controller.ProdutorController;
 import model.Editora;
-import model.Produtor;
-import resources.EstilizarTabela;
 import model.Gravadora;
+import model.Produtor;
 
-public class Creditos_Producao extends JDialog implements ActionListener, MouseListener {
+public class Creditos_Producao extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
+
 	private Set<Integer> produtoresSelecionados = new HashSet<>();
 	private Set<Integer> gravadorasSelecionadas = new HashSet<>();
 	private Set<Integer> editorasSelecionadas = new HashSet<>();
-	
+
 	private DefaultTableModel tabelaProdutorModel, tabelaGravadoraModel, tabelaEditoraModel;
-	private JButton btnAdicionarComp, btnAdicionarGravadora, btnCancelar, btnSalvar, btnAdicionarEditora, btnLimparGravadora, btnLimparProdutor, btnLimparEditora;
+	private JTable tabelaProdutor, tabelaGravadora, tabelaEditora;
+	private JButton btnAdicionarProdutor, btnAdicionarGravadora, btnAdicionarEditora;
+	private JButton btnSalvar, btnCancelar;
+	private JButton btnLimparProdutor, btnLimparGravadora, btnLimparEditora;
+
 	private ProdutorController produtorController;
 	private GravadoraController gravadoraController;
 	private EditoraController editoraController;
-	
-	public Creditos_Producao(ProdutorController produtorController, GravadoraController gravadoraController, EditoraController editoraController) {
+
+	public Creditos_Producao(ProdutorController produtorController,
+	                         GravadoraController gravadoraController,
+	                         EditoraController editoraController) {
+
 		this.produtorController = produtorController;
 		this.gravadoraController = gravadoraController;
 		this.editoraController = editoraController;
-		
-		this.setSize(1000, 680);
-		this.setLocationRelativeTo(null);
-		this.setLayout(new BorderLayout());
-		this.setModal(true);
-		
-		JPanel topContainer = new JPanel();
-		topContainer.setBackground(Color.white);
-		topContainer.setPreferredSize(new Dimension(0, 50));
-		topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
-		topContainer.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
-		
-		JLabel titulo = new JLabel("Informações da produção");
-		titulo.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
-		titulo.setFont(new Font("Montserrat", Font.BOLD, 16));
-		
-		JLabel descricao = new JLabel("Selecione e defina os produtores, gravadoras e editoras.");
-		descricao.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
-		topContainer.add(titulo);
-		topContainer.add(descricao);
-		
+
+		setTitle("Créditos de Produção");
+		setSize(1000, 680);
+		setLocationRelativeTo(null);
+		setLayout(new BorderLayout());
+		setModal(true);
+
+		// Top Container
+		JPanel topContainer = criarTopContainer();
+		add(topContainer, BorderLayout.NORTH);
+
+		// Center Container
 		JPanel centerPanel = new JPanel(new BorderLayout());
-		centerPanel.setBackground(Color.WHITE);
-		centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		
+		centerPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
 		JPanel container = new JPanel(new GridLayout(1, 3, 20, 0));
-		
-		JPanel box1 = new JPanel(new BorderLayout());
-		box1.setBackground(Color.WHITE);
-		
-		JPanel boxTitleContainer = new JPanel();
-		boxTitleContainer.setLayout(new BoxLayout(boxTitleContainer, BoxLayout.Y_AXIS));
-		
-		JPanel boxLabelComp = new JPanel();
-		boxLabelComp.setLayout(new BoxLayout(boxLabelComp, BoxLayout.Y_AXIS));
-		JLabel lblProdutor = new JLabel("Produtores");
-		lblProdutor.setFont(new Font("Seog UI", Font.BOLD, 13));
-		JLabel lblDescrComp = new JLabel("Selecione todos os produtores que participam do disco.");
-		boxLabelComp.add(lblProdutor);
-		boxLabelComp.add(lblDescrComp);
-		
-		
-		JPanel accoesComp = new JPanel(new GridBagLayout());
-		GridBagConstraints gbcAC = new GridBagConstraints();
-		gbcAC.insets = new Insets(5,5,5,10);
-		
-		JTextField pesquisarComp = new JTextField();
-		pesquisarComp.setPreferredSize(new Dimension(150, 28));
-		gbcAC.gridx = 0;
-		gbcAC.gridy = 0;
-		accoesComp.add(pesquisarComp, gbcAC);
-		
-		
-		btnAdicionarComp = new JButton("Adicionar");
-		btnAdicionarComp.addActionListener(this);
-		btnAdicionarComp.setPreferredSize(new Dimension(100, 28));
-		gbcAC.gridx = 1;
-		gbcAC.gridy = 0;
-		accoesComp.add(btnAdicionarComp, gbcAC);
-		
-		boxTitleContainer.add(boxLabelComp);
-		boxTitleContainer.add(accoesComp);
-		
-		pesquisarComp.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
-		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
-		    public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
 
-		    private void filtrar() {
-		        String texto = pesquisarComp.getText().toLowerCase().trim();
-		        tabelaProdutorModel.setRowCount(0);
+		// Box 1 - Produtores
+		JTextField pesquisarProdutor = new JTextField();
+		btnAdicionarProdutor = new JButton("Adicionar");
+		JPanel box1 = criarBoxHeader(
+				"Produtores",
+				"Selecione todos os produtores que participam do disco.",
+				pesquisarProdutor, btnAdicionarProdutor);
 
-		        List<Produtor> produtores = produtorController.listarProdutor();
-		        for (Produtor p : produtores) {
-		            if (texto.isEmpty() ||
-		                p.getNomeProdutor().toLowerCase().contains(texto) ||
-		                String.valueOf(p.getApelidoProdutor()).toLowerCase().contains(texto) ||
-		                p.getEmailProdutor().toLowerCase().contains(texto) ||
-		                String.valueOf(p.getEmailProdutor()).toLowerCase().contains(texto) ||
-		                String.valueOf(p.getContactoProdutor()).toLowerCase().contains(texto) ||
-		                String.valueOf(p.getCodigoProdutor()).contains(texto)) {
+		tabelaProdutorModel = criarModeloTabela(new String[]{"", "Nome do Produtor", "", "Id"});
+		tabelaProdutor = new JTable(tabelaProdutorModel);
+		configurarTabela(tabelaProdutor);
+		box1.add(new JScrollPane(tabelaProdutor) {{
+			setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		}}, BorderLayout.CENTER);
 
-		                tabelaProdutorModel.addRow(new Object[]{
-		                		produtoresSelecionados.contains(p.getCodigoProdutor()),
-		                	    p.getNomeProdutor() + " " + p.getApelidoProdutor(),
-		                	    "Produtor",
-		                	    p.getCodigoProdutor()
-		                });
-		            }
-		        }
-		    }
-		});
-		
-		box1.add(boxTitleContainer, BorderLayout.NORTH);
-		
-		JPanel tabelaProdutorPanel = new JPanel();
-		
-		String[] colunasProdutor = {"", "Nome do Produtor", "", "id"};
-		tabelaProdutorModel = new DefaultTableModel(colunasProdutor, 0) {
-			@Override
-			public Class<?> getColumnClass(int columnIndex) {
-				if (columnIndex == 0) {
-					return Boolean.class;
-				}
-				return super.getColumnClass(columnIndex);
-			}
-			@Override
-			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				return columnIndex == 0;
-			}
-		};		
-		
-		JTable tabelaProdutor = new JTable(tabelaProdutorModel);
-		
-		EstilizarTabela.aplicar(tabelaProdutor);
-		tabelaProdutor.getTableHeader().setReorderingAllowed(false);
-		tabelaProdutor.getTableHeader().setResizingAllowed(false);
-		tabelaProdutor.setRowHeight(27);
-		tabelaProdutorPanel.add(tabelaProdutor);
-		TableColumn checkboxColumn = tabelaProdutor.getColumnModel().getColumn(0);
-		checkboxColumn.setPreferredWidth(3);
-		checkboxColumn.setHeaderRenderer(new HeaderIconRenderer());
-		
-		TableColumn idColumn = tabelaProdutor.getColumnModel().getColumn(3);
-		idColumn.setMaxWidth(0);
-		idColumn.setMinWidth(0);
-		idColumn.setWidth(0);
-		idColumn.setPreferredWidth(0);
-		
-		JScrollPane scrollComp = new JScrollPane(tabelaProdutor);
-		
-		box1.add(scrollComp, BorderLayout.CENTER);
-		
-		JPanel acoesBox1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		
 		btnLimparProdutor = new JButton("Desmarcar tudo");
 		btnLimparProdutor.addActionListener(this);
-		
+		JPanel acoesBox1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		acoesBox1.setBackground(Color.WHITE);
 		acoesBox1.add(btnLimparProdutor);
-		
 		box1.add(acoesBox1, BorderLayout.SOUTH);
-		
 		container.add(box1);
-		
-		JPanel box2 = new JPanel(new BorderLayout());
-		
-		JPanel boxTitleContainerMusic = new JPanel();
-		boxTitleContainerMusic.setLayout(new BoxLayout(boxTitleContainerMusic, BoxLayout.Y_AXIS));
-				
-		JPanel boxLabelMusic = new JPanel();
-		boxLabelMusic.setLayout(new BoxLayout(boxLabelMusic, BoxLayout.Y_AXIS));
-			
-		JLabel lblGravadora = new JLabel("Gravadoras");
-		JLabel lblDescrGravadora = new JLabel("Selecione todas as gravadoras que participam do disco.");
-		boxLabelMusic.add(lblGravadora);
-		boxLabelMusic.add(lblDescrGravadora);
-				
-		JPanel accoesGravadora = new JPanel(new GridBagLayout());
-		GridBagConstraints gbcAM = new GridBagConstraints();
-		gbcAM.insets = new Insets(5,5,5,5);
-				
+
+		// Box 2 - Gravadoras
 		JTextField pesquisarGravadora = new JTextField();
-		pesquisarGravadora.setPreferredSize(new Dimension(150, 28));
-		gbcAM.gridx = 0;
-		gbcAM.gridy = 0;
-		accoesGravadora.add(pesquisarGravadora, gbcAM);
-				
 		btnAdicionarGravadora = new JButton("Adicionar");
-		btnAdicionarGravadora.addActionListener(this);
-		btnAdicionarGravadora.setPreferredSize(new Dimension(100, 28));
-		gbcAM.gridx = 1;
-		gbcAM.gridy = 0;
-		accoesGravadora.add(btnAdicionarGravadora, gbcAM);
-			
-		boxTitleContainerMusic.add(boxLabelMusic);
-		boxTitleContainerMusic.add(accoesGravadora);
-		
-		pesquisarGravadora.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
-		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
-		    public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		JPanel box2 = criarBoxHeader("Gravadoras", "Selecione todas as gravadoras que participam do disco.",
+				pesquisarGravadora, btnAdicionarGravadora);
 
-		    private void filtrar() {
-		        String texto = pesquisarGravadora.getText().toLowerCase().trim();
-		        tabelaGravadoraModel.setRowCount(0);
+		tabelaGravadoraModel = criarModeloTabela(new String[]{"", "Nome da Gravadora", "", "Id"});
+		tabelaGravadora = new JTable(tabelaGravadoraModel);
+		configurarTabela(tabelaGravadora);
+		box2.add(new JScrollPane(tabelaGravadora) {{
+			setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		}}, BorderLayout.CENTER);
 
-		        List<Gravadora> gravadoras = gravadoraController.listarGravadoras();
-		        for (Gravadora g : gravadoras) {
-		            if (texto.isEmpty() ||
-		                g.getNomeGravadora().toLowerCase().contains(texto) ||
-		                g.getEmailGravadora().toLowerCase().contains(texto)) {
-
-		                tabelaGravadoraModel.addRow(new Object[]{
-		                		gravadorasSelecionadas.contains(g.getCodigoGravadora()),
-		                	    g.getNomeGravadora(),
-		                	    "Gravadora",
-		                	    g.getCodigoGravadora()
-		                });
-		            }
-		        }
-		    }
-		});
-		
-		box2.add(boxTitleContainerMusic, BorderLayout.NORTH);
-		
-		JPanel tabelaGravadoraPanel = new JPanel();
-				
-		String[] colunasGravadora = {"", "Nome da Gravadora", "", "Id"};
-		tabelaGravadoraModel = new DefaultTableModel(colunasGravadora, 0) {
-			@Override
-			public Class<?> getColumnClass(int columnIndex) {
-				if (columnIndex == 0) {
-					return Boolean.class;
-				}
-				return super.getColumnClass(columnIndex);
-			}
-			@Override
-			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				return columnIndex == 0;
-			}
-		};		
-				
-		JTable tabelaGravadora = new JTable(tabelaGravadoraModel);
-		EstilizarTabela.aplicar(tabelaGravadora);
-		tabelaGravadora.getTableHeader().setReorderingAllowed(false);
-		tabelaGravadora.getTableHeader().setResizingAllowed(false);
-		tabelaGravadora.setRowHeight(27);
-		tabelaGravadoraPanel.add(tabelaGravadora);
-		checkboxColumn = tabelaGravadora.getColumnModel().getColumn(0);
-		checkboxColumn.setPreferredWidth(3);
-		checkboxColumn.setHeaderRenderer(new HeaderIconRenderer());
-		
-		TableColumn idColumn2 = tabelaGravadora.getColumnModel().getColumn(3);
-		idColumn2.setMaxWidth(0);
-		idColumn2.setMinWidth(0);
-		idColumn2.setWidth(0);
-		idColumn2.setPreferredWidth(0);
-		
-		JScrollPane scrollGravadora = new JScrollPane(tabelaGravadora);
-			
-		box2.add(scrollGravadora, BorderLayout.CENTER);
-		
-		JPanel acoesBox2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-				
 		btnLimparGravadora = new JButton("Desmarcar tudo");
-		btnLimparGravadora.addActionListener(this);		
-		
+		btnLimparGravadora.addActionListener(this);
+		JPanel acoesBox2 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		acoesBox2.setBackground(Color.WHITE);
 		acoesBox2.add(btnLimparGravadora);
-		
 		box2.add(acoesBox2, BorderLayout.SOUTH);
-		
 		container.add(box2);
-		
-		JPanel box3 = new JPanel(new BorderLayout());
-		
-		JPanel boxTitleContainerEditora = new JPanel();
-		boxTitleContainerEditora.setLayout(new BoxLayout(boxTitleContainerEditora, BoxLayout.Y_AXIS));
-				
-		JPanel boxLabelEditora = new JPanel();
-		boxLabelEditora.setLayout(new BoxLayout(boxLabelEditora, BoxLayout.Y_AXIS));
-			
-		JLabel lblEditora = new JLabel("Editoras");
-		JLabel lblDescrEditora = new JLabel("Selecione todas as editoras que participam do disco.");
-		boxLabelEditora.add(lblEditora);
-		boxLabelEditora.add(lblDescrEditora);
-				
-		JPanel accoesEditora = new JPanel(new GridBagLayout());
-		GridBagConstraints gbcACa = new GridBagConstraints();
-		gbcACa.insets = new Insets(5,5,5,5);
-				
+
+		// Box 3 - Editoras
 		JTextField pesquisarEditora = new JTextField();
-		pesquisarEditora.setPreferredSize(new Dimension(150, 28));
-		gbcACa.gridx = 0;
-		gbcACa.gridy = 0;
-		accoesEditora.add(pesquisarEditora, gbcACa);
-				
 		btnAdicionarEditora = new JButton("Adicionar");
-		btnAdicionarEditora.addActionListener(this);
-		btnAdicionarEditora.setPreferredSize(new Dimension(100, 28));
-		gbcACa.gridx = 1;
-		gbcACa.gridy = 0;
-		accoesEditora.add(btnAdicionarEditora, gbcACa);
-			
-		boxTitleContainerEditora.add(boxLabelEditora);
-		boxTitleContainerEditora.add(accoesEditora);
-		
-		pesquisarEditora.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
-		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
-		    public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+		JPanel box3 = criarBoxHeader("Editoras", "Selecione todas as editoras que participam do disco.",
+				pesquisarEditora, btnAdicionarEditora);
 
-		    private void filtrar() {
-		        String texto = pesquisarEditora.getText().toLowerCase().trim();
-		        tabelaEditoraModel.setRowCount(0);
+		tabelaEditoraModel = criarModeloTabela(new String[]{"", "Nome da Editora", "", "Id"});
+		tabelaEditora = new JTable(tabelaEditoraModel);
+		configurarTabela(tabelaEditora);
+		box3.add(new JScrollPane(tabelaEditora) {{
+			setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+		}}, BorderLayout.CENTER);
 
-		        List<Editora> editoras = editoraController.listarEditoras();
-		        for (Editora e : editoras) {
-		            if (texto.isEmpty() ||
-		                e.getNomeEditora().toLowerCase().contains(texto)){
-
-		                tabelaEditoraModel.addRow(new Object[]{
-		                		editorasSelecionadas.contains(e.getCodigoEditora()),
-		                	    e.getNomeEditora(),
-		                	    "Editora",
-		                	    e.getCodigoEditora()
-		                });
-		            }
-		        }
-		    }
-		});
-		
-		box3.add(boxTitleContainerEditora, BorderLayout.NORTH);
-		
-		JPanel tabelaEditoraPanel = new JPanel();
-				
-		String[] colunasEditora = {"", "Nome do Editora", "", "Id"};
-		tabelaEditoraModel = new DefaultTableModel(colunasEditora, 0) {
-			@Override
-			public Class<?> getColumnClass(int columnIndex) {
-				if (columnIndex == 0) {
-					return Boolean.class;
-				}
-				return super.getColumnClass(columnIndex);
-			}
-			@Override
-			public boolean isCellEditable(int rowIndex, int columnIndex) {
-				return columnIndex == 0;
-			}
-		};		
-				
-		JTable tabelaEditora = new JTable(tabelaEditoraModel);
-		EstilizarTabela.aplicar(tabelaEditora);
-		tabelaEditora.getTableHeader().setReorderingAllowed(false);
-		tabelaEditora.getTableHeader().setResizingAllowed(false);
-		tabelaEditora.setRowHeight(27);
-		tabelaEditoraPanel.add(tabelaEditora);
-		checkboxColumn = tabelaEditora.getColumnModel().getColumn(0);
-		checkboxColumn.setPreferredWidth(3);
-		checkboxColumn.setHeaderRenderer(new HeaderIconRenderer());
-		
-		TableColumn idColumn3 = tabelaEditora.getColumnModel().getColumn(3);
-		idColumn3.setMaxWidth(0);
-		idColumn3.setMinWidth(0);
-		idColumn3.setWidth(0);
-		idColumn3.setPreferredWidth(0);
-		
-		JScrollPane scrollEditora = new JScrollPane(tabelaEditora);
-		
-		box3.add(scrollEditora, BorderLayout.CENTER);
-		
-		JPanel acoesBox3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		
 		btnLimparEditora = new JButton("Desmarcar tudo");
 		btnLimparEditora.addActionListener(this);
-		
+		JPanel acoesBox3 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		acoesBox3.setBackground(Color.WHITE);
 		acoesBox3.add(btnLimparEditora);
-		
 		box3.add(acoesBox3, BorderLayout.SOUTH);
-		
 		container.add(box3);
-		
+
 		centerPanel.add(container, BorderLayout.CENTER);
-		
+		add(centerPanel, BorderLayout.CENTER);
+
+		// Bottom Container
 		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		bottomPanel.setPreferredSize(new Dimension(0, 50));
-		
-		btnSalvar = new JButton("Confirmar Seleção");
-		btnSalvar.addActionListener(this);
-		
+		bottomPanel.setBackground(Color.WHITE);
+
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(this);
-		
+
+		btnSalvar = new JButton("Confirmar Seleção");
+		btnSalvar.addActionListener(this);
+		btnSalvar.setBackground(new Color(19, 175, 119));
+		btnSalvar.setForeground(Color.WHITE);
+		btnSalvar.setFocusPainted(false);
+		btnSalvar.setBorderPainted(false);
+		btnSalvar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 		bottomPanel.add(btnCancelar);
 		bottomPanel.add(btnSalvar);
-		
+
+		add(bottomPanel, BorderLayout.SOUTH);
+
+		btnAdicionarProdutor.addActionListener(this);
+		btnAdicionarGravadora.addActionListener(this);
+		btnAdicionarEditora.addActionListener(this);
+
+		// Adicionar filtros de pesquisa
+		adicionarFiltroPesquisa(pesquisarProdutor, tabelaProdutorModel, "produtor");
+		adicionarFiltroPesquisa(pesquisarGravadora, tabelaGravadoraModel, "gravadora");
+		adicionarFiltroPesquisa(pesquisarEditora, tabelaEditoraModel, "editora");
+
 		carregarProdutores();
 		carregarGravadoras();
 		carregarEditoras();
-		
-		Timer timer = new Timer(5000, e -> {
-			carregarProdutores();
-			carregarGravadoras();
-			carregarEditoras();
-		});
-		
-		timer.setInitialDelay(5000);
-		timer.start();
-		
-		this.add(topContainer, BorderLayout.NORTH);
-		this.add(centerPanel, BorderLayout.CENTER);
-		this.add(bottomPanel, BorderLayout.SOUTH);
 	}
 
-	@Override public void mouseClicked(MouseEvent e) {}
-	@Override public void mousePressed(MouseEvent e) {}
-	@Override public void mouseReleased(MouseEvent e) {}
-	@Override public void mouseEntered(MouseEvent e) {}
-	@Override public void mouseExited(MouseEvent e) {}
-	
-	@Override 
+	private JPanel criarTopContainer() {
+		JPanel topContainer = new JPanel();
+		topContainer.setBackground(new Color(19, 175, 119));
+		topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
+		topContainer.setBorder(BorderFactory.createEmptyBorder(18, 25, 18, 25));
+		topContainer.setPreferredSize(new Dimension(0, 90));
+
+		JLabel titulo = new JLabel("Créditos de Produção");
+		titulo.setFont(titulo.getFont().deriveFont(16f).deriveFont(java.awt.Font.BOLD));
+		titulo.setForeground(Color.WHITE);
+
+		JLabel descricao = new JLabel("Selecione os produtores, gravadoras e editoras do disco.");
+		descricao.setFont(descricao.getFont().deriveFont(12f));
+		descricao.setForeground(new Color(230, 230, 230));
+
+		topContainer.add(titulo);
+		topContainer.add(Box.createVerticalStrut(5));
+		topContainer.add(descricao);
+		return topContainer;
+	}
+
+	private JPanel criarBoxHeader(String titulo, String descricao, JTextField campoPesquisa, JButton botaoAdicionar) {
+		JPanel box = new JPanel(new BorderLayout());
+		box.setBackground(Color.WHITE);
+		box.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+				BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+
+		JPanel boxTitleContainer = new JPanel();
+		boxTitleContainer.setLayout(new BoxLayout(boxTitleContainer, BoxLayout.Y_AXIS));
+		boxTitleContainer.setBackground(Color.WHITE);
+
+		JPanel boxLabel = new JPanel();
+		boxLabel.setLayout(new BoxLayout(boxLabel, BoxLayout.Y_AXIS));
+		boxLabel.setBackground(Color.WHITE);
+
+		JLabel lblTitulo = new JLabel(titulo);
+		lblTitulo.setFont(lblTitulo.getFont().deriveFont(14f).deriveFont(java.awt.Font.BOLD));
+
+		JLabel lblDescricao = new JLabel(descricao);
+		lblDescricao.setFont(lblDescricao.getFont().deriveFont(11f));
+		lblDescricao.setForeground(Color.GRAY);
+
+		boxLabel.add(lblTitulo);
+		boxLabel.add(Box.createVerticalStrut(5));
+		boxLabel.add(lblDescricao);
+
+		JPanel acoes = new JPanel(new GridBagLayout());
+		acoes.setBackground(Color.WHITE);
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(8, 5, 5, 5);
+
+		campoPesquisa.setPreferredSize(new Dimension(180, 34));
+
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 1;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		acoes.add(campoPesquisa, gbc);
+
+		botaoAdicionar.setPreferredSize(new Dimension(110, 34));
+		botaoAdicionar.setBackground(new Color(19, 175, 119));
+		botaoAdicionar.setForeground(Color.WHITE);
+		botaoAdicionar.setFocusPainted(false);
+		botaoAdicionar.setBorderPainted(false);
+		botaoAdicionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		gbc.gridx = 1;
+		gbc.weightx = 0;
+		gbc.fill = GridBagConstraints.NONE;
+		acoes.add(botaoAdicionar, gbc);
+
+		boxTitleContainer.add(boxLabel);
+		boxTitleContainer.add(Box.createVerticalStrut(10));
+		boxTitleContainer.add(acoes);
+
+		box.add(boxTitleContainer, BorderLayout.NORTH);
+		return box;
+	}
+
+	private DefaultTableModel criarModeloTabela(String[] colunas) {
+		return new DefaultTableModel(colunas, 0) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Class<?> getColumnClass(int columnIndex) {
+				if (columnIndex == 0) {
+					return Boolean.class;
+				}
+				return super.getColumnClass(columnIndex);
+			}
+
+			@Override
+			public boolean isCellEditable(int rowIndex, int columnIndex) {
+				return columnIndex == 0;
+			}
+		};
+	}
+
+	private void configurarTabela(JTable tabela) {
+		tabela.getColumnModel().getColumn(0).setPreferredWidth(30);
+		tabela.getColumnModel().getColumn(0).setMaxWidth(30);
+		tabela.getColumnModel().getColumn(2).setMinWidth(0);
+		tabela.getColumnModel().getColumn(2).setMaxWidth(0);
+		tabela.getColumnModel().getColumn(2).setWidth(0);
+		tabela.getColumnModel().getColumn(3).setMinWidth(0);
+		tabela.getColumnModel().getColumn(3).setMaxWidth(0);
+		tabela.getColumnModel().getColumn(3).setWidth(0);
+		tabela.setRowHeight(25);
+		tabela.getTableHeader().setReorderingAllowed(false);
+	}
+
+	private void adicionarFiltroPesquisa(JTextField campoPesquisa, DefaultTableModel model, String tipo) {
+		campoPesquisa.getDocument().addDocumentListener(new DocumentListener() {
+			public void insertUpdate(DocumentEvent e) { filtrar(); }
+			public void removeUpdate(DocumentEvent e) { filtrar(); }
+			public void changedUpdate(DocumentEvent e) { filtrar(); }
+
+			private void filtrar() {
+				String texto = campoPesquisa.getText().toLowerCase().trim();
+
+				salvarSelecoesAtuais();
+
+				switch (tipo) {
+					case "produtor": carregarProdutores(); break;
+					case "gravadora": carregarGravadoras(); break;
+					case "editora": carregarEditoras(); break;
+				}
+
+				for (int i = model.getRowCount() - 1; i >= 0; i--) {
+					String nome = model.getValueAt(i, 1).toString().toLowerCase();
+					if (!texto.isEmpty() && !nome.contains(texto)) {
+						model.removeRow(i);
+					}
+				}
+			}
+		});
+	}
+
+	private void salvarSelecoesAtuais() {
+		produtoresSelecionados.clear();
+		for (int i = 0; i < tabelaProdutorModel.getRowCount(); i++) {
+			boolean marcado = (Boolean) tabelaProdutorModel.getValueAt(i, 0);
+			int id = (Integer) tabelaProdutorModel.getValueAt(i, 3);
+			if (marcado) produtoresSelecionados.add(id);
+		}
+
+		gravadorasSelecionadas.clear();
+		for (int i = 0; i < tabelaGravadoraModel.getRowCount(); i++) {
+			boolean marcado = (Boolean) tabelaGravadoraModel.getValueAt(i, 0);
+			int id = (Integer) tabelaGravadoraModel.getValueAt(i, 3);
+			if (marcado) gravadorasSelecionadas.add(id);
+		}
+
+		editorasSelecionadas.clear();
+		for (int i = 0; i < tabelaEditoraModel.getRowCount(); i++) {
+			boolean marcado = (Boolean) tabelaEditoraModel.getValueAt(i, 0);
+			int id = (Integer) tabelaEditoraModel.getValueAt(i, 3);
+			if (marcado) editorasSelecionadas.add(id);
+		}
+	}
+
+	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnAdicionarComp) {
-			new CadastrarProdutorDialog().setVisible(true);
+		if (e.getSource() == btnSalvar) {
+			salvarSelecoesAtuais();
+			this.dispose();
 		}
-		if (e.getSource() == btnAdicionarGravadora) {
-			new CadastrarGravadoraDialog().setVisible(true);
-		}
-		if (e.getSource() == btnAdicionarEditora) {
-			new CadastrarEditoraDialog().setVisible(true);
-		}
-		if (e.getSource() == btnLimparGravadora) {
-			desmarcarGravadora();
+		if (e.getSource() == btnCancelar) {
+			this.dispose();
 		}
 		if (e.getSource() == btnLimparProdutor) {
 			desmarcarProdutor();
 		}
+		if (e.getSource() == btnLimparGravadora) {
+			desmarcarGravadora();
+		}
 		if (e.getSource() == btnLimparEditora) {
 			desmarcarEditora();
 		}
-		if (e.getSource() == btnSalvar) {
-			this.dispose();
-		}
-		if (e.getSource() == btnCancelar) {
-			desmarcarProdutor();
-			desmarcarGravadora();
-			desmarcarEditora();
-			this.dispose();
-		}
 	}
 
-	public class HeaderIconRenderer extends JLabel implements TableCellRenderer{
-
-		private static final long serialVersionUID = 1L;
-
-		public HeaderIconRenderer() {
-			URL url = this.getClass().getResource("/resources/iconcheckbox.png");
-			ImageIcon icone = new ImageIcon(url);
-			Image imagemCrua = icone.getImage();
-			Image imagemRedimensionada = imagemCrua.getScaledInstance(16, 16, Image.SCALE_SMOOTH);
-			ImageIcon iconeFinal = new ImageIcon(imagemRedimensionada);
-			
-			setHorizontalAlignment(JLabel.CENTER);
-			setIcon(iconeFinal);
-		}
-		@Override
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
-				int row, int column) {
-			return this;
-		}
-		
-	}
-	
 	public void carregarProdutores() {
-		for (int i = 0; i < tabelaProdutorModel.getRowCount(); i++) {
-			boolean marcado = (Boolean) tabelaProdutorModel.getValueAt(i, 0);
-			int id = (Integer) tabelaProdutorModel.getValueAt(i, 3);
-			
-			if (marcado) {
-				produtoresSelecionados.add(id);
-			} else {
-				produtoresSelecionados.remove(id);
-			}
-		}
-		
 		tabelaProdutorModel.setRowCount(0);
 		List<Produtor> produtores = produtorController.listarProdutor();
 		for (Produtor produtor : produtores) {
 			boolean estavaMarcado = produtoresSelecionados.contains(produtor.getCodigoProdutor());
-			tabelaProdutorModel.addRow(new Object[] {
+			tabelaProdutorModel.addRow(new Object[]{
 					estavaMarcado,
 					produtor.getNomeProdutor() + " " + produtor.getApelidoProdutor(),
 					"Produtor",
@@ -512,25 +378,13 @@ public class Creditos_Producao extends JDialog implements ActionListener, MouseL
 			});
 		}
 	}
-	
+
 	public void carregarGravadoras() {
-		for (int i = 0; i < tabelaGravadoraModel.getRowCount(); i++) {
-			boolean marcado = (Boolean) tabelaGravadoraModel.getValueAt(i, 0);
-			int id = (Integer) tabelaGravadoraModel.getValueAt(i, 3);
-			
-			if (marcado) {
-				gravadorasSelecionadas.add(id);
-			} else {
-				gravadorasSelecionadas.remove(id);
-			}
-		}
-		
 		tabelaGravadoraModel.setRowCount(0);
 		List<Gravadora> gravadoras = gravadoraController.listarGravadoras();
-		
 		for (Gravadora gravadora : gravadoras) {
 			boolean estavaMarcado = gravadorasSelecionadas.contains(gravadora.getCodigoGravadora());
-			tabelaGravadoraModel.addRow(new Object[] {
+			tabelaGravadoraModel.addRow(new Object[]{
 					estavaMarcado,
 					gravadora.getNomeGravadora(),
 					"Gravadora",
@@ -538,25 +392,13 @@ public class Creditos_Producao extends JDialog implements ActionListener, MouseL
 			});
 		}
 	}
-	
+
 	public void carregarEditoras() {
-		for (int i = 0; i < tabelaEditoraModel.getRowCount(); i++) {
-			boolean marcado = (Boolean) tabelaEditoraModel.getValueAt(i, 0);
-			int id = (Integer) tabelaEditoraModel.getValueAt(i, 3);
-			
-			if (marcado) {
-				editorasSelecionadas.add(id);
-			} else {
-				editorasSelecionadas.remove(id);
-			}
-		}
-		
 		tabelaEditoraModel.setRowCount(0);
-		List<Editora> editoraes = editoraController.listarEditoras();
-		
-		for (Editora editora: editoraes) {
+		List<Editora> editoras = editoraController.listarEditoras();
+		for (Editora editora : editoras) {
 			boolean estavaMarcado = editorasSelecionadas.contains(editora.getCodigoEditora());
-			tabelaEditoraModel.addRow(new Object[] {
+			tabelaEditoraModel.addRow(new Object[]{
 					estavaMarcado,
 					editora.getNomeEditora(),
 					"Editora",
@@ -564,107 +406,74 @@ public class Creditos_Producao extends JDialog implements ActionListener, MouseL
 			});
 		}
 	}
-	
+
 	public void desmarcarProdutor() {
 		produtoresSelecionados.clear();
-		
-		tabelaProdutorModel.setRowCount(0);
-		List<Produtor> produtores = produtorController.listarProdutor();
-		for (Produtor produtor : produtores) {
-			boolean estaDesmarcado = produtoresSelecionados.contains(produtor.getCodigoProdutor());
-			tabelaProdutorModel.addRow(new Object[] {
-					estaDesmarcado,
-					produtor.getNomeProdutor() + " " + produtor.getApelidoProdutor(),
-					"Produtor",
-					produtor.getCodigoProdutor()
-			});
+		for (int i = 0; i < tabelaProdutorModel.getRowCount(); i++) {
+			tabelaProdutorModel.setValueAt(false, i, 0);
 		}
-	
 	}
-	
+
 	public void desmarcarGravadora() {
 		gravadorasSelecionadas.clear();
-		
-		tabelaGravadoraModel.setRowCount(0);
-		List<Gravadora> gravadoras = gravadoraController.listarGravadoras();
-		for (Gravadora gravadora : gravadoras) {
-			boolean estaDesmarcado = gravadorasSelecionadas.contains(gravadora.getCodigoGravadora());
-			tabelaGravadoraModel.addRow(new Object[] {
-					estaDesmarcado,
-					gravadora.getNomeGravadora(),
-					"Gravadora",
-					gravadora.getCodigoGravadora()
-			});
+		for (int i = 0; i < tabelaGravadoraModel.getRowCount(); i++) {
+			tabelaGravadoraModel.setValueAt(false, i, 0);
 		}
-	
 	}
-	
+
 	public void desmarcarEditora() {
 		editorasSelecionadas.clear();
-		
-		tabelaEditoraModel.setRowCount(0);
-		List<Editora> editoraes = editoraController.listarEditoras();
-		for (Editora editora : editoraes) {
-			boolean estaDesmarcado = editorasSelecionadas.contains(editora.getCodigoEditora());
-			tabelaEditoraModel.addRow(new Object[] {
-					estaDesmarcado,
-					editora.getNomeEditora(),
-					"Editora",
-					editora.getCodigoEditora()
-			});
+		for (int i = 0; i < tabelaEditoraModel.getRowCount(); i++) {
+			tabelaEditoraModel.setValueAt(false, i, 0);
 		}
-	
 	}
-	
-	public int totalSelecionados() {		
+
+	public int totalSelecionados() {
 		return produtoresSelecionados.size() + gravadorasSelecionadas.size() + editorasSelecionadas.size();
 	}
-	
+
 	public int produtorContador() {
 		return produtoresSelecionados.size();
 	}
-	
+
 	public int gravadoraContador() {
 		return gravadorasSelecionadas.size();
 	}
-	
+
 	public int editoraContador() {
 		return editorasSelecionadas.size();
 	}
-	
+
 	public List<Produtor> getProdutoresSelecionados() {
-	    List<Produtor> resultado = new ArrayList<>();
-	    List<Produtor> todos = produtorController.listarProdutor();
-	    
-	    for (Produtor produtor : todos) {
-	    	if (produtoresSelecionados.contains(produtor.getCodigoProdutor())) {
-	    		resultado.add(produtor);
-	    	}
-	    }
-	    return resultado;
+		List<Produtor> resultado = new ArrayList<>();
+		List<Produtor> todos = produtorController.listarProdutor();
+		for (Produtor produtor : todos) {
+			if (produtoresSelecionados.contains(produtor.getCodigoProdutor())) {
+				resultado.add(produtor);
+			}
+		}
+		return resultado;
 	}
-	
+
 	public List<Gravadora> getGravadoraSelecionados() {
-	    List<Gravadora> resultado = new ArrayList<>();
-	    List<Gravadora> todos = gravadoraController.listarGravadoras();
-	    
-	    for (Gravadora gravadora : todos) {
-	    	if (gravadorasSelecionadas.contains(gravadora.getCodigoGravadora())) {
-	    		resultado.add(gravadora);
-	    	}
-	    }
-	    return resultado;
+		List<Gravadora> resultado = new ArrayList<>();
+		List<Gravadora> todos = gravadoraController.listarGravadoras();
+		for (Gravadora gravadora : todos) {
+			if (gravadorasSelecionadas.contains(gravadora.getCodigoGravadora())) {
+				resultado.add(gravadora);
+			}
+		}
+		return resultado;
 	}
-	
+
 	public List<Editora> getEditorasSelecionados() {
-	    List<Editora> resultado = new ArrayList<>();
-	    List<Editora> todos = editoraController.listarEditoras();
-	    
-	    for (Editora editora : todos) {
-	    	if (editorasSelecionadas.contains(editora.getCodigoEditora())) {
-	    		resultado.add(editora);
-	    	}
-	    }
-	    return resultado;
+		List<Editora> resultado = new ArrayList<>();
+		List<Editora> todos = editoraController.listarEditoras();
+		for (Editora editora : todos) {
+			if (editorasSelecionadas.contains(editora.getCodigoEditora())) {
+				resultado.add(editora);
+			}
+		}
+		return resultado;
 	}
 }

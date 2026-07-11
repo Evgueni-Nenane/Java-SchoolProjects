@@ -35,7 +35,7 @@ public class NivelAcessoDAO {
 			ResultSet rs = ps.executeQuery();
 			
 			while(rs.next()) {
-				NivelAcesso perfil = new NivelAcesso(rs.getString("NomeNivel"));
+				NivelAcesso perfil = new NivelAcesso(rs.getInt("CodigoNivel"), rs.getString("NomeNivel"));
 				niveis.add(perfil);
 			}
 		} catch (SQLException e) {

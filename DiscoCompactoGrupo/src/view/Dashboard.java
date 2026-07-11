@@ -21,8 +21,8 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel painelPrincipal;
 
-	private JButton btnRegistar;
-	private JButton btnEstatistica, btnExportar, btnUtilizador, btnLogs, btnSair;
+	private JButton btnRegistar, btnArtistas, btnProducao;
+	private JButton  btnExportar, btnUtilizador, btnLogs, btnSair;
 
 	private CardLayout cardPrincipal;
 	private JPanel painelCentral;
@@ -97,25 +97,33 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		EstilizarBotao.aplicar(btnRegistar);
 		btnRegistar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(btnRegistar);
-		btnRegistar.setPreferredSize(new Dimension(130, 30));
-		btnRegistar.setMinimumSize(new Dimension(130, 30));
-		btnRegistar.setMaximumSize(new Dimension(130, 30));
 		btnRegistar.addActionListener(this);
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
+		// Menu Intervenientes
+		JLabel txtIntervenientes = new JLabel("Intervenientes");
+		sidebarPanel.add(txtIntervenientes);
+		txtIntervenientes.setAlignmentX(Component.CENTER_ALIGNMENT);
+		sidebarPanel.add(Box.createVerticalStrut(10));
+		
+		btnArtistas = new JButton("Artistas");
+		EstilizarBotao.aplicar(btnArtistas);
+		btnArtistas.setAlignmentX(Component.CENTER_ALIGNMENT);
+		sidebarPanel.add(btnArtistas);
+		btnArtistas.addActionListener(this);
+		sidebarPanel.add(Box.createVerticalStrut(10));
+
+		btnProducao = new JButton("Produção");
+		EstilizarBotao.aplicar(btnProducao);
+		btnProducao.setAlignmentX(Component.CENTER_ALIGNMENT);
+		sidebarPanel.add(btnProducao);
+		btnProducao.addActionListener(this);
+		sidebarPanel.add(Box.createVerticalStrut(10));
+		
 		// Menu Relatórios
 		JLabel txtRelatorios = new JLabel("Relatórios");
 		sidebarPanel.add(txtRelatorios);
 		txtRelatorios.setAlignmentX(Component.CENTER_ALIGNMENT);
-		sidebarPanel.add(Box.createVerticalStrut(10));
-
-		btnEstatistica = new JButton("Estatisticas");
-		EstilizarBotao.aplicar(btnEstatistica);
-		btnEstatistica.setAlignmentX(Component.CENTER_ALIGNMENT);
-		sidebarPanel.add(btnEstatistica);
-		btnEstatistica.setPreferredSize(new Dimension(130, 30));
-		btnEstatistica.setMinimumSize(new Dimension(130, 30));
-		btnEstatistica.setMaximumSize(new Dimension(130, 30));
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
 		btnExportar = new JButton("Exportar");
@@ -123,9 +131,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		btnExportar.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(btnExportar);
 		btnExportar.addActionListener(this);
-		btnExportar.setPreferredSize(new Dimension(130, 30));
-		btnExportar.setMinimumSize(new Dimension(130, 30));
-		btnExportar.setMaximumSize(new Dimension(130, 30));
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
 		// Menu Administradores
@@ -138,9 +143,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		EstilizarBotao.aplicar(btnUtilizador);
 		btnUtilizador.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(btnUtilizador);
-		btnUtilizador.setPreferredSize(new Dimension(130, 30));
-		btnUtilizador.setMinimumSize(new Dimension(130, 30));
-		btnUtilizador.setMaximumSize(new Dimension(130, 30));
 		btnUtilizador.addActionListener(this);
 		sidebarPanel.add(Box.createVerticalStrut(10));
 
@@ -148,9 +150,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		EstilizarBotao.aplicar(btnLogs);
 		btnLogs.setAlignmentX(Component.CENTER_ALIGNMENT);
 		sidebarPanel.add(btnLogs);
-		btnLogs.setPreferredSize(new Dimension(130, 30));
-		btnLogs.setMinimumSize(new Dimension(130, 30));
-		btnLogs.setMaximumSize(new Dimension(130, 30));
 		btnLogs.addActionListener(this);
 		sidebarPanel.add(Box.createVerticalStrut(50));
 
@@ -158,9 +157,6 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		btnSair = new JButton("Sair");
 		EstilizarBotao.aplicar(btnSair);
 		btnSair.setAlignmentX(Component.CENTER_ALIGNMENT);
-		btnSair.setPreferredSize(new Dimension(130, 30));
-		btnSair.setMinimumSize(new Dimension(130, 30));
-		btnSair.setMaximumSize(new Dimension(130, 30));
 		btnSair.addActionListener(this);
 		sidebarPanel.add(btnSair);
 
@@ -209,6 +205,14 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		PainelDisco painelDisco = new PainelDisco(cardPrincipal, painelCentral, discoController, editoraController, gravadoraController, logsController);
 		painelDisco.setBackground(new Color(246, 247, 249));
 		painelCentral.add(painelDisco, "Discos");
+		
+		PainelArtistas painelArtista = new PainelArtistas(logsController);
+		painelArtista.setBackground(new Color(246, 247, 249));
+		painelCentral.add(painelArtista, "Artistas");
+		
+		PainelProducao painelProducao = new PainelProducao(logsController);
+		painelProducao.setBackground(new Color(246, 247, 249));
+		painelCentral.add(painelProducao, "Producao");
 		
 		PainelUtilizadores painelUtilizadores = new PainelUtilizadores();
 		painelUtilizadores.setBackground(new Color(246, 247, 249));
@@ -259,11 +263,16 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 			}
 			cardPrincipal.show(painelCentral, "Utilizador");
 			LocalDateTime horaAgora = LocalDateTime.now();
-			log = new Logs(
-					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+			log = new Logs(Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
 					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
-					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel utilizadores users", horaAgora);
+					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel users", horaAgora);
 			logsController.inserirLog(log);
+		}
+		if (e.getSource() == btnArtistas) {
+			cardPrincipal.show(painelCentral, "Artistas");
+		}
+		if (e.getSource() == btnProducao) {
+			cardPrincipal.show(painelCentral, "Producao");
 		}
 		if (e.getSource() == btnExportar) {
 			DialogExportar dialog = new DialogExportar(this);
@@ -272,16 +281,14 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		if (e.getSource() == btnRegistar) {
 			cardPrincipal.show(painelCentral, "Discos");
 			LocalDateTime horaAgora = LocalDateTime.now();
-			log = new Logs(
-					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+			log = new Logs(Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
 					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel de discos", horaAgora);
 			logsController.inserirLog(log);
 		}
 		if (e.getSource() == btnSair) {
 			LocalDateTime horaAgora = LocalDateTime.now();
-			log = new Logs(
-					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+			log = new Logs(Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
 					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
 					Sessao.getUtilizadorLogado().getEmail(), "Saiu do sistema", horaAgora);
 			logsController.inserirLog(log);
@@ -294,10 +301,9 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 			}
 			cardPrincipal.show(painelCentral, "Logs_Sistema");
 			LocalDateTime horaAgora = LocalDateTime.now();
-			log = new Logs(
-					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+			log = new Logs(Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
 					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
-					Sessao.getUtilizadorLogado().getEmail(), "Acessou o painel Logs do Sistema", horaAgora);
+					Sessao.getUtilizadorLogado().getEmail(), "Acessou aos Logs do Sistema", horaAgora);
 			logsController.inserirLog(log);
 		}
 

@@ -78,6 +78,91 @@ public class GravadoraDAO {
         return gravadoras;
     }
     
+    public Gravadora buscarPorCodigo(int codigoGravadora) {
+		Gravadora gravadora = new Gravadora();
+		String sql = "SELECT * FROM Gravadora "
+				+ "WHERE Codigo_Gravadora = ?";
+    try {
+        Connection conn = DBConnector.DBConnect();
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, codigoGravadora);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next()) {
+        	gravadora = new Gravadora(
+        			 	rs.getInt("Codigo_Gravadora"),
+        			 	rs.getString("Nome_Gravadora"),
+        			 	rs.getString("Contacto_Gravadora"),
+        			 	rs.getString("Endereco_Gravadora"),
+        			 	rs.getString("Email_Gravadora")
+        			);
+
+            return gravadora;
+        }
+    } catch(SQLException e) {
+        e.printStackTrace();
+    }
+		return gravadora;
+    }
+    
+    public boolean atualizar(Gravadora gravadora) {
+    	String sql = "UPDATE Gravadora SET endereco_gravadora = ?, email_gravadora = ?, contacto_gravadora = ? "
+    			+ "WHERE Codigo_gravadora = ? ";
+    	try (Connection conn = DBConnector.DBConnect();
+    		PreparedStatement ps = conn.prepareStatement(sql)) {
+    		ps.setString(1, gravadora.getEnderecoGravadora());
+    		ps.setString(2, gravadora.getEmailGravadora());
+    		ps.setString(3, gravadora.getContactoGravadora());
+    		ps.setInt(4, gravadora.getCodigoGravadora());
+    		ps.executeUpdate();
+    		return true;
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    		return false;
+    	}
+    }
+    
+    public boolean temRelacionamento(int codigo) {
+    	String sql = "SELECT COUNT(*) AS Quantidade"
+    			+ " FROM GravadoraDisco "
+    			+ " WHERE Codigo_Gravadora = ?";
+    	try {
+    		Connection conn = DBConnector.DBConnect();
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setInt(1, codigo);
+    		ResultSet rs = ps.executeQuery();
+    		if (rs.next()) {
+    			int quantidade = rs.getInt("Quantidade");
+    			
+    			if (quantidade > 0) {
+    				return true;
+    			}
+    		}
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+    	return false;
+    }
+    
+    public boolean remover(int codigo) {
+    	if (temRelacionamento(codigo)) {
+    		return false;
+    	}
+    	
+    	String sql = "DELETE FROM Gravadora WHERE codigo_gravadora = ?";
+    	try {
+    		Connection conn = DBConnector.DBConnect();
+    		PreparedStatement ps = conn.prepareStatement(sql);
+    		ps.setInt(1, codigo);
+    		
+    		int linhasAfectadas = ps.executeUpdate();
+    		return linhasAfectadas > 0;
+    	} catch(SQLException e) {
+    		e.printStackTrace();
+    		return false;
+    	}
+    }
+    
+    
     public boolean inserRelacaoDiscoGravadora(int codigoDisco, int codigoGravadora) {
     	String sql = "INSERT INTO GravadoraDisco (Codigo_DC, Codigo_Gravadora) VALUES (?,?)";
     	try {

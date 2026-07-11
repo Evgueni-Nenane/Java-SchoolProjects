@@ -192,8 +192,12 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
                 "Tem certeza que deseja remover este/a utilizador/a?",
                 "Confirmar Remoção",
                 JOptionPane.YES_NO_OPTION);
+            int confirmacaoDupla = JOptionPane.showConfirmDialog(null,
+                    "Tem certeza que deseja remover este/a utilizador/a?",
+                    "Confirmar Remoção",
+                    JOptionPane.YES_NO_OPTION);
 
-            if(confirmacao == JOptionPane.YES_OPTION) {
+            if(confirmacao == JOptionPane.YES_OPTION && confirmacaoDupla == JOptionPane.YES_OPTION) {
                 int codigo = (int) tabelaModelo.getValueAt(linhaSelecionada, 0);
                 boolean sucesso = utilizadorController.suspenderUtilizador(codigo);
 

@@ -20,4 +20,16 @@ public class CantorController {
     public List<Cantor> listarCantor() {
         return cantorDAO.listarTodos();
     }
+    
+    public Cantor buscarPorCodigo(int codigo) {
+    		return cantorDAO.buscarPorCodigo(codigo);
+    }
+    
+    public boolean atualizarCantor(Cantor cantor) {
+    	return cantorDAO.atualizar(cantor);
+    }
+    
+    public boolean removerCantor(int codigo) {
+    	return cantorDAO.remover(codigo);
+    }
 }

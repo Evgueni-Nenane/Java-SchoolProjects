@@ -27,7 +27,7 @@ public class CadastrarProdutorDialog extends JDialog implements ActionListener {
     	this.produtorController = new ProdutorController();
     	this.logController = new LogsController();
     	
-        setTitle("Cadastrar Compositor");
+        setTitle("Cadastrar Produtor");
         setSize(560, 360);
         setLocationRelativeTo(null);
         setModal(true);

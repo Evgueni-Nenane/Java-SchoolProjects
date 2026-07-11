@@ -1,6 +1,7 @@
 package resources;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
@@ -11,6 +12,10 @@ public class EstilizarBotao {
     	botao.setBackground(new Color(19, 175, 119));
     	botao.setForeground(Color.white);
     	botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+    	botao.setPreferredSize(new Dimension(130, 30));
+		botao.setMinimumSize(new Dimension(130, 30));
+		botao.setMaximumSize(new Dimension(130, 30));
+		
     	botao.setFocusPainted(false);
     	botao.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
     	

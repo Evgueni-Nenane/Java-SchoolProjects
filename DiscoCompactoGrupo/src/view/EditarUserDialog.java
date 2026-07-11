@@ -57,7 +57,6 @@ public class EditarUserDialog extends JDialog implements ActionListener, MouseLi
 	private byte[] fotoBytes;
 	private int codigoUser;
 	
-	
 	public EditarUserDialog(UtilizadorController utilizadorController, LogsController logController, int codigoUser) {
 		this.utilizadorController = utilizadorController;
 		this.logController = logController;
@@ -310,27 +309,26 @@ public class EditarUserDialog extends JDialog implements ActionListener, MouseLi
 		}
 
 		if (e.getSource() == btnEditar) {
-			    NivelAcesso perfilSelecionado = (NivelAcesso) permissao.getSelectedItem();
+			NivelAcesso perfilSelecionado = (NivelAcesso) permissao.getSelectedItem();
 			    
-			    Utilizador utilizador = new Utilizador(this.fotoBytes, perfilSelecionado, txtEmail.getText(), txtContacto.getText());
+
+			Utilizador utilizador = new Utilizador(this.fotoBytes, perfilSelecionado, txtEmail.getText(), txtContacto.getText());
 			    
-			    boolean sucesso = utilizadorController.atualizarUser(this.codigoUser, utilizador);
+			boolean sucesso = utilizadorController.atualizarUser(this.codigoUser, utilizador);
 			    
-			    if (sucesso) {
-			        JOptionPane.showMessageDialog(this, "Utilizador atualizado com sucesso!");
-					LocalDateTime horaAgora = LocalDateTime.now();
-					log = new Logs(
-							Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
-							Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
-							Sessao.getUtilizadorLogado().getEmail(), "Editou utilizador", horaAgora);
-					logController.inserirLog(log);
-			        this.dispose(); 
-			    } else {
-			        JOptionPane.showMessageDialog(this, "Erro ao atualizar utilizador na base de dados.");
-			    }
+			if (sucesso) {
+				JOptionPane.showMessageDialog(this, "Utilizador atualizado com sucesso!");
+				LocalDateTime horaAgora = LocalDateTime.now();
+				log = new Logs(
+						Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
+						Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
+						Sessao.getUtilizadorLogado().getEmail(), "Editou utilizador", horaAgora);
+				logController.inserirLog(log);
+			    this.dispose(); 
+			} else {
+				JOptionPane.showMessageDialog(this, "Erro ao atualizar utilizador.");
+			}
 		}
-
-
 	}
 	
 	private void carregarCampos() {
@@ -344,7 +342,7 @@ public class EditarUserDialog extends JDialog implements ActionListener, MouseLi
 		generoSexual.setSelectedItem(user.getGenero());
 		
 		byte[] ficheiroImg = user.getFoto();
-	    
+		fotoBytes = ficheiroImg;
 	    if (ficheiroImg != null && ficheiroImg.length > 0) {
 	        ImageIcon imagemIcon = new ImageIcon(ficheiroImg);
 	        

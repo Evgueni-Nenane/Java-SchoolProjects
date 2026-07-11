@@ -8,6 +8,8 @@ public class Cantor {
     private String contactoCantor;
     private String emailCantor;
 
+    public Cantor() {}
+    
     public Cantor(String nomeCantor, String apelidoCantor,
             String contactoCantor, String emailCantor) {
         this.nomeCantor = nomeCantor;
@@ -21,14 +23,48 @@ public class Cantor {
         this.codigoCantor = codigoCantor;
     }
 
-    public int getCodigoCantor() { return codigoCantor; }
-    public void setCodigoCantor(int codigoCantor) { this.codigoCantor = codigoCantor; }
-    public String getNomeCantor() { return nomeCantor; }
-    public void setNomeCantor(String nomeCantor) { this.nomeCantor = nomeCantor; }
-    public String getApelidoCantor() { return apelidoCantor; }
-    public void setApelidoCantor(String apelidoCantor) { this.apelidoCantor = apelidoCantor; }
-    public String getContactoCantor() { return contactoCantor; }
-    public void setContactoCantor(String contactoCantor) { this.contactoCantor = contactoCantor; }
-    public String getEmailCantor() { return emailCantor; }
-    public void setEmailCantor(String emailCantor) { this.emailCantor = emailCantor; }
+	public int getCodigoCantor() {
+		return codigoCantor;
+	}
+
+	public void setCodigoCantor(int codigoCantor) {
+		this.codigoCantor = codigoCantor;
+	}
+
+	public String getNomeCantor() {
+		return nomeCantor;
+	}
+
+	public void setNomeCantor(String nomeCantor) {
+		this.nomeCantor = nomeCantor;
+	}
+
+	public String getApelidoCantor() {
+		return apelidoCantor;
+	}
+
+	public void setApelidoCantor(String apelidoCantor) {
+		this.apelidoCantor = apelidoCantor;
+	}
+
+	public String getContactoCantor() {
+		return contactoCantor;
+	}
+
+	public void setContactoCantor(String contactoCantor) {
+		this.contactoCantor = contactoCantor;
+	}
+
+	public String getEmailCantor() {
+		return emailCantor;
+	}
+
+	public void setEmailCantor(String emailCantor) {
+		this.emailCantor = emailCantor;
+	}
+
+	public String getNomeCompleto() {
+		return nomeCantor + " " + apelidoCantor;
+	}
+    
 }
