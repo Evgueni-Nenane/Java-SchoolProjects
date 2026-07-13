@@ -20,6 +20,9 @@ public class GeneroController {
     public List<Genero> listarGeneros() {
         return generoDAO.listarTodos();
     }
-
+    
+    public boolean removerGenero(int codigo) {
+    		return generoDAO.remover(codigo);
+    }
 
 }

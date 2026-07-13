@@ -24,9 +24,9 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import controller.FicheiroTxt;
+import controller.LoginController;
 import controller.LogsController;
 import controller.UtilizadorController;
-import dao.LoginDAO;
 import model.Utilizador;
 import resources.EstilizarTabela;
 
@@ -38,10 +38,12 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 	private JButton btnRemover, btnResetSenha, btnEditarUser;
 	private JTable tabela;
 	private LogsController logController;
-
+	private LoginController loginController;
+	
 	public PainelListaAcoes(UtilizadorController utilizadorController, LogsController logController) {
 		this.utilizadorController = utilizadorController;
 		this.logController = logController;
+		loginController = new LoginController(); 
 		
 		JPanel suspenderPanel = new JPanel();
 		suspenderPanel.setLayout(new BorderLayout());
@@ -228,7 +230,7 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 	                String contacto = (String) tabelaModelo.getValueAt(linhaSelecionada, 5);
 	                
 	                String senha = nomeCompleto.charAt(0) + "" + parteEmail.charAt(1) + "214";
-	                boolean sucesso = LoginDAO.resetarSenha(codigoUser, senha);
+	                boolean sucesso = loginController.resetarSenha(codigoUser, senha);
 	                Utilizador userSenhaReset = new Utilizador(nomeCompleto, contacto, senha);
 	                if(sucesso) {
 	                		if(sucesso) {
@@ -250,6 +252,7 @@ public class PainelListaAcoes extends JPanel implements ActionListener {
 				int linhaSelecionada = tabela.getSelectedRow();
 				int codigoUser = (int) tabelaModelo.getValueAt(linhaSelecionada, 0);
 				new EditarUserDialog(utilizadorController, logController, codigoUser).setVisible(true);
+				carregarUsers();
 		}
 		
 

@@ -77,9 +77,7 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		// =========================
 		JPanel containerInfoDisco = new JPanel(new BorderLayout());
 		containerInfoDisco.setBorder(BorderFactory.createTitledBorder(
-			BorderFactory.createLineBorder(Color.GRAY, 1), 
-			"INFORMAÇÕES DO DISCO",
-			TitledBorder.LEFT, 
+			BorderFactory.createLineBorder(Color.GRAY, 1), "INFORMAÇÕES DO DISCO", TitledBorder.LEFT, 
 			TitledBorder.TOP,
 			new Font("Arial", Font.BOLD, 12)
 		));
@@ -102,65 +100,65 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		gbcd.gridy = 0;
 		gbcd.gridwidth = 1;
 		JLabel lblTituloDisco = new JLabel("Título do Disco:");
-		lblTituloDisco.setFont(new Font("Arial", Font.BOLD, 11));
+		lblTituloDisco.setFont(new Font("Arial", Font.BOLD, 12));
 		innerInfoDisco.add(lblTituloDisco, gbcd);
 		
 		gbcd.gridx = 1;
 		gbcd.gridy = 0;
 		lblTituloDiscoReal = new JLabel("----");
-		lblTituloDiscoReal.setFont(new Font("Arial", Font.PLAIN, 11));
+		lblTituloDiscoReal.setFont(new Font("Arial", Font.PLAIN, 12));
 		innerInfoDisco.add(lblTituloDiscoReal, gbcd);
 		
 		// Genero Musical
 		gbcd.gridx = 0;
 		gbcd.gridy = 1;
 		JLabel lblGenero = new JLabel("Gênero Musical:");
-		lblGenero.setFont(new Font("Arial", Font.BOLD, 11));
+		lblGenero.setFont(new Font("Arial", Font.BOLD, 12));
 		innerInfoDisco.add(lblGenero, gbcd);
 		
 		gbcd.gridx = 1;
 		gbcd.gridy = 1;
 		lblGeneroReal = new JLabel("----");
-		lblGeneroReal.setFont(new Font("Arial", Font.PLAIN, 11));
+		lblGeneroReal.setFont(new Font("Arial", Font.PLAIN, 12));
 		innerInfoDisco.add(lblGeneroReal, gbcd);
 		
 		// Preco
 		gbcd.gridx = 0;
 		gbcd.gridy = 2;
 		JLabel lblPreco = new JLabel("Preço:");
-		lblPreco.setFont(new Font("Arial", Font.BOLD, 11));
+		lblPreco.setFont(new Font("Arial", Font.BOLD, 12));
 		innerInfoDisco.add(lblPreco, gbcd);
 		
 		gbcd.gridx = 1;
 		gbcd.gridy = 2;
 		lblPrecoReal = new JLabel("----");
-		lblPrecoReal.setFont(new Font("Arial", Font.PLAIN, 11));
+		lblPrecoReal.setFont(new Font("Arial", Font.PLAIN, 12));
 		innerInfoDisco.add(lblPrecoReal, gbcd);
 		
 		// Tempo de Existência
 		gbcd.gridx = 0;
 		gbcd.gridy = 3;
 		JLabel lblTempoExistencia = new JLabel("Tempo de Existência:");
-		lblTempoExistencia.setFont(new Font("Arial", Font.BOLD, 11));
+		lblTempoExistencia.setFont(new Font("Arial", Font.BOLD, 12));
 		innerInfoDisco.add(lblTempoExistencia, gbcd);
 		
 		gbcd.gridx = 1;
 		gbcd.gridy = 3;
 		lblTempoExistenciaReal = new JLabel("----");
-		lblTempoExistenciaReal.setFont(new Font("Arial", Font.PLAIN, 11));
+		lblTempoExistenciaReal.setFont(new Font("Arial", Font.PLAIN, 12));
 		innerInfoDisco.add(lblTempoExistenciaReal, gbcd);
 		
 		// Ano de edicao
 		gbcd.gridx = 0;
 		gbcd.gridy = 4;
 		JLabel lblDataEdicao = new JLabel("Data de Edição:");
-		lblDataEdicao.setFont(new Font("Arial", Font.BOLD, 11));
+		lblDataEdicao.setFont(new Font("Arial", Font.BOLD, 12));
 		innerInfoDisco.add(lblDataEdicao, gbcd);
 		
 		gbcd.gridx = 1;
 		gbcd.gridy = 4;
 		lblDataEdicaoReal = new JLabel("----");
-		lblDataEdicaoReal.setFont(new Font("Arial", Font.PLAIN, 11));
+		lblDataEdicaoReal.setFont(new Font("Arial", Font.PLAIN, 12));
 		innerInfoDisco.add(lblDataEdicaoReal, gbcd);
 		
 		containerInfoDisco.add(innerInfoDisco, BorderLayout.CENTER);
@@ -171,10 +169,7 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		// =================
 		containerInfoProducao = new JPanel(new BorderLayout());
 		containerInfoProducao.setBorder(BorderFactory.createTitledBorder(
-			BorderFactory.createLineBorder(Color.GRAY, 1), 
-			"PRODUÇÃO DO DISCO",
-			TitledBorder.LEFT, 
-			TitledBorder.TOP,
+			BorderFactory.createLineBorder(Color.GRAY, 1), "PRODUÇÃO DO DISCO", TitledBorder.LEFT, TitledBorder.TOP,
 			new Font("Arial", Font.BOLD, 12)
 		));
 		containerInfoProducao.setBackground(Color.WHITE);
@@ -203,16 +198,10 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		containerInfoProducao.add(tablesProdPanel, BorderLayout.CENTER);
 		container.add(containerInfoProducao, gbc);
 		
-		
 		// Participantes 
-		
 		containerInfoParticipantes = new JPanel(new BorderLayout());
-		containerInfoParticipantes.setBorder(BorderFactory.createTitledBorder(
-			BorderFactory.createLineBorder(Color.GRAY, 1), 
-			"PARTICIPANTES DO DISCO",
-			TitledBorder.LEFT, 
-			TitledBorder.TOP,
-			new Font("Arial", Font.BOLD, 12)
+		containerInfoParticipantes.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY, 1), 
+			"PARTICIPANTES DO DISCO", TitledBorder.LEFT, TitledBorder.TOP, new Font("Arial", Font.BOLD, 12)
 		));
 		containerInfoParticipantes.setBackground(Color.WHITE);
 		gbc.gridx = 0;
@@ -337,7 +326,7 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		
 		// Título com contador
 		JLabel lblTitulo = new JLabel(titulo);
-		lblTitulo.setFont(new Font("Arial", Font.BOLD, 11));
+		lblTitulo.setFont(new Font("Arial", Font.BOLD, 12));
 		panel.add(lblTitulo, BorderLayout.NORTH);
 		
 		// Tabela
@@ -349,8 +338,8 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 		};
 		JTable tabela = new JTable(model);
 		tabela.setRowHeight(25);
-		tabela.getTableHeader().setFont(new Font("Arial", Font.BOLD, 11));
-		tabela.setFont(new Font("Arial", Font.PLAIN, 11));
+		tabela.getTableHeader().setFont(new Font("Arial", Font.BOLD, 12));
+		tabela.setFont(new Font("Arial", Font.PLAIN, 12));
 		JScrollPane scroll = new JScrollPane(tabela);
 		scroll.setPreferredSize(new Dimension(0, 150));
 		if (titulo.contains("PRODUTORES")) {
@@ -394,19 +383,43 @@ public class DiscoCompletoDialog extends JDialog implements ActionListener, Mous
 
 	}
 	
-
-	@Override public void mouseClicked(MouseEvent e) {}
-	@Override public void mousePressed(MouseEvent e) {}
-	@Override public void mouseReleased(MouseEvent e) {}
-	@Override public void mouseEntered(MouseEvent e) {}
-	@Override public void mouseExited(MouseEvent e) {}
-	
 	@Override 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnSalvar) {
 			this.dispose();
 			dispose();
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

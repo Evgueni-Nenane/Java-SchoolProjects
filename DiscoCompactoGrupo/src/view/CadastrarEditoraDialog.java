@@ -12,6 +12,7 @@ import controller.LogsController;
 import model.Editora;
 import model.Logs;
 import model.Sessao;
+import resources.EstilizarBotao;
 
 
 public class CadastrarEditoraDialog extends JDialog implements ActionListener {
@@ -85,13 +86,24 @@ public class CadastrarEditoraDialog extends JDialog implements ActionListener {
 
         gbco.gridx = 0;
         gbco.gridy = 4;
+        form.add(new JLabel("Contacto da Editora"), gbco);
+        txtContacto = new JTextField();
+        txtContacto.setPreferredSize(new Dimension(250, 30));
+        txtContacto.setMinimumSize(new Dimension(250, 30));
+        txtContacto.setMaximumSize(new Dimension(250, 30));
+        gbco.gridx = 0;
+        gbco.gridy = 5;
+        form.add(txtContacto, gbco); 
+        
+        gbco.gridx = 0;
+        gbco.gridy = 6;
         form.add(new JLabel("Endereço da Editora"), gbco);
         txtEndereco = new JTextField();
         txtEndereco.setPreferredSize(new Dimension(250, 30));
         txtEndereco.setMinimumSize(new Dimension(250, 30));
         txtEndereco.setMaximumSize(new Dimension(250, 30));
         gbco.gridx = 0;
-        gbco.gridy = 5;
+        gbco.gridy = 7;
         form.add(txtEndereco, gbco);       
 
         add(form, BorderLayout.CENTER);
@@ -99,6 +111,7 @@ public class CadastrarEditoraDialog extends JDialog implements ActionListener {
         // Botões
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnSalvar = new JButton("Cadastrar");
+        EstilizarBotao.aplicarSec(btnSalvar);
         btnSalvar.addActionListener(this);
         btnSalvar.setPreferredSize(new Dimension(130, 30));
         painelBotoes.add(btnSalvar);
@@ -112,10 +125,15 @@ public class CadastrarEditoraDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Nome obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
                 return;
                 }
-            if(txtEmail.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Email obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+            if (txtContacto.getText().isEmpty()) {
+        			txtContacto.setText("Não informado");
+	        }
+	        if (txtEmail.getText().isEmpty()) {
+	        		txtEmail.setText("Não informado");
+	        }
+	        if (txtEndereco.getText().isEmpty()) {
+	        		txtEndereco.setText("Não informado");
+	        }
             
             Editora editora = new Editora(txtNome.getText(), txtContacto.getText(), txtEmail.getText(), txtEndereco.getText());
             boolean sucesso = editoraController.cadastrarEditora(editora);
@@ -124,7 +142,7 @@ public class CadastrarEditoraDialog extends JDialog implements ActionListener {
     			log = new Logs(
     					Sessao.getUtilizadorLogado().getCodigo(), Sessao.getUtilizadorLogado().getNome(),
     					Sessao.getUtilizadorLogado().getApelido(), Sessao.getUtilizadorLogado().getPerfil().getNome(),
-    					Sessao.getUtilizadorLogado().getEmail(), "Cadastrou Editora no sistema", horaAgora);
+    					Sessao.getUtilizadorLogado().getEmail(), "Cadastrou editora", horaAgora);
     			logController.inserirLog(log);
                 JOptionPane.showMessageDialog(this, "Editora cadastrada com sucesso!");
                 dispose();

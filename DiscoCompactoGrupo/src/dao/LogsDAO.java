@@ -29,7 +29,7 @@ public class LogsDAO {
 	}
     public List<Logs> listarLogs() {
         List<Logs> logs = new ArrayList<>();
-        String sql = "SELECT * FROM Logs";
+        String sql = "SELECT * FROM Logs ORDER BY HORA DESC";
         try {
             Connection conn = DBConnector.DBConnect();
             PreparedStatement ps = conn.prepareStatement(sql);

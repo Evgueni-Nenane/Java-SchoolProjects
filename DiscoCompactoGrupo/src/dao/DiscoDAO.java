@@ -32,8 +32,15 @@ public class DiscoDAO {
 
     public List<DiscoCompacto> listarTodos() {
         List<DiscoCompacto> discos = new ArrayList<>();
-        String sql = "SELECT d.Codigo_Disco, d.Titulo, d.Preco, d.Ano_Edicao"
-        		+ " FROM Disco_Compacto d";
+        String sql = "SELECT d.Codigo_Disco, d.Titulo, "
+        		+ "GROUP_CONCAT(g.Nome_Genero SEPARATOR ', ') AS Generos, d.Preco, d.Ano_Edicao"
+        		+ " FROM Disco_Compacto d"
+        		+ " INNER JOIN Disco_Genero dg "
+        		+ " 		ON d.Codigo_Disco = dg.Codigo_DC"
+        		+ " INNER JOIN Genero g"
+        		+ " 		ON dg.Codigo_Genero = g.Codigo_Genero"
+        		+ " GROUP BY d.Codigo_Disco, d.Titulo, d.Preco, d.Ano_Edicao";
+        
         try {
             Connection conn = DBConnector.DBConnect();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -53,6 +60,9 @@ public class DiscoDAO {
             		    new ArrayList<>(),
             		    new ArrayList<>()
             	);
+
+            	disco.setGeneroMusicalTxt(rs.getString("Generos"));
+            		
                 discos.add(disco);
             }
         } catch (SQLException e) {

@@ -58,8 +58,8 @@ public class PainelArtistas extends JPanel implements ActionListener, MouseListe
 		topbarPrincipal.setBackground(new Color(254, 254, 254));
 		
 		
-		cardPanel.add(listaAcoesCompositor, "Compositor");
 		cardPanel.add(listaAcoesMusico, "Musico");
+		cardPanel.add(listaAcoesCompositor, "Compositor");
 		cardPanel.add(listaAcoesCantor, "Cantor");
 
 		menuPrincipal.add(topbarPrincipal, BorderLayout.NORTH);

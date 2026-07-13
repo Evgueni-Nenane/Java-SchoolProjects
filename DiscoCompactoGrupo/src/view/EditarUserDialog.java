@@ -41,6 +41,7 @@ import model.NivelAcesso;
 import model.Sessao;
 import model.Sexo;
 import model.Utilizador;
+import resources.EstilizarBotao;
 
 public class EditarUserDialog extends JDialog implements ActionListener, MouseListener {
 
@@ -217,6 +218,7 @@ public class EditarUserDialog extends JDialog implements ActionListener, MouseLi
 		// Botao de Escolher foto
 
 		btnEscolherFoto = new JButton("Escolher Foto");
+		EstilizarBotao.aplicarSec(btnEscolherFoto);
 		btnEscolherFoto.setPreferredSize(new Dimension(150, 30));
 		btnEscolherFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnEscolherFoto.addActionListener(this);
@@ -226,6 +228,7 @@ public class EditarUserDialog extends JDialog implements ActionListener, MouseLi
 		// Remover foto
 		fotoPanel.add(Box.createVerticalStrut(10));
 		btnRemoverFoto = new JButton("Remover Foto");
+		EstilizarBotao.aplicarTerc(btnRemoverFoto);
 		btnRemoverFoto.setPreferredSize(new Dimension(150, 30));
 		btnRemoverFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnRemoverFoto.addActionListener(this);

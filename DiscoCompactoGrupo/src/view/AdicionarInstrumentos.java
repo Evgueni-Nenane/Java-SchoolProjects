@@ -28,6 +28,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -37,6 +38,10 @@ import javax.swing.table.TableCellRenderer;
 
 import controller.InstrumentoController;
 import model.Instrumento;
+import model.NivelAcesso;
+import model.Sessao;
+import resources.EstilizarBotao;
+import resources.EstilizarTabela;
 
 public class AdicionarInstrumentos extends JDialog implements ActionListener, MouseListener {
 
@@ -44,9 +49,10 @@ public class AdicionarInstrumentos extends JDialog implements ActionListener, Mo
 	private Set<Integer> instrumentosSelecionados = new HashSet<>();
 	
 	private DefaultTableModel tabelaInstrumentoModel;
-	private JButton btnAdicionarInstrumento, btnLimparInstrumento, btnCancelar, btnSalvar;
+	private JButton btnAdicionarInstrumento, btnLimparInstrumento, btnRemoverInstrumento, btnCancelar, btnSalvar;
 	private InstrumentoController instrumentoController;
 	private AdicionarInstrumentoDialog adicionarInstrumento;
+	private JTable tabelaComp;
 	
 	public AdicionarInstrumentos(InstrumentoController instrumentoController) {
 		this.instrumentoController = instrumentoController;
@@ -87,7 +93,33 @@ public class AdicionarInstrumentos extends JDialog implements ActionListener, Mo
 				pesquisarComp, btnAdicionarInstrumento);
 
 		tabelaInstrumentoModel = criarModeloTabela(new String[] {"","Nome do Instrumento", "id" });
-		JTable tabelaComp = new JTable(tabelaInstrumentoModel);
+		
+		pesquisarComp.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
+
+            private void filtrar() {
+                String texto = pesquisarComp.getText().toLowerCase().trim();
+                tabelaInstrumentoModel.setRowCount(0);
+
+                List<Instrumento> instrumentos = instrumentoController.listarInstrumentos();
+                for (Instrumento d : instrumentos) {
+                    
+                    if (texto.isEmpty() ||
+                        String.valueOf(d.getNome()).toLowerCase().contains(texto)) {
+
+                        tabelaInstrumentoModel.addRow(new Object[]{
+                        		instrumentosSelecionados.contains(d.getCodigo()),
+                        		d.getNome(),
+                            d.getCodigo()
+                        });
+                    }
+                    }
+                }
+        });
+		
+		tabelaComp = new JTable(tabelaInstrumentoModel);
 		tabelaComp.getModel().addTableModelListener(e -> {
 
 		    int linha = e.getFirstRow();
@@ -111,9 +143,21 @@ public class AdicionarInstrumentos extends JDialog implements ActionListener, Mo
 		}}, BorderLayout.CENTER);
 
 		btnLimparInstrumento = new JButton("Desmarcar tudo");
+		btnRemoverInstrumento = new JButton("Remover");
+		
+		EstilizarTabela.aplicar(tabelaComp);
+		tabelaComp.getColumnModel().getColumn(0).setMinWidth(30);
+		tabelaComp.getColumnModel().getColumn(0).setMaxWidth(30);
+		tabelaComp.getColumnModel().getColumn(0).setPreferredWidth(30);
+		tabelaComp.getColumnModel().getColumn(2).setMinWidth(0);
+		tabelaComp.getColumnModel().getColumn(2).setMaxWidth(0);
+		tabelaComp.getColumnModel().getColumn(2).setPreferredWidth(0);
+		
+		
 		JPanel acoesBox1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		acoesBox1.setBackground(Color.WHITE);
 		acoesBox1.add(btnLimparInstrumento);
+		acoesBox1.add(btnRemoverInstrumento);
 		box1.add(acoesBox1, BorderLayout.SOUTH);
 
 		container.add(box1);
@@ -129,8 +173,9 @@ public class AdicionarInstrumentos extends JDialog implements ActionListener, Mo
 
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(this);
-
+		EstilizarBotao.aplicarTerc(btnCancelar);
 		btnSalvar = new JButton("Confirmar Seleção");
+		EstilizarBotao.aplicarSec(btnSalvar);
 		btnSalvar.addActionListener(this);
 		btnSalvar.setForeground(Color.WHITE);
 		btnSalvar.setFocusPainted(false);
@@ -143,51 +188,58 @@ public class AdicionarInstrumentos extends JDialog implements ActionListener, Mo
 
 		btnAdicionarInstrumento.addActionListener(this);
 		btnLimparInstrumento.addActionListener(this);
+		btnRemoverInstrumento.addActionListener(this);
 
 		carregarInstrumentos();
 	}
 
 	private JPanel criarTopContainer() {
 		JPanel topContainer = new JPanel();
+        topContainer.setBackground(new Color(19, 175, 119));
 		topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
 		topContainer.setBorder(BorderFactory.createEmptyBorder(18, 25, 18, 25));
 		topContainer.setPreferredSize(new Dimension(0, 90));
-
+		
 		JLabel titulo = new JLabel("Informações dos instrumentos");
+		titulo.setFont(titulo.getFont().deriveFont(16f).deriveFont(java.awt.Font.BOLD));
 		titulo.setForeground(Color.WHITE);
 
 		JLabel descricao = new JLabel("Selecione os instrumentos musicais");
+        descricao.setFont(descricao.getFont().deriveFont(12f));
 		descricao.setForeground(new Color(230, 230, 230));
 
 		topContainer.add(titulo);
+        topContainer.add(Box.createVerticalStrut(5));
 		topContainer.add(descricao);
 		return topContainer;
 	}
 
 	private JPanel criarBoxHeader(String titulo, String descricao, JTextField campoPesquisa, JButton botaoAdicionar) {
 		JPanel box = new JPanel(new BorderLayout());
-		box.setBackground(Color.WHITE);
-		box.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-				BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+        box.setBackground(Color.WHITE);
+        box.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 
-		JPanel boxTitleContainer = new JPanel();
-		boxTitleContainer.setLayout(new BoxLayout(boxTitleContainer, BoxLayout.Y_AXIS));
-		boxTitleContainer.setBackground(Color.WHITE);
+        JPanel boxTitleContainer = new JPanel();
+        boxTitleContainer.setLayout(new BoxLayout(boxTitleContainer, BoxLayout.Y_AXIS));
+        boxTitleContainer.setBackground(Color.WHITE);
 
-		JPanel boxLabel = new JPanel();
-		boxLabel.setLayout(new BoxLayout(boxLabel, BoxLayout.Y_AXIS));
-		boxLabel.setBackground(Color.WHITE);
+        JPanel boxLabel = new JPanel();
+        boxLabel.setLayout(new BoxLayout(boxLabel, BoxLayout.Y_AXIS));
+        boxLabel.setBackground(Color.WHITE);
 
-		JLabel lblTitulo = new JLabel(titulo);
+        JLabel lblTitulo = new JLabel(titulo);
+        lblTitulo.setFont(lblTitulo.getFont().deriveFont(14f).deriveFont(java.awt.Font.BOLD));
 
-		JLabel lblDescricao = new JLabel(descricao);
-		lblDescricao.setForeground(Color.GRAY);
+        JLabel lblDescricao = new JLabel(descricao);
+        lblDescricao.setFont(lblDescricao.getFont().deriveFont(11f));
+        lblDescricao.setForeground(Color.GRAY);
 
-		boxLabel.add(lblTitulo);
-		boxLabel.add(Box.createVerticalStrut(5));
-		boxLabel.add(lblDescricao);
-
+        boxLabel.add(lblTitulo);
+        boxLabel.add(Box.createVerticalStrut(5));
+        boxLabel.add(lblDescricao);
+        
 		JPanel acoes = new JPanel(new GridBagLayout());
 		acoes.setBackground(Color.WHITE);
 
@@ -204,6 +256,7 @@ public class AdicionarInstrumentos extends JDialog implements ActionListener, Mo
 
 		botaoAdicionar.setPreferredSize(new Dimension(110, 34));
 		botaoAdicionar.setForeground(Color.WHITE);
+		botaoAdicionar.setBackground(new Color(19, 175, 119));
 		botaoAdicionar.setFocusPainted(false);
 		botaoAdicionar.setBorderPainted(false);
 		botaoAdicionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -258,6 +311,35 @@ public class AdicionarInstrumentos extends JDialog implements ActionListener, Mo
 		}
 		if (e.getSource() == btnLimparInstrumento) {
 			desmarcarInstrumentos();
+		}
+		if (e.getSource() == btnRemoverInstrumento) {
+			if(Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() == NivelAcesso.OPERADOR) {
+                JOptionPane.showMessageDialog(null, "Sem permissão suficiente", "Erro de permissão", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            int linhaSelecionada = tabelaComp.getSelectedRow();
+
+            if(linhaSelecionada == -1) {
+                JOptionPane.showMessageDialog(null, "Selecione um disco!", "Aviso", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            int confirmacao = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover este genero?",
+                "Confirmar Remoção", JOptionPane.YES_NO_OPTION);
+
+            if(confirmacao == JOptionPane.YES_OPTION) {
+
+                int codigo = (int) tabelaInstrumentoModel.getValueAt(linhaSelecionada, 2);
+                boolean sucesso = instrumentoController.remover(codigo);
+
+                if(sucesso) {
+                    JOptionPane.showMessageDialog(null, "Genero removido com sucesso!");
+                    carregarInstrumentos();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Não é possível remover este Genero por estar associado a um disco!");
+                }
+            }
 		}
 		if (e.getSource() == btnSalvar) {
 			this.dispose();

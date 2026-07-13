@@ -46,6 +46,9 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1200, 700);
 		setLocationRelativeTo(null);
+		setTitle("Sistema de gestão de discos");
+		Image icone = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/icon.png"));
+		setIconImage(icone);
 		painelPrincipal = new JPanel(new BorderLayout());
 		painelPrincipal.setBackground(new Color(246, 247, 249));
 		painelPrincipal.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -155,7 +158,10 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 
 		// Botao Sair
 		btnSair = new JButton("Sair");
-		EstilizarBotao.aplicar(btnSair);
+		btnSair.setPreferredSize(new Dimension(130, 30));
+		btnSair.setMinimumSize(new Dimension(130, 30));
+		btnSair.setMaximumSize(new Dimension(130, 30));
+		EstilizarBotao.aplicarTerc(btnSair);
 		btnSair.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btnSair.addActionListener(this);
 		sidebarPanel.add(btnSair);
@@ -175,7 +181,7 @@ public class Dashboard extends JFrame implements ActionListener, MouseListener {
 
 		JLabel fotoUser = new JLabel();
 		fotoUser.setPreferredSize(new Dimension(40, 40));
-		fotoUser.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		fotoUser.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 		innerUser.add(fotoUser);
 		JPanel infoUser = new JPanel();
 		infoUser.setBackground(Color.black);

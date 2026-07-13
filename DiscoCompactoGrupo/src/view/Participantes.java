@@ -324,10 +324,8 @@ public class Participantes extends JDialog implements ActionListener, MouseListe
             private void filtrar() {
                 String texto = campoPesquisa.getText().toLowerCase().trim();
                 
-                // Salvar seleções atuais
                 salvarSelecoesAtuais(model, tipo);
                 
-                // Recarregar dados
                 switch (tipo) {
                     case "compositor":
                         carregarCompositores();

@@ -22,6 +22,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -30,7 +31,10 @@ import javax.swing.table.DefaultTableModel;
 
 import controller.GeneroController;
 import model.Genero;
+import model.NivelAcesso;
+import model.Sessao;
 import resources.EstilizarBotao;
+import resources.EstilizarTabela;
 
 public class AdicionarGeneros extends JDialog implements ActionListener {
 
@@ -38,14 +42,15 @@ public class AdicionarGeneros extends JDialog implements ActionListener {
 	private Set<Integer> generosSelecionados = new HashSet<>();
 
 	private DefaultTableModel tabelaGeneroModel;
-	private JButton btnAdicionarGenero, btnLimparGenero, btnCancelar, btnSalvar;
+	private JTable tabelaComp;
+	private JButton btnAdicionarGenero, btnLimparGenero, btnCancelar, btnSalvar, btnRemoverGenero;
 	private GeneroController generoController;
 
 	public AdicionarGeneros(GeneroController generoController) {
 		this.generoController = generoController;
 
 		setTitle("Gêneros Musicais");
-		setSize(560, 600);
+		setSize(450, 600);
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 		setModal(true);
@@ -105,9 +110,12 @@ public class AdicionarGeneros extends JDialog implements ActionListener {
                 }
         });
 
+		tabelaComp = new JTable(tabelaGeneroModel);
+		EstilizarTabela.aplicar(tabelaComp);
+		tabelaComp.getColumnModel().getColumn(0).setMinWidth(30);
+		tabelaComp.getColumnModel().getColumn(0).setMaxWidth(30);
+		tabelaComp.getColumnModel().getColumn(0).setPreferredWidth(30);
 		
-
-		JTable tabelaComp = new JTable(tabelaGeneroModel);
 		tabelaGeneroModel.addTableModelListener(e -> {
 
 		    if (e.getType() != javax.swing.event.TableModelEvent.UPDATE) {
@@ -132,10 +140,18 @@ public class AdicionarGeneros extends JDialog implements ActionListener {
 		box1.add(new JScrollPane(tabelaComp) {{
 			setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 		}}, BorderLayout.CENTER);
-
-		btnLimparGenero = new JButton("Desmarcar tudo");
+		
+		tabelaComp.getColumnModel().getColumn(2).setMinWidth(0);
+		tabelaComp.getColumnModel().getColumn(2).setMaxWidth(0);
+		tabelaComp.getColumnModel().getColumn(2).setPreferredWidth(0);
+		
 		JPanel acoesBox1 = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		acoesBox1.setBackground(Color.WHITE);
+
+		btnRemoverGenero = new JButton("Remover");
+		btnLimparGenero = new JButton("Desmarcar tudo");
+		
+		acoesBox1.add(btnRemoverGenero);
 		acoesBox1.add(btnLimparGenero);
 		box1.add(acoesBox1, BorderLayout.SOUTH);
 
@@ -167,51 +183,58 @@ public class AdicionarGeneros extends JDialog implements ActionListener {
 
 		btnAdicionarGenero.addActionListener(this);
 		btnLimparGenero.addActionListener(this);
+		btnRemoverGenero.addActionListener(this);
 
 		carregarGeneros();
 	}
 
 	private JPanel criarTopContainer() {
 		JPanel topContainer = new JPanel();
+        topContainer.setBackground(new Color(19, 175, 119));
 		topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
 		topContainer.setBorder(BorderFactory.createEmptyBorder(18, 25, 18, 25));
 		topContainer.setPreferredSize(new Dimension(0, 90));
 
 		JLabel titulo = new JLabel("Informações dos gêneros");
+		titulo.setFont(titulo.getFont().deriveFont(16f).deriveFont(java.awt.Font.BOLD));
 		titulo.setForeground(Color.WHITE);
 
 		JLabel descricao = new JLabel("Selecione os gêneros musicais do disco");
+        descricao.setFont(descricao.getFont().deriveFont(12f));
 		descricao.setForeground(new Color(230, 230, 230));
 
 		topContainer.add(titulo);
+        topContainer.add(Box.createVerticalStrut(5));
 		topContainer.add(descricao);
 		return topContainer;
 	}
 
 	private JPanel criarBoxHeader(String titulo, String descricao, JTextField campoPesquisa, JButton botaoAdicionar) {
 		JPanel box = new JPanel(new BorderLayout());
-		box.setBackground(Color.WHITE);
-		box.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-				BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+        box.setBackground(Color.WHITE);
+        box.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                BorderFactory.createEmptyBorder(15, 15, 15, 15)));
 
-		JPanel boxTitleContainer = new JPanel();
-		boxTitleContainer.setLayout(new BoxLayout(boxTitleContainer, BoxLayout.Y_AXIS));
-		boxTitleContainer.setBackground(Color.WHITE);
+        JPanel boxTitleContainer = new JPanel();
+        boxTitleContainer.setLayout(new BoxLayout(boxTitleContainer, BoxLayout.Y_AXIS));
+        boxTitleContainer.setBackground(Color.WHITE);
 
-		JPanel boxLabel = new JPanel();
-		boxLabel.setLayout(new BoxLayout(boxLabel, BoxLayout.Y_AXIS));
-		boxLabel.setBackground(Color.WHITE);
+        JPanel boxLabel = new JPanel();
+        boxLabel.setLayout(new BoxLayout(boxLabel, BoxLayout.Y_AXIS));
+        boxLabel.setBackground(Color.WHITE);
 
-		JLabel lblTitulo = new JLabel(titulo);
+        JLabel lblTitulo = new JLabel(titulo);
+        lblTitulo.setFont(lblTitulo.getFont().deriveFont(14f).deriveFont(java.awt.Font.BOLD));
 
-		JLabel lblDescricao = new JLabel(descricao);
-		lblDescricao.setForeground(Color.GRAY);
+        JLabel lblDescricao = new JLabel(descricao);
+        lblDescricao.setFont(lblDescricao.getFont().deriveFont(11f));
+        lblDescricao.setForeground(Color.GRAY);
 
-		boxLabel.add(lblTitulo);
-		boxLabel.add(Box.createVerticalStrut(5));
-		boxLabel.add(lblDescricao);
-
+        boxLabel.add(lblTitulo);
+        boxLabel.add(Box.createVerticalStrut(5));
+        boxLabel.add(lblDescricao);
+        
 		JPanel acoes = new JPanel(new GridBagLayout());
 		acoes.setBackground(Color.WHITE);
 
@@ -228,6 +251,7 @@ public class AdicionarGeneros extends JDialog implements ActionListener {
 
 		botaoAdicionar.setPreferredSize(new Dimension(110, 34));
 		botaoAdicionar.setForeground(Color.WHITE);
+		botaoAdicionar.setBackground(new Color(19, 175, 119));
 		botaoAdicionar.setFocusPainted(false);
 		botaoAdicionar.setBorderPainted(false);
 		botaoAdicionar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -279,6 +303,36 @@ public class AdicionarGeneros extends JDialog implements ActionListener {
 		if (e.getSource() == btnCancelar) {
 			desmarcarGeneros();
 			this.dispose();
+		}
+		if (e.getSource() == btnRemoverGenero) {
+			 if(Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() == NivelAcesso.OPERADOR) {
+	                JOptionPane.showMessageDialog(null, "Sem permissão suficiente", "Erro de permissão", JOptionPane.ERROR_MESSAGE);
+	                return;
+	            }
+	            
+	            int linhaSelecionada = tabelaComp.getSelectedRow();
+
+	            if(linhaSelecionada == -1) {
+	                JOptionPane.showMessageDialog(null, "Selecione um disco!", "Aviso", JOptionPane.WARNING_MESSAGE);
+	                return;
+	            }
+
+	            int confirmacao = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover este genero?",
+	                "Confirmar Remoção", JOptionPane.YES_NO_OPTION);
+
+	            if(confirmacao == JOptionPane.YES_OPTION) {
+
+	                int codigo = (int) tabelaGeneroModel.getValueAt(linhaSelecionada, 2);
+	                boolean sucesso = generoController.removerGenero(codigo);
+
+	                if(sucesso) {
+	                    JOptionPane.showMessageDialog(null, "Genero removido com sucesso!");
+	                    carregarGeneros();
+	                } else {
+	                    JOptionPane.showMessageDialog(null, "Não é possível remover este Genero por estar associado a um disco!");
+	                }
+	            }
+
 		}
 	}
 

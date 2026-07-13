@@ -42,6 +42,7 @@ import model.NivelAcesso;
 import model.Sessao;
 import model.Sexo;
 import model.Utilizador;
+import resources.EstilizarBotao;
 
 public class PainelCadastroUsers extends JPanel implements ActionListener, MouseListener {
 
@@ -204,6 +205,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		gbc.gridwidth = 1;
 		gbc.fill = GridBagConstraints.NONE;
 		btnGerarSenha.setPreferredSize(new Dimension(150, 30));
+		EstilizarBotao.aplicarSec(btnGerarSenha);
 		btnGerarSenha.addActionListener(this);
 		formularioPanel.add(btnGerarSenha, (GridBagConstraints) gbc.clone());
 
@@ -213,6 +215,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		gbc.gridwidth = 2;
 		gbc.anchor = GridBagConstraints.CENTER;
 		btnCadastrar.setPreferredSize(new Dimension(200, 35));
+		EstilizarBotao.aplicarSec(btnCadastrar);
 		btnCadastrar.addActionListener(this);
 		formularioPanel.add(btnCadastrar, (GridBagConstraints) gbc.clone());
 
@@ -239,7 +242,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		fotoLabel.setPreferredSize(new Dimension(150, 150));
 		fotoLabel.setMaximumSize(new Dimension(150, 150));
 		fotoLabel.setMinimumSize(new Dimension(150, 150));
-		fotoLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		fotoLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 		fotoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 		fotoPanel.add(Box.createVerticalStrut(10));
 		fotoPanel.add(fotoLabel);
@@ -249,6 +252,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		btnEscolherFoto = new JButton("Escolher Foto");
 		btnEscolherFoto.setPreferredSize(new Dimension(150, 30));
 		btnEscolherFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
+		EstilizarBotao.aplicarSec(btnEscolherFoto);
 		btnEscolherFoto.addActionListener(this);
 		fotoPanel.add(Box.createVerticalStrut(10));
 		fotoPanel.add(btnEscolherFoto);
@@ -258,6 +262,7 @@ public class PainelCadastroUsers extends JPanel implements ActionListener, Mouse
 		btnRemoverFoto = new JButton("Remover Foto");
 		btnRemoverFoto.setPreferredSize(new Dimension(150, 30));
 		btnRemoverFoto.setAlignmentX(Component.CENTER_ALIGNMENT);
+		EstilizarBotao.aplicarTerc(btnRemoverFoto);
 		btnRemoverFoto.addActionListener(this);
 		fotoPanel.add(btnRemoverFoto);
 

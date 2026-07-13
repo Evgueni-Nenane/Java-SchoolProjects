@@ -16,6 +16,7 @@ import controller.LogsController;
 import controller.UtilizadorController;
 import model.Logs;
 import model.Sessao;
+import resources.EstilizarBotao;
 
 public class PainelUtilizadores extends JPanel implements ActionListener, MouseListener {
 
@@ -41,11 +42,11 @@ public class PainelUtilizadores extends JPanel implements ActionListener, MouseL
 		mainPanel.add(cardPanel, BorderLayout.CENTER);
 
 		btnCadastrarUsers = new JButton("Cadastrar Utilizadores");
+		EstilizarBotao.aplicarSec(btnCadastrarUsers);
 		btnCadastrarUsers.addActionListener(this);
 
-
-
 		btnSuspenderUser = new JButton("Informações de Utilizador");
+		EstilizarBotao.aplicarSec(btnCadastrarUsers);
 		btnSuspenderUser.addActionListener(this);
 
 		mainTopBar.add(btnCadastrarUsers);

@@ -48,8 +48,6 @@ public class DiscoController {
 	    		return -1;
 	    	}
 
-	    	// Genero é uma relação N:N (tabela Disco_Genero), inserida do mesmo
-	    	// jeito que as outras entidades associativas do disco
 	    	for (Genero genero : disco.getGeneroMusical()) {
 	    		generoDAO.inserRelacaoGeneroDisco(codigoDisco, genero.getCodigoGenero());
 	    	}
@@ -91,7 +89,7 @@ public class DiscoController {
 
         generoDAO.removerRelacoesPorDisco(disco.getCodigoDisco());
         for (Genero genero : disco.getGeneroMusical()) {
-        	generoDAO.inserRelacaoGeneroDisco(disco.getCodigoDisco(), genero.getCodigoGenero());
+        		generoDAO.inserRelacaoGeneroDisco(disco.getCodigoDisco(), genero.getCodigoGenero());
         }
     }
     public boolean removerDisco(int codigoDisco) {

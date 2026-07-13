@@ -21,7 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.MatteBorder;
 
-import dao.LoginDAO;
+import controller.LoginController;
 
 public class JLogin extends JFrame {
 
@@ -29,6 +29,7 @@ public class JLogin extends JFrame {
     private JTextField textFieldNome;
     private JPasswordField passwordField;
     private JCheckBox mostrarSenha;
+    private LoginController loginController;
     
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -44,6 +45,7 @@ public class JLogin extends JFrame {
     }
 
     public JLogin() {
+    		loginController = new LoginController();
         initialize();
     }
 
@@ -132,12 +134,12 @@ public class JLogin extends JFrame {
                 String usuario = textFieldNome.getText();
                 String senha = new String(passwordField.getPassword());
 
-                if (LoginDAO.login(usuario, senha)) {
+                if (loginController.login(usuario, senha)) {
                 	dispose();
                     
                 	JOptionPane.showMessageDialog(JLogin.this, "Bem-vindo, " + usuario + "!");
-	                if (LoginDAO.isPrimeiroAcesso(usuario, senha)) {
-	                    AlterarSenha alterarSenha = new AlterarSenha(usuario, senha);
+	                if (loginController.isPrimeiroAcesso(usuario, senha)) {
+	                    Alterar alterarSenha = new Alterar(usuario, senha);
 	                    alterarSenha.setVisible(true);
 	                } else {
 	                    Dashboard dashboard = new Dashboard();

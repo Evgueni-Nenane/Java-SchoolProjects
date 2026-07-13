@@ -307,9 +307,15 @@ public class Creditos_Producao extends JDialog implements ActionListener {
 				salvarSelecoesAtuais();
 
 				switch (tipo) {
-					case "produtor": carregarProdutores(); break;
-					case "gravadora": carregarGravadoras(); break;
-					case "editora": carregarEditoras(); break;
+					case "produtor":
+						carregarProdutores();
+						break;
+					case "gravadora":
+						carregarGravadoras();
+						break;
+					case "editora": 
+						carregarEditoras(); 
+						break;
 				}
 
 				for (int i = model.getRowCount() - 1; i >= 0; i--) {
@@ -362,6 +368,18 @@ public class Creditos_Producao extends JDialog implements ActionListener {
 		}
 		if (e.getSource() == btnLimparEditora) {
 			desmarcarEditora();
+		}
+		if ( e.getSource() == btnAdicionarProdutor) {
+			new CadastrarProdutorDialog().setVisible(true);
+			carregarProdutores();
+		}
+		if (e.getSource() == btnAdicionarGravadora) {
+			new CadastrarGravadoraDialog().setVisible(true);
+			carregarGravadoras();
+		}
+		if (e.getSource() == btnAdicionarEditora) {
+			new CadastrarEditoraDialog().setVisible(true);
+			carregarEditoras();
 		}
 	}
 

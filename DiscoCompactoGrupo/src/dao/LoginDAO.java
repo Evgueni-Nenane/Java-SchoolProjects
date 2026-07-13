@@ -4,14 +4,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 
+import controller.LogsController;
+import model.Logs;
 import model.NivelAcesso;
 import model.Sessao;
 import model.Utilizador;
 
 public class LoginDAO {
-
-	public static boolean login(String username, String senha) {
+	private static Logs log;
+	
+	public boolean login(String username, String senha, LogsController logController) {
 	    String sql = "SELECT Codigo_User, Nome, Apelido, UserName, Genero, Email, Contacto, Foto, Codigo_Nivel, NomeNivel"
 	    		+ " FROM Utilizador u"
 	    		+ " INNER JOIN NivelAcesso n"
@@ -27,6 +31,12 @@ public class LoginDAO {
 	        	NivelAcesso perfil = new NivelAcesso(rs.getInt("Codigo_Nivel"), rs.getString("NomeNivel"));
 	            Utilizador userSessao = new Utilizador(rs.getBytes("foto"), rs.getString("nome"), rs.getString("apelido"), rs.getString("username"), perfil, rs.getString("email"));
 	            Sessao.iniciarSessao(userSessao);
+	            
+	            LocalDateTime horaAgora = LocalDateTime.now();
+	            log = new Logs(Sessao.getUtilizadorLogado().getNome(), Sessao.getUtilizadorLogado().getApelido(),
+	            		Sessao.getUtilizadorLogado().getPerfil().getNome(),
+	            		Sessao.getUtilizadorLogado().getEmail(), "Realizou login", horaAgora);
+	            logController.inserirLog(log);
 	            return true;
 	        }
 	        return false;
@@ -37,7 +47,7 @@ public class LoginDAO {
 	}
 	
 
-	public static boolean isPrimeiroAcesso(String username, String senha) {
+	public boolean isPrimeiroAcesso(String username, String senha) {
 		String sql = "SELECT primeiro_acesso FROM utilizador WHERE UserName = ? AND Senha = ?";
 		try {
 			Connection conn = DBConnector.DBConnect();
@@ -55,7 +65,7 @@ public class LoginDAO {
 		}
 	}
 	
-	public static boolean atualizarSenha(String username, String senhaAntiga, String novaSenha) {
+	public boolean atualizarSenha(String username, String senhaAntiga, String novaSenha) {
 
 	    String sql = "UPDATE utilizador SET senha = ?, primeiro_acesso = 0 WHERE BINARY username = ? AND BINARY senha = ?";
 
@@ -72,7 +82,7 @@ public class LoginDAO {
 	        return false;
 	    }
 	}
-	public static boolean resetarSenha(int codigoUser, String senha) {
+	public boolean resetarSenha(int codigoUser, String senha) {
 
 	    String sql = "UPDATE utilizador SET senha = ?, primeiro_acesso = 1 WHERE codigo_user = ?";
 

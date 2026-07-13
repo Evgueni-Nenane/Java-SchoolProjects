@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -25,9 +24,9 @@ import javax.swing.table.DefaultTableModel;
 import controller.DiscoController;
 import controller.LogsController;
 import model.DiscoCompacto;
-import model.Genero;
 import model.NivelAcesso;
 import model.Sessao;
+import resources.EstilizarBotao;
 import resources.EstilizarTabela;
 
 public class ListaAcoesDiscos extends JPanel implements ActionListener {
@@ -54,8 +53,8 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
         parteDescritiva.setLayout(new BoxLayout(parteDescritiva, BoxLayout.Y_AXIS));
         parteDescritiva.setBackground(titulo.getBackground());
         JLabel nome = new JLabel("Discos Cadastrados no Sistema");
-        nome.setFont(new Font("Montserrat", 16, Font.BOLD));
-        parteDescritiva.add(Box.createHorizontalStrut(20));
+        nome.setFont(new Font("Montserrat", Font.BOLD, 16));
+        parteDescritiva.add(Box.createHorizontalStrut(10));
         parteDescritiva.add(Box.createVerticalGlue());
         parteDescritiva.add(nome);
         parteDescritiva.add(Box.createVerticalGlue());
@@ -82,18 +81,17 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
 
                 List<DiscoCompacto> discos = discoController.listarDiscos();
                 for (DiscoCompacto d : discos) {
-                    String generosStr = formatarGeneros(d.getGeneroMusical());
                     
                     if (texto.isEmpty() ||
                         d.getTitulo().toLowerCase().contains(texto) ||
-                        generosStr.toLowerCase().contains(texto) ||
+                        d.getGeneroMusicalTxt().toLowerCase().contains(texto) ||
                         String.valueOf(d.getPreco()).contains(texto) ||
                         String.valueOf(d.getAnoEdicao()).contains(texto)) {
 
                         tabelaModelo.addRow(new Object[]{
                             d.getCodigoDisco(),
                             d.getTitulo(),
-                            generosStr,
+                            d.getGeneroMusicalTxt(),
                             d.getPreco(),
                             d.getAnoEdicao()
                         });
@@ -116,6 +114,9 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
             }
         };
         tabela = new JTable(tabelaModelo);
+        tabela.getColumnModel().getColumn(0).setMinWidth(0);
+        tabela.getColumnModel().getColumn(0).setMaxWidth(0);
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(0);
         tabela.getTableHeader().setReorderingAllowed(false);
         tabela.getTableHeader().setResizingAllowed(false);
         EstilizarTabela.aplicar(tabela);
@@ -125,19 +126,25 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
         removerPanel.add(scroll, BorderLayout.CENTER);
 
         // Botão remover
-        btnRemover = new JButton("Remover Selecionado");
+		btnRemover = new JButton("Remover");
+		EstilizarBotao.aplicarTerc(btnRemover);
         btnRemover.addActionListener(this);
         
-        btnEditar = new JButton("Editar Disco");
+        btnEditar = new JButton("Editar");
+        EstilizarBotao.aplicarSec(btnEditar);
         btnEditar.addActionListener(this);
-        
+
         btnVerDetalhes = new JButton("Ver Detalhes");
+        EstilizarBotao.aplicarSec(btnVerDetalhes);
         btnVerDetalhes.addActionListener(this);
         
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         painelBotoes.add(btnRemover);
         painelBotoes.add(btnEditar);
         painelBotoes.add(btnVerDetalhes);
+        painelBotoes.setPreferredSize(new Dimension(0, 60));
+        painelBotoes.setBorder(BorderFactory.createMatteBorder(1, 0,0,0, Color.LIGHT_GRAY));
+        painelBotoes.setBackground(Color.WHITE);
         removerPanel.add(painelBotoes, BorderLayout.SOUTH);
 
         this.setLayout(new BorderLayout());
@@ -146,19 +153,6 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
         carregarDiscos();
     }
 
-    private String formatarGeneros(List<Genero> generos) {
-        if (generos == null || generos.isEmpty()) {
-            return "Nenhum gênero";
-        }
-        
-        List<String> nomesGeneros = new ArrayList<>();
-
-        for (Genero genero : generos) {
-            nomesGeneros.add(genero.getNomeGenero());
-        }
-
-        return String.join(", ", nomesGeneros);
-    }
 
     public void carregarDiscos() {
         tabelaModelo.setRowCount(0);
@@ -167,7 +161,7 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
             tabelaModelo.addRow(new Object[]{
                 disco.getCodigoDisco(),
                 disco.getTitulo(),
-                formatarGeneros(disco.getGeneroMusical()), 
+                disco.getGeneroMusicalTxt(),
                 disco.getPreco(),
                 disco.getAnoEdicao()
             });
@@ -189,10 +183,8 @@ public class ListaAcoesDiscos extends JPanel implements ActionListener {
                 return;
             }
 
-            int confirmacao = JOptionPane.showConfirmDialog(null,
-                "Tem certeza que deseja remover este disco?",
-                "Confirmar Remoção",
-                JOptionPane.YES_NO_OPTION);
+            int confirmacao = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja remover este disco?",
+                "Confirmar Remoção", JOptionPane.YES_NO_OPTION);
 
             if(confirmacao == JOptionPane.YES_OPTION) {
 

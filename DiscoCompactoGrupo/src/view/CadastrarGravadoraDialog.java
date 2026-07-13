@@ -12,6 +12,7 @@ import controller.LogsController;
 import model.Gravadora;
 import model.Logs;
 import model.Sessao;
+import resources.EstilizarBotao;
 
 
 public class CadastrarGravadoraDialog extends JDialog implements ActionListener {
@@ -110,6 +111,7 @@ public class CadastrarGravadoraDialog extends JDialog implements ActionListener 
         // Botões
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnSalvar = new JButton("Cadastrar");
+        EstilizarBotao.aplicarSec(btnSalvar);
         btnSalvar.addActionListener(this);
         btnSalvar.setPreferredSize(new Dimension(130, 30));
         painelBotoes.add(btnSalvar);
@@ -123,10 +125,15 @@ public class CadastrarGravadoraDialog extends JDialog implements ActionListener 
                 JOptionPane.showMessageDialog(this, "Nome obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
                 return;
                 }
-            if(txtEmail.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Email obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+            if (txtContacto.getText().isEmpty()) {
+    				txtContacto.setText("Não informado");
+	        }
+	        if (txtEmail.getText().isEmpty()) {
+	        		txtEmail.setText("Não informado");
+	        }
+	        if (txtEndereco.getText().isEmpty()) {
+	        		txtEndereco.setText("Não informado");
+	        }
             
             Gravadora gravadora = new Gravadora(txtNome.getText(), txtContacto.getText(), txtEmail.getText(), txtEndereco.getText());
             int sucesso = gravadoraController.cadastrarGravadora(gravadora);

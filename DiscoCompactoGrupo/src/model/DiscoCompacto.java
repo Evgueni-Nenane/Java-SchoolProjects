@@ -10,6 +10,7 @@ public class DiscoCompacto {
     private String titulo;
     private double preco;
     private int anoEdicao;
+    private String generoMusicalTxt;
     private List<Genero> generoMusical;
     private List<Cantor> cantores;
     private List<Musico> musicos;
@@ -76,6 +77,14 @@ public class DiscoCompacto {
 
 	public void setAnoEdicao(int anoEdicao) {
 		this.anoEdicao = anoEdicao;
+	}
+	
+	public String getGeneroMusicalTxt() {
+		return generoMusicalTxt;
+	}
+
+	public void setGeneroMusicalTxt(String generoMusicalTxt) {
+		this.generoMusicalTxt = generoMusicalTxt;
 	}
 
 	public List<Genero> getGeneroMusical() {

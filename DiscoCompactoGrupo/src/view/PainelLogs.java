@@ -9,7 +9,6 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -45,6 +44,7 @@ public class PainelLogs extends JPanel implements ActionListener {
 		parteDescritiva.setBackground(titulo.getBackground());
 
 		JLabel nome = new JLabel("Logs do Sistema");
+		nome.setFont(nome.getFont().deriveFont(16f).deriveFont(java.awt.Font.BOLD));
 		parteDescritiva.add(Box.createHorizontalStrut(20));
 		parteDescritiva.add(Box.createVerticalGlue());
 		parteDescritiva.add(nome);
@@ -57,15 +57,8 @@ public class PainelLogs extends JPanel implements ActionListener {
 		JTextField txtPesquisa = new JTextField();
 		txtPesquisa.setPreferredSize(new Dimension(200, 30));
 
-		JLabel filtro = new JLabel("Icone");
-		filtro.setPreferredSize(new Dimension(30, 30));
-		filtro.setMinimumSize(new Dimension(30, 30));
-		filtro.setMaximumSize(new Dimension(30, 30));
-		filtro.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-
 		partePesquisa.add(pesquisar);
 		partePesquisa.add(txtPesquisa);
-		partePesquisa.add(filtro);
 		txtPesquisa.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
 		    public void insertUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
 		    public void removeUpdate(javax.swing.event.DocumentEvent e) { filtrar(); }
@@ -105,7 +98,7 @@ public class PainelLogs extends JPanel implements ActionListener {
 
 		JPanel tabelaPanel = new JPanel();
 
-		String[] colunas = { "Codigo", "Nome Completo", "E-mail Corporativo", "Perfil", "Acção","Data" };
+		String[] colunas = { "ID", "Nome Completo", "E-mail Corporativo", "Perfil", "Acção","Data" };
 		tabelaModelo = new DefaultTableModel(colunas, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -117,7 +110,10 @@ public class PainelLogs extends JPanel implements ActionListener {
 		EstilizarTabela.aplicar(tabela);
 		tabela.getTableHeader().setReorderingAllowed(false);
 		tabela.getTableHeader().setResizingAllowed(false);
-
+		tabela.getColumnModel().getColumn(0).setMinWidth(40);
+		tabela.getColumnModel().getColumn(0).setMaxWidth(40);
+		tabela.getColumnModel().getColumn(0).setPreferredWidth(40);
+		
 		tabelaPanel.add(tabela);
 
 		JScrollPane scroll = new JScrollPane(tabela);

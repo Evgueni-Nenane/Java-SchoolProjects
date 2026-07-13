@@ -12,6 +12,7 @@ import controller.ProdutorController;
 import model.Logs;
 import model.Produtor;
 import model.Sessao;
+import resources.EstilizarBotao;
 
 
 public class CadastrarProdutorDialog extends JDialog implements ActionListener {
@@ -111,6 +112,7 @@ public class CadastrarProdutorDialog extends JDialog implements ActionListener {
         // Botões
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.CENTER));
         btnSalvar = new JButton("Cadastrar");
+        EstilizarBotao.aplicarSec(btnSalvar);
         btnSalvar.addActionListener(this);
         btnSalvar.setPreferredSize(new Dimension(130, 30));
         painelBotoes.add(btnSalvar);
@@ -124,15 +126,12 @@ public class CadastrarProdutorDialog extends JDialog implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Nome obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            if(txtContacto.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Contacto obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if(txtEmail.getText().trim().isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Email obrigatório!", "Erro", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
+            if (txtContacto.getText().isEmpty()) {
+    			txtContacto.setText("Não informado");
+	        }
+	        if (txtEmail.getText().isEmpty()) {
+	        		txtEmail.setText("Não informado");
+	        }
             Produtor produtor= new Produtor(txtNome.getText(), txtApelido.getText(), txtContacto.getText(), txtEmail.getText());
             int sucesso = produtorController.cadastrarProdutor(produtor);
             if(sucesso != -1) {

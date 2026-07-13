@@ -42,12 +42,12 @@ public class CriarGeneroDialog extends JDialog {
 
     private void initialize() {
 
-        JLabel titulo = new JLabel("ADICIONAR GÉNERO");
+        JLabel titulo = new JLabel("ADICIONAR GENERO");
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
         titulo.setBounds(80, 15, 250, 30);
         add(titulo);
 
-        JLabel lblGenero = new JLabel("Género:");
+        JLabel lblGenero = new JLabel("Genero:");
         lblGenero.setBounds(30, 65, 80, 25);
         add(lblGenero);
 
@@ -89,21 +89,19 @@ public class CriarGeneroDialog extends JDialog {
                     Sessao.getUtilizadorLogado().getApelido(),
                     Sessao.getUtilizadorLogado().getPerfil().getNome(),
                     Sessao.getUtilizadorLogado().getEmail(),
-                    "Adicionou género",
+                    "Adicionou genero",
                     horaAgora
             );
 
             logController.inserirLog(log);
 
-            JOptionPane.showMessageDialog(this,
-                    "Género adicionado com sucesso!");
+            JOptionPane.showMessageDialog(this, "Genero adicionado com sucesso!");
 
             dispose();
 
         } else {
 
-            JOptionPane.showMessageDialog(this,
-                    "Este género já existe na base de dados.");
+            JOptionPane.showMessageDialog(this, "Este genero já existe na base de dados.");
         }
     }
 }

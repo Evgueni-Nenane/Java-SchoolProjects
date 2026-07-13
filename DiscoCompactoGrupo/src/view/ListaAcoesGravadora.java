@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -25,6 +26,7 @@ import controller.GravadoraController;
 import model.Gravadora;
 import model.NivelAcesso;
 import model.Sessao;
+import resources.EstilizarBotao;
 import resources.EstilizarTabela;
 
 public class ListaAcoesGravadora extends JPanel implements ActionListener {
@@ -49,12 +51,11 @@ public class ListaAcoesGravadora extends JPanel implements ActionListener {
 		parteDescritiva.setLayout(new BoxLayout(parteDescritiva, BoxLayout.Y_AXIS));
 		parteDescritiva.setBackground(titulo.getBackground());
 
-		JLabel nome = new JLabel("Lista de Gravadoras");
-		JLabel descricao = new JLabel("Acções");
+		JLabel nome = new JLabel("Lista de gravadoras");
+        nome.setFont(new Font("Montserrat", Font.BOLD, 16));
 		parteDescritiva.add(Box.createHorizontalStrut(20));
 		parteDescritiva.add(Box.createVerticalGlue());
 		parteDescritiva.add(nome);
-		parteDescritiva.add(descricao);
 		parteDescritiva.add(Box.createVerticalGlue());
 
 		JPanel partePesquisa = new JPanel();
@@ -113,6 +114,9 @@ public class ListaAcoesGravadora extends JPanel implements ActionListener {
 		};
 			
 		tabela = new JTable(tabelaModelo);
+		tabela.getColumnModel().getColumn(0).setMinWidth(0);
+		tabela.getColumnModel().getColumn(0).setMaxWidth(0);
+		tabela.getColumnModel().getColumn(0).setPreferredWidth(0);
 		EstilizarTabela.aplicar(tabela);
 		tabela.getTableHeader().setReorderingAllowed(false);
 		tabela.getTableHeader().setResizingAllowed(false);
@@ -124,18 +128,24 @@ public class ListaAcoesGravadora extends JPanel implements ActionListener {
 		suspenderPanel.add(scroll, BorderLayout.CENTER);
         
 		btnRemover = new JButton("Remover");
+		EstilizarBotao.aplicarTerc(btnRemover);
         btnRemover.addActionListener(this);
         
         btnEditar = new JButton("Editar");
+        EstilizarBotao.aplicarSec(btnEditar);
         btnEditar.addActionListener(this);
 
         btnAdicionar = new JButton("Adicionar");
+        EstilizarBotao.aplicarSec(btnAdicionar);
         btnAdicionar.addActionListener(this);
         
         JPanel painelBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         painelBotoes.add(btnRemover);
         painelBotoes.add(btnEditar);
         painelBotoes.add(btnAdicionar);
+        painelBotoes.setPreferredSize(new Dimension(0, 60));
+        painelBotoes.setBorder(BorderFactory.createMatteBorder(1, 0,0,0, Color.LIGHT_GRAY));
+        painelBotoes.setBackground(Color.WHITE);
         suspenderPanel.add(painelBotoes, BorderLayout.SOUTH);
 
 		this.setLayout(new BorderLayout());
@@ -168,10 +178,7 @@ public class ListaAcoesGravadora extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnRemover) {
 			if (Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() == NivelAcesso.OPERADOR) {
-				JOptionPane.showConfirmDialog(null,
-		                "Sem permissão",
-		                "Sem acesso",
-		                JOptionPane.YES_NO_OPTION);
+				JOptionPane.showConfirmDialog(null, "Sem permissão", "Sem acesso", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			
@@ -205,10 +212,8 @@ public class ListaAcoesGravadora extends JPanel implements ActionListener {
 		}
 		if (e.getSource() == btnEditar) {
 			if (Sessao.getUtilizadorLogado().getPerfil().getCodigoNivel() == NivelAcesso.OPERADOR) {
-				JOptionPane.showConfirmDialog(null,
-		                "Sem permissão",
-		                "Sem acesso",
-		                JOptionPane.YES_NO_OPTION);
+				JOptionPane.showConfirmDialog(null, "Sem permissão", "Sem acesso",
+		                JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			int linhaSelecionada = tabela.getSelectedRow();

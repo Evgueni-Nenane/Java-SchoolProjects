@@ -42,6 +42,7 @@ import model.DiscoCompacto;
 import model.Genero;
 import model.Logs;
 import model.Sessao;
+import resources.EstilizarBotao;
 
 public class CadastrarDiscos extends JPanel implements ActionListener, MouseListener {
 
@@ -228,7 +229,7 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		btnPanel.setBackground(new Color(250, 251, 252));
 		
-		btnSalvar = new JButton("Salvar");
+		btnSalvar = new JButton("Salvar Disco");
 		btnSalvar.addActionListener(this);
 		btnSalvar.setBackground(new Color(19, 175, 119));
 		btnSalvar.setForeground(Color.WHITE);
@@ -238,10 +239,11 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 
 		btnLimpar = new JButton("Limpar");
 		btnLimpar.addActionListener(this);
+		EstilizarBotao.aplicarTerc(btnLimpar);
 		btnLimpar.setPreferredSize(new Dimension(120, 35));
 
-		btnPanel.add(btnSalvar);
 		btnPanel.add(btnLimpar);
+		btnPanel.add(btnSalvar);
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
@@ -423,6 +425,10 @@ public class CadastrarDiscos extends JPanel implements ActionListener, MouseList
 		if (participantes.totalSelecionados() == 0) {
 			JOptionPane.showMessageDialog(null, "Selecione pelo menos um participante!", "Erro", JOptionPane.WARNING_MESSAGE);
 			return;
+		}
+		
+		if (creditosProducao.getEditorasSelecionados() == null) {
+			JOptionPane.showMessageDialog(null, "Selecione pelo menos uma editora", "Erro", JOptionPane.WARNING_MESSAGE);
 		}
 		
 		String titulo = txtNomeDisco.getText().trim();
